@@ -85,11 +85,14 @@ func ExtractVersion(output string) string {
 		if line == "" {
 			continue
 		}
-		// Look for a field that looks like a version number (starts with digit)
+		// Look for a field that looks like a version number
 		fields := strings.Fields(line)
 		for _, f := range fields {
 			if len(f) > 0 && f[0] >= '0' && f[0] <= '9' {
-				// Strip trailing parenthetical like "(Claude Code)"
+				return f
+			}
+			// Handle "go1.24.0", "v2.0.0" etc — strip prefix to check for digits
+			if len(f) > 1 && containsVersion(f) {
 				return f
 			}
 		}
@@ -100,4 +103,14 @@ func ExtractVersion(output string) string {
 		return fields[len(fields)-1]
 	}
 	return output
+}
+
+// containsVersion checks if a string contains a version-like pattern (e.g., "go1.24.0").
+func containsVersion(s string) bool {
+	for i := 0; i < len(s)-1; i++ {
+		if s[i] >= '0' && s[i] <= '9' && (i+1 < len(s) && s[i+1] == '.') {
+			return true
+		}
+	}
+	return false
 }

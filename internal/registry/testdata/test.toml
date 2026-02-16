@@ -1,0 +1,53 @@
+[[tools]]
+name = "test-tool-a"
+display_name = "Test Tool A"
+description = "A test coding tool"
+category = "coding"
+tags = ["ai", "test"]
+homepage = "https://example.com/a"
+
+[tools.install]
+pip = "test-tool-a"
+
+[tools.install.verify]
+command = "test-tool-a --version"
+
+[tools.keys]
+required = ["TEST_API_KEY"]
+
+[[tools]]
+name = "test-tool-b"
+display_name = "Test Tool B"
+description = "A test LLM tool"
+category = "llm"
+tags = ["ai", "llm"]
+homepage = "https://example.com/b"
+
+[tools.install]
+brew = "test-tool-b"
+npm = "test-tool-b"
+
+[tools.install.verify]
+command = "test-tool-b --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "test-tool-c"
+display_name = "Test Tool C"
+description = "A test infra tool"
+category = "infra"
+tags = ["ai", "infra", "docker"]
+homepage = "https://example.com/c"
+
+[tools.install]
+docker = "testorg/tool-c:latest"
+pip = "tool-c"
+
+[tools.install.verify]
+command = "tool-c --version"
+
+[tools.keys]
+required = []
+optional = ["OPTIONAL_KEY"]
