@@ -9,6 +9,7 @@ repo = "https://github.com/vllm-project/vllm"
 
 [tools.install]
 pip = "vllm"
+docker = "vllm/vllm-openai:latest"
 
 [tools.install.verify]
 command = "python3 -c 'import vllm; print(vllm.__version__)'"

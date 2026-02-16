@@ -87,18 +87,47 @@ func configPath() string {
 	return filepath.Join(ConfigDir(), "config.toml")
 }
 
-// Load reads the config file, creating defaults if it doesn't exist.
+// Load reads the global config, then overlays any project-level .tamr.toml found
+// by walking up from the current directory.
 func Load() *Config {
 	cfg := Default()
-	path := configPath()
 
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return cfg
+	// Layer 1: Global config
+	if data, err := os.ReadFile(configPath()); err == nil {
+		_ = toml.Unmarshal(data, cfg)
 	}
 
-	_ = toml.Unmarshal(data, cfg)
+	// Layer 2: Project-level .tamr.toml (walk up to find it)
+	if projectPath := findProjectConfig(); projectPath != "" {
+		_ = toml.Unmarshal(mustRead(projectPath), cfg)
+	}
+
 	return cfg
+}
+
+// findProjectConfig walks up from cwd looking for .tamr.toml.
+func findProjectConfig() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		return ""
+	}
+	for {
+		candidate := filepath.Join(dir, ".tamr.toml")
+		if _, err := os.Stat(candidate); err == nil {
+			return candidate
+		}
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			break
+		}
+		dir = parent
+	}
+	return ""
+}
+
+func mustRead(path string) []byte {
+	data, _ := os.ReadFile(path)
+	return data
 }
 
 // Save writes the config to disk.

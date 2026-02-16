@@ -65,6 +65,7 @@ repo = "https://github.com/mudler/LocalAI"
 
 [tools.install]
 brew = "localai"
+docker = "localai/localai:latest"
 
 [tools.install.verify]
 command = "local-ai --version"

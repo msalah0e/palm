@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/msalah0e/tamr/internal/config"
 	"github.com/msalah0e/tamr/internal/hooks"
 	"github.com/msalah0e/tamr/internal/installer"
+	"github.com/msalah0e/tamr/internal/parallel"
 	"github.com/msalah0e/tamr/internal/registry"
 	"github.com/msalah0e/tamr/internal/state"
 	"github.com/msalah0e/tamr/internal/ui"
@@ -13,7 +15,9 @@ import (
 )
 
 func installCmd() *cobra.Command {
-	return &cobra.Command{
+	var sequential bool
+
+	cmd := &cobra.Command{
 		Use:     "install <tool> [tool2...]",
 		Aliases: []string{"i", "add"},
 		Short:   "Install AI tool(s)",
@@ -26,7 +30,14 @@ func installCmd() *cobra.Command {
 				return
 			}
 
-			// Multiple tools
+			// Multiple tools — use parallel by default
+			cfg := config.Load()
+			if !sequential && cfg.Parallel.Enabled && len(args) > 1 {
+				installParallel(reg, args, cfg.Parallel.Concurrency)
+				return
+			}
+
+			// Sequential fallback
 			ui.Banner("installing")
 			success, failed := 0, 0
 			for _, name := range args {
@@ -51,6 +62,9 @@ func installCmd() *cobra.Command {
 			fmt.Println()
 		},
 	}
+
+	cmd.Flags().BoolVar(&sequential, "seq", false, "Install sequentially (disable parallel)")
+	return cmd
 }
 
 func installOne(reg *registry.Registry, name string) {
@@ -81,20 +95,63 @@ func installOne(reg *registry.Registry, name string) {
 	}
 }
 
+func installParallel(reg *registry.Registry, names []string, concurrency int) {
+	ui.Banner("installing (parallel)")
+
+	var tasks []parallel.Task
+	var unknown int
+
+	for _, name := range names {
+		tool := reg.Get(name)
+		if tool == nil {
+			ui.Warn.Printf("  %s unknown tool %q\n", ui.WarnIcon(), name)
+			unknown++
+			continue
+		}
+		t := *tool // copy
+		tasks = append(tasks, parallel.Task{
+			Name: t.DisplayName,
+			Fn: func() error {
+				return doInstall(&t)
+			},
+		})
+	}
+
+	if len(tasks) == 0 {
+		return
+	}
+
+	fmt.Println()
+	results := parallel.Run(tasks, concurrency)
+
+	success, failed := 0, 0
+	for _, r := range results {
+		if r.OK {
+			success++
+		} else {
+			failed++
+		}
+	}
+	failed += unknown
+
+	fmt.Printf("\n  %d installed", success)
+	if failed > 0 {
+		fmt.Printf(" · %d failed", failed)
+	}
+	fmt.Println()
+}
+
 func doInstall(tool *registry.Tool) error {
-	// Pre-install hook
 	_ = hooks.Run("pre_install", tool.Name, tool.Category)
 
 	if err := installer.Install(*tool); err != nil {
 		return err
 	}
 
-	// Record in state
 	backend, pkg := tool.InstallMethod()
 	dt := registry.DetectOne(*tool)
 	_ = state.Record(tool.Name, dt.Version, backend, pkg, dt.Path)
 
-	// Post-install hook
 	_ = hooks.Run("post_install", tool.Name, tool.Category)
 
 	return nil

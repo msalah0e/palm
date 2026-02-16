@@ -29,6 +29,8 @@ func Install(tool registry.Tool) error {
 		return cargoInstall(pkg)
 	case "go":
 		return goInstall(pkg)
+	case "docker":
+		return dockerPull(pkg)
 	case "script":
 		return scriptInstall(pkg)
 	case "binary":
@@ -50,11 +52,13 @@ func Update(tool registry.Tool) error {
 	case "npm":
 		return runCmd("npm", "update", "-g", pkg)
 	case "cargo":
-		return cargoInstall(pkg) // cargo install re-compiles latest
+		return cargoInstall(pkg)
 	case "go":
-		return goInstall(pkg) // go install @latest gets latest
+		return goInstall(pkg)
+	case "docker":
+		return dockerPull(pkg)
 	case "script":
-		return scriptInstall(pkg) // re-run the script
+		return scriptInstall(pkg)
 	default:
 		return fmt.Errorf("cannot auto-update %s tools", backend)
 	}
@@ -73,6 +77,8 @@ func Uninstall(tool registry.Tool) error {
 		return pipUninstall(pkg)
 	case "npm":
 		return runCmd("npm", "uninstall", "-g", pkg)
+	case "docker":
+		return runCmd("docker", "rmi", pkg)
 	default:
 		return fmt.Errorf("cannot auto-uninstall %s tools", backend)
 	}
@@ -84,7 +90,10 @@ func brewInstall(pkg string) error {
 
 func pipInstall(pkg string) error {
 	if hasCommand("uv") {
-		return runCmd("uv", "pip", "install", pkg)
+		return runCmd("uv", "tool", "install", pkg)
+	}
+	if hasCommand("pipx") {
+		return runCmd("pipx", "install", pkg)
 	}
 	if hasCommand("pip3") {
 		return runCmd("pip3", "install", pkg)
@@ -92,22 +101,28 @@ func pipInstall(pkg string) error {
 	if hasCommand("pip") {
 		return runCmd("pip", "install", pkg)
 	}
-	return fmt.Errorf("no pip/uv found — install Python first")
+	return fmt.Errorf("no pip/uv/pipx found — install Python first")
 }
 
 func pipUpdate(pkg string) error {
 	if hasCommand("uv") {
-		return runCmd("uv", "pip", "install", "--upgrade", pkg)
+		return runCmd("uv", "tool", "upgrade", pkg)
+	}
+	if hasCommand("pipx") {
+		return runCmd("pipx", "upgrade", pkg)
 	}
 	if hasCommand("pip3") {
 		return runCmd("pip3", "install", "--upgrade", pkg)
 	}
-	return fmt.Errorf("no pip/uv found — install Python first")
+	return fmt.Errorf("no pip/uv/pipx found — install Python first")
 }
 
 func pipUninstall(pkg string) error {
 	if hasCommand("uv") {
-		return runCmd("uv", "pip", "uninstall", pkg)
+		return runCmd("uv", "tool", "uninstall", pkg)
+	}
+	if hasCommand("pipx") {
+		return runCmd("pipx", "uninstall", pkg)
 	}
 	return runCmd("pip3", "uninstall", "-y", pkg)
 }
@@ -131,6 +146,13 @@ func goInstall(pkg string) error {
 		return fmt.Errorf("go not found — install Go first")
 	}
 	return runCmd("go", "install", pkg)
+}
+
+func dockerPull(image string) error {
+	if !hasCommand("docker") {
+		return fmt.Errorf("docker not found — install Docker first")
+	}
+	return runCmd("docker", "pull", image)
 }
 
 func scriptInstall(url string) error {

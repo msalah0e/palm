@@ -31,9 +31,9 @@ tamr discover
 # Search for tools
 tamr search agent
 
-# Install tools (auto-detects backend: brew, pip/uv, npm, cargo, go)
+# Install tools (auto-detects backend: pip/uv, npm, cargo, go, docker)
 tamr install ollama
-tamr install aider claude-code    # install multiple at once
+tamr install aider claude-code    # parallel install by default
 
 # See what's installed
 tamr list
@@ -62,6 +62,17 @@ tamr keys rm OPENAI_API_KEY
 eval $(tamr keys export)
 ```
 
+## Offline Mode
+
+Pre-download tools for airgapped environments:
+
+```bash
+tamr fetch aider ollama       # cache specific tools
+tamr fetch --all              # cache everything
+tamr bundle tools.tar.gz      # create portable archive
+tamr install aider --offline  # install from cache
+```
+
 ## Registry
 
 102 tools across 13 categories:
@@ -87,7 +98,7 @@ Tools are defined as TOML files in [`registry/`](registry/) and embedded at comp
 ## Commands
 
 ```
-tamr install <tool...>       Install AI tool(s)
+tamr install <tool...>       Install AI tool(s) — parallel by default
 tamr remove <tool>           Remove an AI tool
 tamr update [tool|--all]     Update AI tool(s)
 tamr list                    List installed AI tools
@@ -97,14 +108,30 @@ tamr run <tool> [args...]    Run tool with vault keys injected
 tamr doctor                  Health check (tools + keys + runtimes)
 tamr keys [add|rm|list|export]  Manage API keys
 tamr discover                Browse curated catalog
+tamr fetch [tool...|--all]   Pre-download for offline use
+tamr bundle <output.tar.gz>  Create portable tool bundle
 tamr stats                   Usage statistics
 tamr self-update             Update tamr itself
 tamr completion <shell>      Shell completions (zsh/bash/fish)
 ```
 
+## Install Backends
+
+tamr auto-detects the best install method for each tool:
+
+| Backend | Tools | Examples |
+|---------|-------|---------|
+| **pip/uv** | Python tools | aider, crewai, deepeval |
+| **npm** | Node.js tools | claude-code, codex |
+| **go** | Go tools | mods, fabric, opencode |
+| **cargo** | Rust tools | qdrant |
+| **docker** | Containerized tools | vllm, localai, chromadb |
+| **brew** | macOS packages | ollama, k8sgpt |
+| **script** | curl installers | plandex |
+
 ## Configuration
 
-Optional config at `~/.config/tamr/config.toml`:
+### Global config: `~/.config/tamr/config.toml`
 
 ```toml
 [ui]
@@ -114,13 +141,31 @@ color = true
 [install]
 prefer_uv = true   # use uv over pip when available
 
-[stats]
-enabled = false     # local usage tracking
+[parallel]
+enabled = true      # parallel multi-tool install
+concurrency = 4     # max simultaneous installs
 
 [hooks]
-pre_install = ""    # shell command to run before install
-post_install = ""   # shell command to run after install
+pre_install = ""    # shell command before install
+post_install = ""   # shell command after install
+
+[stats]
+enabled = false     # local usage tracking
 ```
+
+### Project config: `.tamr.toml`
+
+Drop a `.tamr.toml` in any project to override global settings:
+
+```toml
+[hooks]
+post_install = "echo 'Tool installed for this project'"
+
+[install]
+prefer_uv = false
+```
+
+tamr walks up from the current directory to find `.tamr.toml`.
 
 ## Extending
 
@@ -136,6 +181,7 @@ tags = ["ai", "custom"]
 
 [tools.install]
 pip = "my-tool"
+docker = "myorg/my-tool:latest"
 
 [tools.install.verify]
 command = "my-tool --version"
@@ -160,7 +206,7 @@ tamr completion fish > ~/.config/fish/completions/tamr.fish
 ## Requirements
 
 - macOS or Linux
-- One of: Homebrew, pip/uv, npm, cargo, or go (for installing tools)
+- At least one: pip/uv, npm, cargo, go, or docker
 
 ## License
 

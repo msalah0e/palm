@@ -55,7 +55,7 @@ func doctorCmd() *cobra.Command {
 			checkRuntime("npm", "npm", "--version")
 			checkRuntime("Go", "go", "version")
 			checkRuntime("Cargo", "cargo", "--version")
-			checkRuntime("Homebrew", "brew", "--version")
+			checkRuntime("Docker", "docker", "--version")
 
 			if len(detected) > 0 {
 				fmt.Printf("\n  %d/%d tools healthy", healthy, len(detected))

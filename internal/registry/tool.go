@@ -20,6 +20,7 @@ type Install struct {
 	Npm    string `toml:"npm"`
 	Cargo  string `toml:"cargo"`
 	Go     string `toml:"go"`
+	Docker string `toml:"docker"`
 	Binary string `toml:"binary"`
 	Script string `toml:"script"`
 	Verify Verify `toml:"verify"`
@@ -54,6 +55,8 @@ func (t Tool) InstallMethod() (backend, pkg string) {
 		return "cargo", t.Install.Cargo
 	case t.Install.Go != "":
 		return "go", t.Install.Go
+	case t.Install.Docker != "":
+		return "docker", t.Install.Docker
 	default:
 		return "manual", t.Homepage
 	}

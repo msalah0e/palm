@@ -9,6 +9,7 @@ repo = "https://github.com/chroma-core/chroma"
 
 [tools.install]
 pip = "chromadb"
+docker = "chromadb/chroma:latest"
 
 [tools.install.verify]
 command = "chroma --version"
@@ -28,6 +29,7 @@ repo = "https://github.com/qdrant/qdrant"
 [tools.install]
 brew = "qdrant/tap/qdrant"
 cargo = "qdrant"
+docker = "qdrant/qdrant:latest"
 
 [tools.install.verify]
 command = "qdrant --version"
@@ -46,6 +48,7 @@ repo = "https://github.com/weaviate/weaviate"
 
 [tools.install]
 brew = "weaviate"
+docker = "cr.weaviate.io/semitechnologies/weaviate:latest"
 
 [tools.install.verify]
 command = "weaviate --version"
@@ -64,6 +67,7 @@ repo = "https://github.com/milvus-io/milvus"
 
 [tools.install]
 pip = "pymilvus"
+docker = "milvusdb/milvus:latest"
 
 [tools.install.verify]
 command = "python3 -c 'import pymilvus; print(pymilvus.__version__)'"
@@ -102,7 +106,7 @@ repo = "https://github.com/pgvector/pgvector"
 brew = "pgvector"
 
 [tools.install.verify]
-command = "brew list pgvector 2>/dev/null && echo 'installed'"
+command = "psql -c 'SELECT extversion FROM pg_extension WHERE extname = '\"'\"'vector'\"'\"'' 2>/dev/null || echo 'installed'"
 
 [tools.keys]
 required = []
