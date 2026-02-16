@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tamr - The AI Tool Manager</title>
+<meta name="description" content="Install, configure, and run 100+ AI CLI tools from one place. API key vault, parallel execution, offline mode.">
+<meta property="og:title" content="tamr - The AI Tool Manager">
+<meta property="og:description" content="Install, configure, and run 100+ AI CLI tools from one place.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+<style>
+  :root {
+    --palm: #2DB682;
+    --palm-dim: #1a8a5e;
+    --palm-glow: rgba(45, 182, 130, 0.3);
+    --bg: #0a0f1a;
+    --bg2: #0f1525;
+    --surface: #141c2e;
+    --surface2: #1a2340;
+    --border: rgba(45, 182, 130, 0.15);
+    --text: #e2e8f0;
+    --text-dim: #8892a8;
+    --text-muted: #5a6478;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --cyan: #22d3ee;
+    --purple: #a78bfa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(10, 15, 26, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  nav .logo { font-size: 1.3rem; font-weight: 700; color: var(--palm); text-decoration: none; }
+  nav .logo span { margin-right: 6px; }
+  nav .links { display: flex; gap: 1.5rem; align-items: center; }
+  nav .links a {
+    color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500;
+    transition: color 0.2s;
+  }
+  nav .links a:hover { color: var(--palm); }
+  nav .gh-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--palm); color: #000; padding: 6px 14px; border-radius: 6px;
+    font-weight: 600; font-size: 0.85rem; text-decoration: none;
+    transition: all 0.2s;
+  }
+  nav .gh-btn:hover { background: #35d495; transform: translateY(-1px); }
+  nav .gh-btn svg { width: 16px; height: 16px; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, var(--palm-glow) 0%, transparent 70%);
+    opacity: 0.3;
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(45, 182, 130, 0.1);
+    border: 1px solid var(--border);
+    padding: 6px 16px; border-radius: 20px;
+    font-size: 0.85rem; color: var(--palm);
+    margin-bottom: 2rem;
+  }
+  .hero h1 {
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 .palm { color: var(--palm); }
+  .hero .subtitle {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    color: var(--text-dim);
+    max-width: 600px;
+    margin-bottom: 3rem;
+    line-height: 1.6;
+  }
+  .hero .cta-group {
+    display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 4rem;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 28px; border-radius: 8px;
+    font-weight: 600; font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none; cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--palm); color: #000;
+  }
+  .btn-primary:hover { background: #35d495; transform: translateY(-2px); box-shadow: 0 8px 32px var(--palm-glow); }
+  .btn-secondary {
+    background: var(--surface2); color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--palm); transform: translateY(-2px); }
+
+  /* TERMINAL */
+  .terminal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    max-width: 700px; width: 100%;
+    text-align: left;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    position: relative;
+    z-index: 1;
+  }
+  .terminal-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px;
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+  .terminal-dot.red { background: #ff5f57; }
+  .terminal-dot.yellow { background: #febc2e; }
+  .terminal-dot.green { background: #28c840; }
+  .terminal-title { color: var(--text-muted); font-size: 0.8rem; margin-left: 8px; }
+  .terminal-body {
+    padding: 1.5rem;
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+  .terminal-body .prompt { color: var(--palm); }
+  .terminal-body .cmd { color: var(--text); }
+  .terminal-body .comment { color: var(--text-muted); }
+  .terminal-body .output { color: var(--text-dim); }
+  .terminal-body .success { color: #28c840; }
+  .terminal-body .key { color: var(--cyan); }
+
+  /* STATS */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem;
+    max-width: 900px; width: 100%;
+    margin: 4rem auto 0;
+    position: relative; z-index: 1;
+  }
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+  .stat .number {
+    font-size: 2.5rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--palm), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .stat .label { color: var(--text-dim); font-size: 0.85rem; margin-top: 4px; }
+
+  /* SECTIONS */
+  section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 5rem 2rem;
+  }
+  section h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  section h2 .palm { color: var(--palm); }
+  section .section-sub {
+    color: var(--text-dim);
+    font-size: 1.15rem;
+    margin-bottom: 3rem;
+    max-width: 700px;
+  }
+
+  /* FEATURES GRID */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .feature {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all 0.3s;
+  }
+  .feature:hover {
+    border-color: var(--palm);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(45, 182, 130, 0.1);
+  }
+  .feature-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  .feature h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .feature p { color: var(--text-dim); font-size: 0.9rem; }
+  .feature code {
+    display: inline-block;
+    background: rgba(45, 182, 130, 0.1);
+    color: var(--palm);
+    padding: 2px 8px; border-radius: 4px;
+    font-family: 'SF Mono', monospace;
+    font-size: 0.8rem;
+    margin-top: 0.75rem;
+  }
+
+  /* CATEGORIES */
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+  .category {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: flex; align-items: center; gap: 1rem;
+    transition: all 0.2s;
+  }
+  .category:hover { border-color: var(--border); }
+  .cat-icon { font-size: 1.5rem; }
+  .cat-info h4 { font-size: 0.95rem; font-weight: 600; }
+  .cat-info .count { color: var(--palm); font-size: 0.8rem; font-weight: 600; }
+
+  /* INSTALL SECTION */
+  .install-section {
+    text-align: center;
+    padding: 6rem 2rem;
+    position: relative;
+  }
+  .install-section::before {
+    content: '';
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 400px;
+    background: radial-gradient(circle, var(--palm-glow) 0%, transparent 70%);
+    opacity: 0.2; pointer-events: none;
+  }
+  .install-box {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 24px;
+    font-family: 'SF Mono', monospace;
+    font-size: 1.1rem;
+    margin-top: 2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative; z-index: 1;
+  }
+  .install-box:hover { border-color: var(--palm); }
+  .install-box .dollar { color: var(--palm); }
+  .install-box .copy {
+    color: var(--text-muted); font-size: 0.8rem;
+    margin-left: 12px;
+    padding: 4px 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+  }
+
+  /* ROADMAP */
+  .roadmap {
+    display: flex; flex-direction: column; gap: 2rem;
+  }
+  .roadmap-item {
+    display: flex; gap: 2rem; align-items: flex-start;
+  }
+  .roadmap-version {
+    min-width: 80px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--palm);
+    padding-top: 2px;
+  }
+  .roadmap-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.5rem;
+    flex: 1;
+  }
+  .roadmap-content h4 { font-weight: 700; margin-bottom: 0.75rem; }
+  .roadmap-content ul {
+    list-style: none; padding: 0;
+  }
+  .roadmap-content li {
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    padding: 4px 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  .roadmap-content li::before {
+    content: '';
+    position: absolute; left: 0; top: 12px;
+    width: 6px; height: 6px;
+    background: var(--palm);
+    border-radius: 50%;
+  }
+
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  footer a { color: var(--palm); text-decoration: none; }
+
+  @media (max-width: 768px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .features { grid-template-columns: 1fr; }
+    .categories { grid-template-columns: repeat(2, 1fr); }
+    .roadmap-item { flex-direction: column; gap: 0.5rem; }
+    nav .links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/tamr/"><span>🌴</span> tamr</a>
+  <div class="links">
+    <a href="#features">Features</a>
+    <a href="#tools">Tools</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="research.html">Research</a>
+    <a class="gh-btn" href="https://github.com/msalah0e/tamr">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+      GitHub
+    </a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">v0.4.0 &middot; The Matrix Hub</div>
+  <h1>
+    <span class="palm">tamr</span><br>
+    The AI Tool Manager
+  </h1>
+  <p class="subtitle">
+    Install, configure, and run 100+ AI CLI tools from one place.
+    API key vault. Parallel execution. Offline mode.
+  </p>
+  <div class="cta-group">
+    <a href="https://github.com/msalah0e/tamr" class="btn btn-primary">Get Started</a>
+    <a href="research.html" class="btn btn-secondary">Read the Research</a>
+  </div>
+
+  <div class="terminal">
+    <div class="terminal-bar">
+      <div class="terminal-dot red"></div>
+      <div class="terminal-dot yellow"></div>
+      <div class="terminal-dot green"></div>
+      <span class="terminal-title">Terminal</span>
+    </div>
+    <div class="terminal-body">
+      <div><span class="prompt">$</span> <span class="cmd">tamr install claude-code aider ollama</span></div>
+      <div><span class="success">  ✓</span> <span class="output">Claude Code installed (npm)</span></div>
+      <div><span class="success">  ✓</span> <span class="output">Aider installed (pip)</span></div>
+      <div><span class="success">  ✓</span> <span class="output">Ollama installed (brew)</span></div>
+      <div>&nbsp;</div>
+      <div><span class="prompt">$</span> <span class="cmd">tamr keys add ANTHROPIC_API_KEY</span></div>
+      <div><span class="key">  🔐</span> <span class="output">Stored in vault (Keychain)</span></div>
+      <div>&nbsp;</div>
+      <div><span class="prompt">$</span> <span class="cmd">tamr run aider</span></div>
+      <div><span class="comment">  # Keys auto-injected from vault</span></div>
+      <div><span class="success">  ✓</span> <span class="output">Launching aider with OPENAI_API_KEY...</span></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="number">100+</div>
+      <div class="label">AI Tools</div>
+    </div>
+    <div class="stat">
+      <div class="number">13</div>
+      <div class="label">Categories</div>
+    </div>
+    <div class="stat">
+      <div class="number">6</div>
+      <div class="label">Install Backends</div>
+    </div>
+    <div class="stat">
+      <div class="number">0</div>
+      <div class="label">Competitors</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <h2>Why <span class="palm">tamr</span></h2>
+  <p class="section-sub">
+    Every AI tool has its own installer, its own config format, its own key management.
+    tamr unifies all of it into one CLI.
+  </p>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <h3>Universal Installer</h3>
+      <p>Install any AI tool with one command. tamr detects the right backend &mdash; brew, pip, npm, cargo, go, or script.</p>
+      <code>tamr install claude-code</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔐</div>
+      <h3>API Key Vault</h3>
+      <p>Store API keys securely in macOS Keychain or encrypted file vault. Auto-inject when running tools.</p>
+      <code>tamr keys add ANTHROPIC_API_KEY</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🚀</div>
+      <h3>Run with Key Injection</h3>
+      <p>Launch any tool with vault keys automatically set as environment variables. No more .env files.</p>
+      <code>tamr run aider</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Parallel Execution</h3>
+      <p>Install and update multiple tools concurrently with backend-aware parallelism and live progress bars.</p>
+      <code>tamr install a b c --parallel</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔍</div>
+      <h3>Smart Discovery</h3>
+      <p>Search 100+ tools by name, category, or tags. Get detailed info, install methods, and key requirements.</p>
+      <code>tamr search "local llm"</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🩺</div>
+      <h3>Health Check</h3>
+      <p>Diagnose your AI toolchain: installed tools, missing runtimes, key validity, outdated versions.</p>
+      <code>tamr doctor</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">✈️</div>
+      <h3>Offline Mode</h3>
+      <p>Pre-fetch packages for air-gapped environments. Export/import bundles with tools, models, and encrypted keys.</p>
+      <code>tamr fetch aider --offline</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <h3>Matrix Dashboard</h3>
+      <p>Terminal UI showing installed tools, status, costs, and models. Like htop for your AI stack.</p>
+      <code>tamr matrix</code>
+    </div>
+  </div>
+</section>
+
+<!-- TOOLS -->
+<section id="tools">
+  <h2>100+ <span class="palm">AI Tools</span></h2>
+  <p class="section-sub">
+    The most comprehensive registry of AI CLI tools.
+    From coding agents to model management.
+  </p>
+
+  <div class="categories">
+    <div class="category">
+      <div class="cat-icon">💻</div>
+      <div class="cat-info">
+        <h4>Coding Agents</h4>
+        <div class="count">20+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">💬</div>
+      <div class="cat-info">
+        <h4>Chat CLIs</h4>
+        <div class="count">12+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🧠</div>
+      <div class="cat-info">
+        <h4>Local LLM Runners</h4>
+        <div class="count">15+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🔧</div>
+      <div class="cat-info">
+        <h4>AI DevOps/Infra</h4>
+        <div class="count">10+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🗄️</div>
+      <div class="cat-info">
+        <h4>Data &amp; RAG</h4>
+        <div class="count">11+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🎨</div>
+      <div class="cat-info">
+        <h4>AI Media</h4>
+        <div class="count">12+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🤖</div>
+      <div class="cat-info">
+        <h4>Agent Frameworks</h4>
+        <div class="count">13+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🧪</div>
+      <div class="cat-info">
+        <h4>Testing &amp; Quality</h4>
+        <div class="count">7+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🛡️</div>
+      <div class="cat-info">
+        <h4>AI Security</h4>
+        <div class="count">7+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">📝</div>
+      <div class="cat-info">
+        <h4>Writing &amp; Docs</h4>
+        <div class="count">5+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">📦</div>
+      <div class="cat-info">
+        <h4>Model Management</h4>
+        <div class="count">8+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🌐</div>
+      <div class="cat-info">
+        <h4>API Gateways</h4>
+        <div class="count">5+ tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">📈</div>
+      <div class="cat-info">
+        <h4>Observability</h4>
+        <div class="count">4+ tools</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <h2>Road<span class="palm">map</span></h2>
+  <p class="section-sub">
+    From tool manager to AI control plane.
+  </p>
+
+  <div class="roadmap">
+    <div class="roadmap-item">
+      <div class="roadmap-version">v0.3.0</div>
+      <div class="roadmap-content">
+        <h4>The AI Tool Manager ✅</h4>
+        <ul>
+          <li>Top-level commands (install, remove, update, search, info, doctor)</li>
+          <li>API key vault with macOS Keychain + encrypted file vault</li>
+          <li>tamr run with vault key injection</li>
+          <li>58 tools across 6 categories</li>
+        </ul>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-version">v0.4.0</div>
+      <div class="roadmap-content">
+        <h4>The Matrix Hub</h4>
+        <ul>
+          <li>State tracking for installed tools</li>
+          <li>Config hierarchy with .tamr.toml project files</li>
+          <li>External plugin registry</li>
+          <li>Lifecycle hooks (pre/post install/run)</li>
+          <li>Parallel execution with progress bars</li>
+          <li>Offline mode with --offline flag and tamr fetch</li>
+          <li>100+ tools across 13 categories</li>
+        </ul>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-version">v0.5.0</div>
+      <div class="roadmap-content">
+        <h4>Workspace &amp; Context</h4>
+        <ul>
+          <li>tamr workspace for project-level tool config</li>
+          <li>tamr context for unified AI tool instructions</li>
+          <li>Shell integration (eval $(tamr env))</li>
+          <li>Enhanced session history with cost tracking</li>
+        </ul>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-version">v1.0.0</div>
+      <div class="roadmap-content">
+        <h4>The Control Plane</h4>
+        <ul>
+          <li>tamr proxy &mdash; local LLM API interceptor</li>
+          <li>tamr matrix &mdash; terminal dashboard</li>
+          <li>tamr budget &mdash; spending controls</li>
+          <li>tamr benchmark &mdash; tool comparison</li>
+          <li>tamr models &mdash; unified model management</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<div class="install-section">
+  <h2>Get <span class="palm">Started</span></h2>
+  <p class="section-sub" style="max-width: 500px; margin: 1rem auto 0;">
+    Install tamr with Go, then start managing your AI tools.
+  </p>
+  <div class="install-box" onclick="navigator.clipboard.writeText('go install github.com/msalah0e/tamr@latest')">
+    <span class="dollar">$</span> go install github.com/msalah0e/tamr@latest
+    <span class="copy">click to copy</span>
+  </div>
+</div>
+
+<footer>
+  <p>Built with 🌴 by <a href="https://github.com/msalah0e">msalah0e</a> &middot; <a href="https://github.com/msalah0e/tamr">GitHub</a> &middot; <a href="research.html">Research Report</a></p>
+</footer>
+
+</body>
+</html>

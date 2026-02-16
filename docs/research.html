@@ -1,0 +1,1776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tamr -- The AI Tool Matrix Hub | Deep Research Report</title>
+<style>
+  :root {
+    --palm: #2DB682;
+    --palm-dim: #1a8a5e;
+    --palm-glow: rgba(45, 182, 130, 0.25);
+    --palm-ghost: rgba(45, 182, 130, 0.08);
+    --blue: #0171E3;
+    --bg: #0a0f1a;
+    --bg2: #0f1525;
+    --bg3: #141c2e;
+    --surface: #1a2340;
+    --surface2: #1e2a48;
+    --border: rgba(45, 182, 130, 0.15);
+    --border2: rgba(255,255,255,0.06);
+    --text: #e2e8f0;
+    --text-dim: #8892a8;
+    --text-muted: #5a6478;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --yellow: #eab308;
+    --cyan: #22d3ee;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: var(--palm-dim) var(--bg);
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--palm-dim); border-radius: 3px; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 15px;
+  }
+
+  /* ── Sidebar TOC ── */
+  .toc {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border2);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 24px 0;
+    scrollbar-width: none;
+  }
+  .toc::-webkit-scrollbar { display: none; }
+  .toc-logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border2);
+    margin-bottom: 16px;
+  }
+  .toc-logo span {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--palm);
+    letter-spacing: -0.5px;
+  }
+  .toc-logo small {
+    display: block;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+  .toc a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 20px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+  .toc a:hover, .toc a.active {
+    color: var(--palm);
+    background: var(--palm-ghost);
+    border-left-color: var(--palm);
+  }
+  .toc a .toc-num {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-muted);
+    min-width: 18px;
+  }
+
+  /* ── Main Content ── */
+  .main {
+    margin-left: 260px;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    padding: 80px 60px 60px;
+    background: linear-gradient(160deg, var(--bg2) 0%, var(--bg) 40%, #0a1a14 100%);
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--palm-glow) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--palm-dim), transparent);
+  }
+  .hero-badge {
+    display: inline-block;
+    padding: 5px 14px;
+    border: 1px solid var(--palm);
+    color: var(--palm);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: 48px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff 30%, var(--palm));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero h1 .palm-icon { -webkit-text-fill-color: initial; font-size: 42px; }
+  .hero .subtitle {
+    font-size: 18px;
+    color: var(--text-dim);
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+  .hero-meta {
+    display: flex; gap: 24px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .hero-meta span { display: flex; align-items: center; gap: 6px; }
+
+  /* ── Stats Bar ── */
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+    background: var(--border2);
+    border-bottom: 1px solid var(--border2);
+  }
+  .stat-card {
+    background: var(--bg2);
+    padding: 28px 24px;
+    text-align: center;
+    transition: background 0.3s;
+  }
+  .stat-card:hover { background: var(--bg3); }
+  .stat-num {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, var(--palm), var(--cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+  }
+
+  /* ── Sections ── */
+  section {
+    padding: 60px;
+    border-bottom: 1px solid var(--border2);
+  }
+  section:last-child { border-bottom: none; }
+  .section-head {
+    margin-bottom: 40px;
+  }
+  .section-head .sec-num {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--palm);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .section-head h2 {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: #fff;
+  }
+  .section-head p {
+    color: var(--text-dim);
+    margin-top: 8px;
+    max-width: 700px;
+    font-size: 15px;
+  }
+
+  /* ── Glass Card ── */
+  .glass {
+    background: linear-gradient(135deg, rgba(26,35,64,0.7), rgba(20,28,46,0.5));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .glass:hover {
+    border-color: rgba(45,182,130,0.3);
+    box-shadow: 0 8px 32px rgba(45,182,130,0.08);
+  }
+
+  /* ── Grid Layouts ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* ── Category Cards ── */
+  .cat-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s;
+  }
+  .cat-card:hover {
+    border-color: var(--palm);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .cat-card .cat-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .cat-card .cat-head h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .cat-card .cat-count {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--palm);
+    background: var(--palm-ghost);
+    padding: 3px 10px;
+    border-radius: 12px;
+  }
+  .cat-card .cat-tools {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+  .cat-card .cat-tools code {
+    display: inline-block;
+    background: rgba(255,255,255,0.04);
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    border: 1px solid var(--border2);
+    margin: 2px 2px;
+  }
+
+  /* ── Tables ── */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .data-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    border-bottom: 2px solid var(--border);
+    background: var(--bg2);
+  }
+  .data-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border2);
+    color: var(--text-dim);
+  }
+  .data-table tr:hover td { background: var(--palm-ghost); }
+  .data-table .score {
+    font-weight: 700;
+    font-family: 'SF Mono', monospace;
+    font-size: 13px;
+  }
+  .score-hi { color: var(--palm); }
+  .score-mid { color: var(--yellow); }
+  .score-lo { color: var(--red); }
+
+  /* ── Score Bar ── */
+  .score-bar {
+    height: 6px;
+    background: var(--bg);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 4px;
+  }
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s ease;
+  }
+
+  /* ── Badges ── */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .badge-critical { background: rgba(239,68,68,0.15); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+  .badge-high { background: rgba(245,158,11,0.15); color: var(--orange); border: 1px solid rgba(245,158,11,0.3); }
+  .badge-medium { background: rgba(234,179,8,0.15); color: var(--yellow); border: 1px solid rgba(234,179,8,0.3); }
+  .badge-low { background: rgba(45,182,130,0.15); color: var(--palm); border: 1px solid rgba(45,182,130,0.3); }
+  .badge-hard { background: rgba(167,139,250,0.15); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
+  .badge-planned { background: rgba(34,211,238,0.15); color: var(--cyan); border: 1px solid rgba(34,211,238,0.3); }
+  .badge-done { background: rgba(45,182,130,0.15); color: var(--palm); border: 1px solid rgba(45,182,130,0.3); }
+
+  /* ── Gap Cards ── */
+  .gap-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 24px;
+    border-left: 3px solid;
+    transition: all 0.3s;
+  }
+  .gap-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .gap-card.sev-critical { border-left-color: var(--red); }
+  .gap-card.sev-high { border-left-color: var(--orange); }
+  .gap-card.sev-medium { border-left-color: var(--yellow); }
+  .gap-card h4 {
+    color: #fff;
+    font-size: 15px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .gap-card p { color: var(--text-dim); font-size: 13px; }
+
+  /* ── Feature Cards ── */
+  .feat-card {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 24px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .feat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--palm), var(--cyan));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .feat-card:hover::before { opacity: 1; }
+  .feat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+  .feat-card .feat-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+  }
+  .feat-card .feat-head h4 {
+    font-family: 'SF Mono', monospace;
+    color: var(--palm);
+    font-size: 14px;
+  }
+  .feat-card .feat-meta {
+    display: flex;
+    gap: 6px;
+  }
+  .feat-card p { color: var(--text-dim); font-size: 13px; }
+
+  /* ── Architecture Layers ── */
+  .layer {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    transition: all 0.3s;
+    position: relative;
+  }
+  .layer:hover {
+    border-color: var(--palm);
+    background: var(--surface2);
+  }
+  .layer-num {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--palm);
+    opacity: 0.4;
+    min-width: 40px;
+    font-family: 'SF Mono', monospace;
+  }
+  .layer-ver {
+    font-family: 'SF Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--palm);
+    background: var(--palm-ghost);
+    padding: 3px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .layer-content h4 { color: #fff; font-size: 14px; margin-bottom: 4px; }
+  .layer-content p { color: var(--text-muted); font-size: 12px; }
+
+  /* ── Comp Table ── */
+  .comp-table th:first-child, .comp-table td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .comp-table th { text-align: center; }
+  .comp-table td { text-align: center; }
+  .comp-table .ck { color: var(--palm); font-size: 16px; }
+  .comp-table .cx { color: var(--text-muted); font-size: 14px; }
+  .comp-table .cp { color: var(--cyan); font-size: 12px; font-weight: 600; }
+  .comp-table .tamr-col { background: var(--palm-ghost); }
+
+  /* ── Roadmap ── */
+  .roadmap-item {
+    position: relative;
+    padding-left: 36px;
+    margin-bottom: 40px;
+  }
+  .roadmap-item::before {
+    content: '';
+    position: absolute;
+    left: 11px; top: 28px; bottom: -40px;
+    width: 2px;
+    background: var(--border);
+  }
+  .roadmap-item:last-child::before { display: none; }
+  .roadmap-dot {
+    position: absolute;
+    left: 0; top: 4px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--palm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .roadmap-dot.active {
+    background: var(--palm);
+    box-shadow: 0 0 12px var(--palm-glow);
+  }
+  .roadmap-ver {
+    font-family: 'SF Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--palm);
+    margin-bottom: 4px;
+  }
+  .roadmap-date {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .roadmap-tasks {
+    list-style: none;
+  }
+  .roadmap-tasks li {
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .roadmap-tasks li::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--palm-dim);
+    flex-shrink: 0;
+  }
+
+  /* ── Terminal Block ── */
+  .terminal {
+    background: #0c0c0c;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    margin-top: 20px;
+  }
+  .terminal-bar {
+    background: #1a1a1a;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .terminal-dot {
+    width: 12px; height: 12px;
+    border-radius: 50%;
+  }
+  .terminal-dot.r { background: #ff5f57; }
+  .terminal-dot.y { background: #febc2e; }
+  .terminal-dot.g { background: #28c840; }
+  .terminal-bar span {
+    margin-left: 8px;
+    font-size: 12px;
+    color: #666;
+  }
+  .terminal-body {
+    padding: 16px 20px;
+    line-height: 1.8;
+    color: #c0c0c0;
+  }
+  .terminal-body .t-spin { color: var(--cyan); }
+  .terminal-body .t-ok { color: var(--palm); }
+  .terminal-body .t-dim { color: #555; }
+  .terminal-body .t-tool { color: #e2e8f0; }
+  .terminal-body .t-info { color: var(--text-muted); }
+
+  /* ── Offline Feature List ── */
+  .feature-list {
+    list-style: none;
+  }
+  .feature-list li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border2);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-list .fl-icon {
+    color: var(--palm);
+    font-size: 16px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+  .feature-list strong { color: #fff; }
+
+  /* ── Packages List ── */
+  .pkg-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .pkg {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border2);
+    padding: 4px 12px;
+    border-radius: 6px;
+    font-family: 'SF Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    transition: all 0.2s;
+  }
+  .pkg:hover { border-color: var(--palm); color: var(--palm); }
+
+  /* ── Verdict Box ── */
+  .verdict {
+    background: linear-gradient(135deg, rgba(45,182,130,0.08), rgba(45,182,130,0.02));
+    border: 1px solid rgba(45,182,130,0.25);
+    border-radius: 12px;
+    padding: 28px;
+    margin-top: 28px;
+  }
+  .verdict h3 {
+    color: var(--palm);
+    font-size: 16px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .verdict ul {
+    list-style: none;
+    padding: 0;
+  }
+  .verdict li {
+    padding: 6px 0;
+    color: var(--text-dim);
+    font-size: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .verdict li::before {
+    content: '\2713';
+    color: var(--palm);
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ── Footer ── */
+  .footer {
+    padding: 40px 60px;
+    background: var(--bg2);
+    border-top: 1px solid var(--border2);
+    text-align: center;
+  }
+  .footer p {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .footer .footer-brand {
+    font-size: 14px;
+    color: var(--palm);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate {
+    opacity: 0;
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .animate.d1 { animation-delay: 0.1s; }
+  .animate.d2 { animation-delay: 0.2s; }
+  .animate.d3 { animation-delay: 0.3s; }
+  .animate.d4 { animation-delay: 0.4s; }
+
+  /* ── Summary Card ── */
+  .exec-summary {
+    background: linear-gradient(135deg, var(--surface), var(--bg3));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px;
+  }
+  .exec-summary p {
+    font-size: 16px;
+    color: var(--text);
+    line-height: 1.75;
+  }
+  .exec-summary .highlight {
+    color: var(--palm);
+    font-weight: 600;
+  }
+
+  /* ── Print ── */
+  @media print {
+    .toc { display: none; }
+    .main { margin-left: 0; }
+    body { background: #fff; color: #111; font-size: 11pt; }
+    .hero { background: #fff; padding: 30px; }
+    .hero h1 { background: none; -webkit-text-fill-color: #111; color: #111; font-size: 28pt; }
+    section { padding: 20px; page-break-inside: avoid; }
+    .glass, .cat-card, .gap-card, .feat-card, .layer { background: #f8f8f8; border-color: #ddd; }
+    .stat-num { background: none; -webkit-text-fill-color: var(--palm); }
+    .stats-bar { border: 1px solid #ddd; }
+    .stat-card { background: #f8f8f8; }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1200px) {
+    .grid-3 { grid-template-columns: 1fr 1fr; }
+    .grid-4 { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 900px) {
+    .toc { display: none; }
+    .main { margin-left: 0; }
+    section { padding: 32px 20px; }
+    .hero { padding: 40px 20px; }
+    .hero h1 { font-size: 28px; }
+    .stats-bar { grid-template-columns: repeat(3, 1fr); }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================ -->
+<!-- SIDEBAR TOC                                  -->
+<!-- ============================================ -->
+<nav class="toc">
+  <div class="toc-logo">
+    <span>&#127796; tamr</span>
+    <small>Research Report</small>
+  </div>
+  <a href="#exec"><span class="toc-num">01</span> Executive Summary</a>
+  <a href="#landscape"><span class="toc-num">02</span> AI Tools Landscape</a>
+  <a href="#language"><span class="toc-num">03</span> Language Analysis</a>
+  <a href="#arch"><span class="toc-num">04</span> Architecture Design</a>
+  <a href="#gaps"><span class="toc-num">05</span> Gap Analysis</a>
+  <a href="#features"><span class="toc-num">06</span> Matrix Hub Features</a>
+  <a href="#offline"><span class="toc-num">07</span> Offline Mode</a>
+  <a href="#parallel"><span class="toc-num">08</span> Parallel Execution</a>
+  <a href="#competitive"><span class="toc-num">09</span> Competitive Landscape</a>
+  <a href="#roadmap"><span class="toc-num">10</span> Implementation Roadmap</a>
+</nav>
+
+<!-- ============================================ -->
+<!-- MAIN CONTENT                                 -->
+<!-- ============================================ -->
+<div class="main">
+
+  <!-- ── Hero ── -->
+  <header class="hero">
+    <div class="hero-badge">Deep Research Report</div>
+    <h1><span class="palm-icon">&#127796;</span> tamr &mdash; The AI Tool Matrix Hub</h1>
+    <p class="subtitle">Deep Research Report &middot; February 2026</p>
+    <div class="hero-meta">
+      <span>&#9671; v0.4.0+ Vision</span>
+      <span>&#9671; 130+ Tools Cataloged</span>
+      <span>&#9671; 13 Categories</span>
+      <span>&#9671; February 16, 2026</span>
+    </div>
+  </header>
+
+  <!-- ── Stats Bar ── -->
+  <div class="stats-bar">
+    <div class="stat-card animate d1">
+      <div class="stat-num">130+</div>
+      <div class="stat-label">AI CLI Tools Cataloged</div>
+    </div>
+    <div class="stat-card animate d2">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Competing Managers</div>
+    </div>
+    <div class="stat-card animate d3">
+      <div class="stat-num">94</div>
+      <div class="stat-label">Go Score /100</div>
+    </div>
+    <div class="stat-card animate d4">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Critical Gaps Found</div>
+    </div>
+    <div class="stat-card animate d4">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Hub Features Designed</div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- SECTION 1: EXECUTIVE SUMMARY                 -->
+  <!-- ============================================ -->
+  <section id="exec">
+    <div class="section-head">
+      <span class="sec-num">Section 01</span>
+      <h2>Executive Summary</h2>
+      <p>The strategic case for tamr as the first AI tool package manager and matrix hub.</p>
+    </div>
+
+    <div class="exec-summary">
+      <p>
+        <strong class="highlight">tamr</strong> is the first CLI that combines
+        <span class="highlight">AI tool package management</span>,
+        <span class="highlight">API key vault</span>,
+        <span class="highlight">unified configuration</span>, and
+        <span class="highlight">cost tracking</span> into a single, zero-dependency binary.
+        After exhaustive research covering <span class="highlight">130+ AI CLI tools</span> across
+        <span class="highlight">13 categories</span>, no competing AI tool manager was found.
+        The closest adjacent tools (Ruler, LNAI, coder-config) address fragments of the problem but none
+        attempt the full package-management layer.
+      </p>
+      <br>
+      <p>
+        The <span class="highlight">v0.3.0</span> release stripped the Homebrew wrapper and promoted
+        AI commands to top-level, focusing tamr squarely on its unique value proposition. This report
+        covers the research and architecture for <span class="highlight">v0.4.0+</span> &mdash;
+        the <strong>"Matrix Hub"</strong> vision &mdash; transforming tamr from a tool installer into
+        a comprehensive control plane for the AI development toolkit.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 2: AI TOOLS LANDSCAPE                -->
+  <!-- ============================================ -->
+  <section id="landscape">
+    <div class="section-head">
+      <span class="sec-num">Section 02</span>
+      <h2>AI Tools Landscape</h2>
+      <p>130+ tools cataloged across 13 categories. The full inventory that tamr manages.</p>
+    </div>
+
+    <div class="grid-3">
+      <!-- 1. Coding Agents -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9000; Coding Agents</h4>
+          <span class="cat-count">20+</span>
+        </div>
+        <div class="cat-tools">
+          <code>claude-code</code> <code>aider</code> <code>copilot-cli</code> <code>cline</code>
+          <code>continue</code> <code>cody</code> <code>codex</code> <code>gemini-cli</code>
+          <code>opencode</code> <code>crush</code> <code>goose</code> <code>plandex</code>
+          <code>gptme</code> <code>kilo</code> <code>cursor</code> <code>windsurf</code>
+          <code>specify</code> <code>qodo</code>
+        </div>
+      </div>
+
+      <!-- 2. Chat/Conversation CLIs -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9993; Chat / Conversation CLIs</h4>
+          <span class="cat-count">12+</span>
+        </div>
+        <div class="cat-tools">
+          <code>llm</code> <code>aichat</code> <code>mods</code> <code>tgpt</code>
+          <code>elia</code> <code>oterm</code> <code>chatgpt-cli</code> <code>kimi-cli</code>
+          <code>shell-gpt</code>
+        </div>
+      </div>
+
+      <!-- 3. Local LLM Runners -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9881; Local LLM Runners</h4>
+          <span class="cat-count">15+</span>
+        </div>
+        <div class="cat-tools">
+          <code>ollama</code> <code>llamafile</code> <code>localai</code> <code>gpt4all</code>
+          <code>jan</code> <code>msty</code> <code>lm-studio</code> <code>vllm</code>
+          <code>mlx</code> <code>exllamav2</code> <code>tabbyapi</code>
+          <code>text-generation-webui</code> <code>mlc-llm</code> <code>cortex</code>
+          <code>koboldcpp</code>
+        </div>
+      </div>
+
+      <!-- 4. AI DevOps -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9729; AI DevOps / Infrastructure</h4>
+          <span class="cat-count">10+</span>
+        </div>
+        <div class="cat-tools">
+          <code>k8sgpt</code> <code>litellm</code> <code>bentoml</code> <code>openllm</code>
+          <code>modal</code> <code>ray</code> <code>replicate/cog</code> <code>gpustack</code>
+          <code>skypilot</code> <code>baseten</code>
+        </div>
+      </div>
+
+      <!-- 5. AI Data/RAG -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9874; AI Data / RAG</h4>
+          <span class="cat-count">11+</span>
+        </div>
+        <div class="cat-tools">
+          <code>chromadb</code> <code>qdrant</code> <code>weaviate</code> <code>milvus</code>
+          <code>lancedb</code> <code>pgvector</code> <code>faiss</code> <code>pinecone</code>
+          <code>datasette</code> <code>vectoradmin</code> <code>firecrawl</code>
+        </div>
+      </div>
+
+      <!-- 6. AI Media -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9835; AI Media (Image/Audio/Video)</h4>
+          <span class="cat-count">12+</span>
+        </div>
+        <div class="cat-tools">
+          <code>comfyui</code> <code>automatic1111</code> <code>invokeai</code> <code>fooocus</code>
+          <code>stabilitymatrix</code> <code>whisper.cpp</code> <code>whisper-cli</code>
+          <code>faster-whisper</code> <code>piper-tts</code> <code>bark</code>
+          <code>coqui-tts</code> <code>f5-tts</code>
+        </div>
+      </div>
+
+      <!-- 7. AI Agents/Orchestration -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9733; Agents / Orchestration</h4>
+          <span class="cat-count">13+</span>
+        </div>
+        <div class="cat-tools">
+          <code>langchain</code> <code>langgraph</code> <code>crewai</code> <code>autogen</code>
+          <code>smolagents</code> <code>llamaindex</code> <code>haystack</code> <code>dspy</code>
+          <code>pydantic-ai</code> <code>openai-agents-sdk</code> <code>vercel-ai-sdk</code>
+          <code>mastra</code>
+        </div>
+      </div>
+
+      <!-- 8. AI Testing/Quality -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#10003; Testing / Quality</h4>
+          <span class="cat-count">7+</span>
+        </div>
+        <div class="cat-tools">
+          <code>promptfoo</code> <code>deepeval</code> <code>qodo</code> <code>coderabbit</code>
+          <code>sourcery</code> <code>braintrust</code> <code>ragas</code>
+        </div>
+      </div>
+
+      <!-- 9. AI Security -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9888; Security</h4>
+          <span class="cat-count">7+</span>
+        </div>
+        <div class="cat-tools">
+          <code>snyk</code> <code>semgrep</code> <code>trivy</code> <code>checkov</code>
+          <code>codeql</code> <code>garak</code> <code>rebuff</code>
+        </div>
+      </div>
+
+      <!-- 10. AI Writing/Docs -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9998; Writing / Docs</h4>
+          <span class="cat-count">5+</span>
+        </div>
+        <div class="cat-tools">
+          <code>mintlify</code> <code>docuwriter</code> <code>gitbook</code> <code>fern</code>
+          <code>readme-ai</code>
+        </div>
+      </div>
+
+      <!-- 11. Model Management -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9638; Model Management</h4>
+          <span class="cat-count">8+</span>
+        </div>
+        <div class="cat-tools">
+          <code>huggingface-hub</code> <code>llama.cpp-convert</code> <code>mlflow</code>
+          <code>wandb</code> <code>dvc</code> <code>ollama</code> <code>mlx-lm</code>
+          <code>autogguf</code>
+        </div>
+      </div>
+
+      <!-- 12. API Gateways/Proxies -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#8644; API Gateways / Proxies</h4>
+          <span class="cat-count">5+</span>
+        </div>
+        <div class="cat-tools">
+          <code>openrouter</code> <code>litellm</code> <code>portkey</code>
+          <code>llm-gateway</code> <code>ai-proxy</code>
+        </div>
+      </div>
+
+      <!-- 13. AI Observability -->
+      <div class="cat-card">
+        <div class="cat-head">
+          <h4>&#9673; Observability</h4>
+          <span class="cat-count">4+</span>
+        </div>
+        <div class="cat-tools">
+          <code>langfuse</code> <code>helicone</code> <code>langsmith</code>
+          <code>arize-phoenix</code>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 3: LANGUAGE ANALYSIS                 -->
+  <!-- ============================================ -->
+  <section id="language">
+    <div class="section-head">
+      <span class="sec-num">Section 03</span>
+      <h2>Language Analysis</h2>
+      <p>Rigorous scoring of five candidate languages across ten criteria. Go wins decisively.</p>
+    </div>
+
+    <div class="glass" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="min-width:200px;">Criterion (weight: equal)</th>
+            <th style="min-width:100px;">Go</th>
+            <th style="min-width:100px;">Rust</th>
+            <th style="min-width:100px;">Zig</th>
+            <th style="min-width:100px;">TS/Bun</th>
+            <th style="min-width:100px;">Python</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cross-compilation</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-mid">7</td>
+            <td class="score score-mid">8</td>
+            <td class="score score-lo">5</td>
+            <td class="score score-lo">3</td>
+          </tr>
+          <tr>
+            <td>Binary size</td>
+            <td class="score score-mid">7</td>
+            <td class="score score-hi">9</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-lo">3</td>
+            <td class="score score-lo">2</td>
+          </tr>
+          <tr>
+            <td>Startup time</td>
+            <td class="score score-hi">9</td>
+            <td class="score score-mid">8</td>
+            <td class="score score-hi">9</td>
+            <td class="score score-mid">6</td>
+            <td class="score score-lo">4</td>
+          </tr>
+          <tr>
+            <td>CLI library ecosystem</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-hi">9</td>
+            <td class="score score-lo">3</td>
+            <td class="score score-mid">7</td>
+            <td class="score score-mid">7</td>
+          </tr>
+          <tr>
+            <td>Crypto / HTTP stdlib</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-mid">8</td>
+            <td class="score score-lo">4</td>
+            <td class="score score-mid">8</td>
+            <td class="score score-hi">9</td>
+          </tr>
+          <tr>
+            <td>Process management</td>
+            <td class="score score-hi">9</td>
+            <td class="score score-mid">8</td>
+            <td class="score score-mid">7</td>
+            <td class="score score-mid">6</td>
+            <td class="score score-mid">6</td>
+          </tr>
+          <tr>
+            <td>Concurrency model</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-hi">9</td>
+            <td class="score score-lo">5</td>
+            <td class="score score-mid">7</td>
+            <td class="score score-lo">5</td>
+          </tr>
+          <tr>
+            <td>Contributor friendliness</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-lo">5</td>
+            <td class="score score-lo">4</td>
+            <td class="score score-mid">8</td>
+            <td class="score score-hi">9</td>
+          </tr>
+          <tr>
+            <td>Zero-dependency dist</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-hi">10</td>
+            <td class="score score-lo">4</td>
+            <td class="score score-lo">2</td>
+          </tr>
+          <tr>
+            <td>Compile speed</td>
+            <td class="score score-hi">9</td>
+            <td class="score score-lo">4</td>
+            <td class="score score-mid">8</td>
+            <td class="score" style="color:var(--text-muted);">N/A</td>
+            <td class="score" style="color:var(--text-muted);">N/A</td>
+          </tr>
+          <tr style="border-top:2px solid var(--palm);">
+            <td style="font-weight:800;color:#fff;font-size:15px;">Total Score</td>
+            <td style="font-weight:800;font-size:20px;color:var(--palm);font-family:'SF Mono',monospace;">94</td>
+            <td style="font-weight:700;font-size:18px;color:var(--yellow);font-family:'SF Mono',monospace;">77</td>
+            <td style="font-weight:700;font-size:18px;color:var(--orange);font-family:'SF Mono',monospace;">68</td>
+            <td style="font-weight:700;font-size:18px;color:var(--text-muted);font-family:'SF Mono',monospace;">54</td>
+            <td style="font-weight:700;font-size:18px;color:var(--text-muted);font-family:'SF Mono',monospace;">47</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Visual Score Bars -->
+    <div style="margin-top:28px;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+        <span style="min-width:70px;font-weight:600;color:#fff;font-size:14px;">Go</span>
+        <div style="flex:1;">
+          <div class="score-bar"><div class="score-bar-fill" style="width:94%;background:linear-gradient(90deg,var(--palm),var(--cyan));"></div></div>
+        </div>
+        <span style="min-width:32px;font-family:'SF Mono',monospace;font-weight:700;color:var(--palm);font-size:14px;">94</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+        <span style="min-width:70px;font-weight:600;color:var(--text-dim);font-size:14px;">Rust</span>
+        <div style="flex:1;">
+          <div class="score-bar"><div class="score-bar-fill" style="width:77%;background:linear-gradient(90deg,var(--orange),var(--yellow));"></div></div>
+        </div>
+        <span style="min-width:32px;font-family:'SF Mono',monospace;font-weight:700;color:var(--yellow);font-size:14px;">77</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+        <span style="min-width:70px;font-weight:600;color:var(--text-dim);font-size:14px;">Zig</span>
+        <div style="flex:1;">
+          <div class="score-bar"><div class="score-bar-fill" style="width:68%;background:linear-gradient(90deg,var(--orange),var(--red));"></div></div>
+        </div>
+        <span style="min-width:32px;font-family:'SF Mono',monospace;font-weight:700;color:var(--orange);font-size:14px;">68</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+        <span style="min-width:70px;font-weight:600;color:var(--text-muted);font-size:14px;">TS/Bun</span>
+        <div style="flex:1;">
+          <div class="score-bar"><div class="score-bar-fill" style="width:54%;background:var(--text-muted);"></div></div>
+        </div>
+        <span style="min-width:32px;font-family:'SF Mono',monospace;font-weight:700;color:var(--text-muted);font-size:14px;">54</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;">
+        <span style="min-width:70px;font-weight:600;color:var(--text-muted);font-size:14px;">Python</span>
+        <div style="flex:1;">
+          <div class="score-bar"><div class="score-bar-fill" style="width:47%;background:var(--text-muted);"></div></div>
+        </div>
+        <span style="min-width:32px;font-family:'SF Mono',monospace;font-weight:700;color:var(--text-muted);font-size:14px;">47</span>
+      </div>
+    </div>
+
+    <!-- Verdict -->
+    <div class="verdict">
+      <h3>&#10004; Verdict: Stay with Go</h3>
+      <ul>
+        <li><strong>Distribution is king</strong> for a tool manager &mdash; single static binary, zero runtime dependencies, instant startup</li>
+        <li><strong>Charmbracelet ecosystem</strong> (bubbletea, lipgloss, bubbles) is unmatched for terminal UIs &mdash; critical for <code>tamr matrix</code></li>
+        <li><strong>Goroutines</strong> make parallel tool installation and proxy operations trivial to implement</li>
+        <li><strong>Remarkably lean</strong> &mdash; only 3 dependencies today (cobra, fatih/color, BurntSushi/toml)</li>
+        <li><strong>Cross-compilation</strong> to macOS/Linux/Windows with a single <code>GOOS</code> flag &mdash; no linker headaches</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 4: ARCHITECTURE DESIGN               -->
+  <!-- ============================================ -->
+  <section id="arch">
+    <div class="section-head">
+      <span class="sec-num">Section 04</span>
+      <h2>Architecture Design</h2>
+      <p>Five-layer evolution plan from current v0.3.0 to the full Matrix Hub at v1.0.</p>
+    </div>
+
+    <!-- Architecture Layers -->
+    <div class="layer">
+      <div class="layer-num">1</div>
+      <div style="flex:1;">
+        <div class="layer-content">
+          <h4>Registry + Installer + Vault + Run <span class="layer-ver">v0.3.0 (current)</span></h4>
+          <p>Tool registry (47 embedded TOML), multi-backend installer (brew/pip/npm/go/cargo/binary), macOS Keychain vault, <code>tamr run</code> with env injection</p>
+        </div>
+      </div>
+      <span class="badge badge-done">SHIPPED</span>
+    </div>
+
+    <div class="layer">
+      <div class="layer-num">2</div>
+      <div style="flex:1;">
+        <div class="layer-content">
+          <h4>State + Config Hierarchy + Plugins + Hooks <span class="layer-ver">v0.4.0</span></h4>
+          <p>Track installed state, global/workspace/project config hierarchy, external plugin registry, pre/post lifecycle hooks</p>
+        </div>
+      </div>
+      <span class="badge badge-planned">NEXT</span>
+    </div>
+
+    <div class="layer">
+      <div class="layer-num">3</div>
+      <div style="flex:1;">
+        <div class="layer-content">
+          <h4>Workspace + Context + Shell + History <span class="layer-ver">v0.5.0</span></h4>
+          <p>Project-level workspaces, context transpilation, <code>eval $(tamr env)</code>, unified session history</p>
+        </div>
+      </div>
+      <span class="badge badge-planned">PLANNED</span>
+    </div>
+
+    <div class="layer">
+      <div class="layer-num">4</div>
+      <div style="flex:1;">
+        <div class="layer-content">
+          <h4>Proxy + Dashboard (TUI) + Cost Tracking <span class="layer-ver">v0.6.0</span></h4>
+          <p>Local HTTP proxy intercepting LLM API calls, bubbletea terminal dashboard, real-time cost estimation</p>
+        </div>
+      </div>
+      <span class="badge badge-planned">PLANNED</span>
+    </div>
+
+    <div class="layer">
+      <div class="layer-num">5</div>
+      <div style="flex:1;">
+        <div class="layer-content">
+          <h4>Budget + Models + Benchmark + Sync <span class="layer-ver">v1.0.0</span></h4>
+          <p>Spending enforcement, unified model management, cross-tool benchmarking, cross-machine sync via git</p>
+        </div>
+      </div>
+      <span class="badge badge-planned">PLANNED</span>
+    </div>
+
+    <!-- Architecture Patterns -->
+    <h3 style="margin-top:40px;margin-bottom:20px;color:#fff;font-size:18px;">Key Architecture Patterns from Research</h3>
+    <div class="grid-2">
+      <div class="glass">
+        <h4 style="color:var(--cyan);font-size:14px;font-family:'SF Mono',monospace;margin-bottom:8px;">mise</h4>
+        <p style="font-size:13px;color:var(--text-dim);">Hybrid embedded + external registry. Config hierarchy (global &rarr; workspace &rarr; project). Lock files for reproducibility. <strong style="color:var(--palm);">Adopted</strong> &mdash; config hierarchy pattern.</p>
+      </div>
+      <div class="glass">
+        <h4 style="color:var(--cyan);font-size:14px;font-family:'SF Mono',monospace;margin-bottom:8px;">proto</h4>
+        <p style="font-size:13px;color:var(--text-dim);">WASM plugins for extensibility. <strong style="color:var(--orange);">Not adopted</strong> &mdash; TOML schema plugins cover 97% of tamr use cases without WASM complexity.</p>
+      </div>
+      <div class="glass">
+        <h4 style="color:var(--cyan);font-size:14px;font-family:'SF Mono',monospace;margin-bottom:8px;">volta</h4>
+        <p style="font-size:13px;color:var(--text-dim);">Shim-based version management. <strong style="color:var(--orange);">Not needed</strong> &mdash; tamr does not manage tool versions, only installs and runs.</p>
+      </div>
+      <div class="glass">
+        <h4 style="color:var(--cyan);font-size:14px;font-family:'SF Mono',monospace;margin-bottom:8px;">homebrew</h4>
+        <p style="font-size:13px;color:var(--text-dim);">Tap system for community registries. Bottle system for pre-built binaries. <strong style="color:var(--palm);">Adopted</strong> &mdash; plugin registry pattern.</p>
+      </div>
+    </div>
+
+    <!-- New Internal Packages -->
+    <h3 style="margin-top:40px;margin-bottom:20px;color:#fff;font-size:18px;">New Internal Packages</h3>
+    <div class="glass" style="overflow-x:auto;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Package</th>
+            <th>Purpose</th>
+            <th>Target</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code style="color:var(--palm);">internal/state/</code></td><td>Tracks installed tools (version, backend, path, timestamps)</td><td>v0.4</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/hooks/</code></td><td>Pre/post lifecycle hooks (shell commands)</td><td>v0.4</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/parallel/</code></td><td>errgroup + mpb for concurrent operations</td><td>v0.5</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/context/</code></td><td>Context transpilation (.tamr/context.md &rarr; CLAUDE.md, .aider.conf, .cursorrules)</td><td>v0.4</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/workspace/</code></td><td>Project-level .tamr/workspace.toml</td><td>v0.4</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/proxy/</code></td><td>Local LLM API proxy for cost tracking</td><td>v0.6</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/budget/</code></td><td>Spending controls and alerts</td><td>v0.7</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/models/</code></td><td>Unified local model management</td><td>v0.6</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/session/</code></td><td>Enhanced session/history tracking</td><td>v0.5</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/tui/</code></td><td>bubbletea-based dashboard</td><td>v0.6</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 5: GAP ANALYSIS                      -->
+  <!-- ============================================ -->
+  <section id="gaps">
+    <div class="section-head">
+      <span class="sec-num">Section 05</span>
+      <h2>Gap Analysis</h2>
+      <p>Eight critical gaps in the AI tool ecosystem that tamr is uniquely positioned to fill.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="gap-card sev-high">
+        <h4><span class="badge badge-high">HIGH</span> Key Sprawl</h4>
+        <p>API keys scattered across .bashrc, .env, .env.local, macOS Keychain, 1Password. No single source of truth. Developers waste time managing the same keys in 5+ places.</p>
+      </div>
+
+      <div class="gap-card sev-critical">
+        <h4><span class="badge badge-critical">CRITICAL</span> Tool Fragmentation</h4>
+        <p>Every tool has its own config format: CLAUDE.md, .aider.conf.yml, .cursorrules, codex.md, GEMINI.md. No "write once, run everywhere" for project context.</p>
+      </div>
+
+      <div class="gap-card sev-high">
+        <h4><span class="badge badge-high">HIGH</span> Cost Visibility</h4>
+        <p>Each AI provider has its own billing dashboard (Anthropic Console, OpenAI Platform, Google Cloud). No unified real-time cost view across all tools and providers.</p>
+      </div>
+
+      <div class="gap-card sev-medium">
+        <h4><span class="badge badge-medium">MEDIUM</span> Model Confusion</h4>
+        <p>Each tool defaults to different models (Claude Sonnet, GPT-4o, Gemini Flash). No central way to declare "use claude-opus-4-6 everywhere" for a project.</p>
+      </div>
+
+      <div class="gap-card sev-medium">
+        <h4><span class="badge badge-medium">MEDIUM</span> No Unified History</h4>
+        <p>Claude Code sessions in ~/.claude/, Aider logs in git history, Cursor in its SQLite DB. No cross-tool session visibility or searchable history.</p>
+      </div>
+
+      <div class="gap-card sev-high">
+        <h4><span class="badge badge-high">HIGH</span> No Project-Level Config</h4>
+        <p>No way to codify "this project uses Claude Code + Aider + Codex with these specific settings, models, and key bindings." Every new team member starts from scratch.</p>
+      </div>
+
+      <div class="gap-card sev-high">
+        <h4><span class="badge badge-high">HIGH</span> Enterprise Deployment</h4>
+        <p>No proxy support, no budget limits, no centralized governance for AI CLI tools. Enterprise teams cannot enforce spending policies or audit tool usage.</p>
+      </div>
+
+      <div class="gap-card sev-medium">
+        <h4><span class="badge badge-medium">MEDIUM</span> No Benchmarking</h4>
+        <p>No standardized way to compare coding agents on your own codebase. Which tool completes a refactoring task faster, cheaper, and more accurately? Nobody knows.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 6: MATRIX HUB FEATURES               -->
+  <!-- ============================================ -->
+  <section id="features">
+    <div class="section-head">
+      <span class="sec-num">Section 06</span>
+      <h2>Matrix Hub Features</h2>
+      <p>Eight features that transform tamr from a tool installer into a comprehensive AI development control plane.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="feat-card">
+        <div class="feat-head">
+          <h4>tamr workspace</h4>
+          <div class="feat-meta">
+            <span class="badge badge-planned">v0.4</span>
+            <span class="badge badge-low">LOW EFFORT</span>
+          </div>
+        </div>
+        <p>Project-level <code>.tamr/workspace.toml</code> defining required tools, preferred models, key references, and team settings. Commit it to git. New team members run <code>tamr install</code> and get the full AI toolkit configured.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-head">
+          <h4>tamr context</h4>
+          <div class="feat-meta">
+            <span class="badge badge-planned">v0.4</span>
+            <span class="badge badge-medium">MED EFFORT</span>
+          </div>
+        </div>
+        <p>Single <code>.tamr/context.md</code> transpiled to CLAUDE.md, .aider.conf.yml, .cursorrules, codex.md, and more. Write your project context once &mdash; tamr generates the tool-specific config files. "Write once, configure everywhere."</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-head">
+          <h4>tamr history</h4>
+          <div class="feat-meta">
+            <span class="badge badge-planned">v0.5</span>
+            <span class="badge badge-low">LOW EFFORT</span>
+          </div>
+        </div>
+        <p>Unified session log capturing tool name, project, duration, token usage, and estimated cost. Searchable and filterable. Finally answer: "How much did I spend on AI coding this week?"</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-head">
+          <h4>Shell Integration</h4>
+          <div class="feat-meta">
+            <span class="badge badge-planned">v0.5</span>
+            <span class="badge badge-low">LOW EFFORT</span>
+          </div>
+        </div>
+        <p><code>eval $(tamr env)</code> exports all API keys as environment variables. No more <code>tamr run</code> wrapper required. Add it to .zshrc and every terminal session has keys available.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-head">
+          <h4>tamr proxy</h4>
+          <div class="feat-meta">
+            <span class="badge badge-planned">v0.6</span>
+            <span class="badge badge-hard">HARD</span>
+          </div>
+        </div>
+        <p>Local HTTP proxy intercepting all LLM API calls. Logs every request/response, calculates token costs in real-time, enables request routing and caching. THE foundational feature for cost visibility and enterprise governance.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-head">
+          <h4>tamr matrix</h4>
+          <div class="feat-meta">
+            <span class="badge badge-planned">v0.6</span>
+            <span class="badge badge-medium">MED EFFORT</span>
+          </div>
+        </div>
+        <p>Terminal dashboard built with bubbletea TUI. Shows installed tools with status, active sessions, real-time cost counters, model usage, and key health. Like htop for your AI development toolkit.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-head">
+          <h4>tamr budget</h4>
+          <div class="feat-meta">
+            <span class="badge badge-planned">v0.7</span>
+            <span class="badge badge-hard">HARD</span>
+          </div>
+        </div>
+        <p>Spending limits per provider, per tool, per project. Configurable alerts at thresholds (80%, 90%, 100%). Hard enforcement via the proxy layer. Essential for teams and enterprises managing AI spend.</p>
+      </div>
+
+      <div class="feat-card">
+        <div class="feat-head">
+          <h4>tamr benchmark</h4>
+          <div class="feat-meta">
+            <span class="badge badge-planned">v1.0</span>
+            <span class="badge badge-hard">HARD</span>
+          </div>
+        </div>
+        <p>Run multiple coding agents on the same task. Compare completion time, token usage, cost, and output quality. Generates a report showing which tool performs best for your specific codebase and use case.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 7: OFFLINE MODE                       -->
+  <!-- ============================================ -->
+  <section id="offline">
+    <div class="section-head">
+      <span class="sec-num">Section 07</span>
+      <h2>Offline Mode Design</h2>
+      <p>Full functionality without network access. Air-gapped deployments, flight mode, and local-first operation.</p>
+    </div>
+
+    <div class="glass">
+      <ul class="feature-list">
+        <li>
+          <span class="fl-icon">&#9670;</span>
+          <div><strong><code>--offline</code> global persistent flag</strong> &mdash; Set on the root command. Persists across sessions. All registry, search, and info commands work offline via embedded TOML (<code>go:embed</code>).</div>
+        </li>
+        <li>
+          <span class="fl-icon">&#9670;</span>
+          <div><strong><code>tamr fetch &lt;tool&gt;</code></strong> &mdash; Pre-download packages to local cache at <code>~/.cache/tamr/</code>. Supports all backends (brew bottles, pip wheels, npm tarballs, Go binaries). Idempotent.</div>
+        </li>
+        <li>
+          <span class="fl-icon">&#9670;</span>
+          <div><strong><code>tamr bundle export/import</code></strong> &mdash; Create portable archives for air-gapped transfer. Bundles include tools, model weights, and encrypted key references. USB-transferable.</div>
+        </li>
+        <li>
+          <span class="fl-icon">&#9670;</span>
+          <div><strong>Network auto-detection</strong> &mdash; Graceful degradation when offline is detected. Falls back to cached registry and local packages. Clear indicators in CLI output when operating in degraded mode.</div>
+        </li>
+        <li>
+          <span class="fl-icon">&#9670;</span>
+          <div><strong><code>tamr models fetch/export/import</code></strong> &mdash; Manage LLM model files for local runners. Fetch GGUF/MLX models while online. Export to bundle for offline use. Integrates with Ollama and llama.cpp.</div>
+        </li>
+        <li>
+          <span class="fl-icon">&#9670;</span>
+          <div><strong>Embedded registry via go:embed</strong> &mdash; All 130+ tool definitions compiled into the binary. <code>tamr search</code>, <code>tamr info</code>, and <code>tamr list</code> work with zero network access, always.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 8: PARALLEL EXECUTION                 -->
+  <!-- ============================================ -->
+  <section id="parallel">
+    <div class="section-head">
+      <span class="sec-num">Section 08</span>
+      <h2>Parallel Execution</h2>
+      <p>Concurrent tool installation and operations with progress visualization. The "badass mode."</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="glass">
+        <h4 style="color:#fff;font-size:15px;margin-bottom:12px;">Implementation</h4>
+        <ul class="feature-list" style="padding:0;">
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--cyan);">golang.org/x/sync/errgroup</code> with <code>SetLimit</code> for bounded concurrency</div></li>
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--cyan);">github.com/vbauerster/mpb/v8</code> (Multi Progress Bar) for parallel visualization</div></li>
+          <li><span class="fl-icon">&#9670;</span><div>Backend-aware parallelism: serialize within same backend (brew), parallelize across different backends</div></li>
+          <li><span class="fl-icon">&#9670;</span><div>Default concurrency: <strong>4</strong>, configurable via <code>--concurrency N</code> or <code>config.toml</code></div></li>
+        </ul>
+      </div>
+
+      <div class="glass">
+        <h4 style="color:#fff;font-size:15px;margin-bottom:12px;">Applies To</h4>
+        <ul class="feature-list" style="padding:0;">
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">tamr install a b c</code> &mdash; Install multiple tools concurrently</div></li>
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">tamr update --all</code> &mdash; Update all installed tools in parallel</div></li>
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">tamr doctor</code> &mdash; Check all tool health concurrently</div></li>
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">tamr fetch --all</code> &mdash; Pre-download all packages for offline use</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Terminal Visualization -->
+    <div class="terminal">
+      <div class="terminal-bar">
+        <span class="terminal-dot r"></span>
+        <span class="terminal-dot y"></span>
+        <span class="terminal-dot g"></span>
+        <span>tamr install claude-code aider ollama fabric</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-spin">&#8987;</span> <span class="t-tool">Claude Code</span>    <span class="t-dim">installing via npm...</span></div>
+        <div><span class="t-ok">&#10003;</span> <span class="t-tool">Aider</span>          <span class="t-info">installed (pip)</span>           <span class="t-dim">12.3s</span></div>
+        <div><span class="t-spin">&#8987;</span> <span class="t-tool">Ollama</span>         <span class="t-dim">installing via brew...</span></div>
+        <div><span class="t-ok">&#10003;</span> <span class="t-tool">Fabric</span>         <span class="t-info">installed (go)</span>             <span class="t-dim">8.1s</span></div>
+        <br>
+        <div><span class="t-ok">&#10003;</span> <span class="t-tool">Claude Code</span>    <span class="t-info">installed (npm)</span>            <span class="t-dim">18.7s</span></div>
+        <div><span class="t-ok">&#10003;</span> <span class="t-tool">Ollama</span>         <span class="t-info">installed (brew)</span>           <span class="t-dim">22.4s</span></div>
+        <br>
+        <div style="color:var(--palm);font-weight:600;">&#10003; 4 tools installed in 22.4s (parallel)</div>
+        <div style="color:var(--text-muted);">  Sequential would have taken ~61.5s &mdash; <span style="color:var(--palm);">2.7x faster</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 9: COMPETITIVE LANDSCAPE              -->
+  <!-- ============================================ -->
+  <section id="competitive">
+    <div class="section-head">
+      <span class="sec-num">Section 09</span>
+      <h2>Competitive Landscape</h2>
+      <p>Feature comparison against adjacent tools. No direct competitor exists.</p>
+    </div>
+
+    <div class="glass" style="overflow-x:auto;">
+      <table class="data-table comp-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="tamr-col">tamr</th>
+            <th>Ruler</th>
+            <th>LNAI</th>
+            <th>coder-config</th>
+            <th>LiteLLM</th>
+            <th>Homebrew</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Package Management</td>
+            <td class="tamr-col"><span class="ck">&#10003;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>API Key Vault</td>
+            <td class="tamr-col"><span class="ck">&#10003;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+          </tr>
+          <tr>
+            <td>Unified Config</td>
+            <td class="tamr-col"><span class="cp">PLANNED</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+          </tr>
+          <tr>
+            <td>Cost Tracking</td>
+            <td class="tamr-col"><span class="cp">PLANNED</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+          </tr>
+          <tr>
+            <td>Local Proxy</td>
+            <td class="tamr-col"><span class="cp">PLANNED</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+          </tr>
+          <tr>
+            <td>TUI Dashboard</td>
+            <td class="tamr-col"><span class="cp">PLANNED</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+          </tr>
+          <tr>
+            <td>AI-Specific</td>
+            <td class="tamr-col"><span class="ck">&#10003;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+          </tr>
+          <tr>
+            <td>Cross-platform Binary</td>
+            <td class="tamr-col"><span class="ck">&#10003;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="cx">&mdash;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+            <td><span class="ck">&#10003;</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="verdict" style="margin-top:28px;">
+      <h3>&#9670; Key Insight</h3>
+      <ul>
+        <li>No tool combines package management + vault + config + cost tracking</li>
+        <li>Ruler/LNAI/coder-config solve config only &mdash; no installation, no keys, no costs</li>
+        <li>LiteLLM is the closest to the proxy/cost vision but is Python-only and not a package manager</li>
+        <li>Homebrew is a general package manager with zero AI awareness</li>
+        <li>tamr is building in a greenfield &mdash; first-mover advantage is real</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================================ -->
+  <!-- SECTION 10: IMPLEMENTATION ROADMAP            -->
+  <!-- ============================================ -->
+  <section id="roadmap">
+    <div class="section-head">
+      <span class="sec-num">Section 10</span>
+      <h2>Implementation Roadmap</h2>
+      <p>Five releases over six months. From tool manager to full AI development control plane.</p>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="roadmap-dot active"></div>
+      <div class="roadmap-ver">v0.4.0</div>
+      <div class="roadmap-date">March 2026 &mdash; Foundation</div>
+      <ul class="roadmap-tasks">
+        <li>State tracking (<code>internal/state/</code>) &mdash; persist installed tools, versions, paths, timestamps</li>
+        <li>Config hierarchy &mdash; <code>.tamr.toml</code> project files with global/workspace/project precedence</li>
+        <li>External plugin registry &mdash; <code>~/.config/tamr/plugins/*.toml</code> for community tools</li>
+        <li>Lifecycle hooks &mdash; pre/post install, pre/post run shell commands</li>
+        <li><code>tamr workspace</code> &mdash; project-level workspace.toml for team tooling</li>
+        <li><code>tamr context</code> &mdash; transpile context.md to CLAUDE.md, .aider.conf, .cursorrules</li>
+      </ul>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="roadmap-dot"></div>
+      <div class="roadmap-ver">v0.5.0</div>
+      <div class="roadmap-date">April 2026 &mdash; Developer Experience</div>
+      <ul class="roadmap-tasks">
+        <li>Enhanced history/session tracking &mdash; unified log with search and filters</li>
+        <li>Shell integration &mdash; <code>eval $(tamr env)</code> for direct env export</li>
+        <li>Offline mode &mdash; <code>--offline</code> flag, <code>tamr fetch</code>, embedded registry</li>
+        <li>Parallel execution &mdash; errgroup + mpb for concurrent installs</li>
+        <li><code>tamr outdated</code> &mdash; check for newer versions of installed tools</li>
+      </ul>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="roadmap-dot"></div>
+      <div class="roadmap-ver">v0.6.0</div>
+      <div class="roadmap-date">May 2026 &mdash; Intelligence Layer</div>
+      <ul class="roadmap-tasks">
+        <li><code>tamr proxy</code> &mdash; local HTTP proxy intercepting LLM API calls</li>
+        <li><code>tamr matrix</code> &mdash; bubbletea TUI dashboard for tools, sessions, costs</li>
+        <li>Cost estimation engine &mdash; real-time token counting and pricing</li>
+        <li><code>tamr models</code> &mdash; unified local model management (fetch, list, remove)</li>
+      </ul>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="roadmap-dot"></div>
+      <div class="roadmap-ver">v0.7.0</div>
+      <div class="roadmap-date">June 2026 &mdash; Enterprise</div>
+      <ul class="roadmap-tasks">
+        <li><code>tamr budget</code> &mdash; spending controls with alerts and hard enforcement</li>
+        <li><code>tamr bundle export/import</code> &mdash; portable archives for air-gapped environments</li>
+        <li><code>tamr registry add &lt;url&gt;</code> &mdash; remote community registries</li>
+      </ul>
+    </div>
+
+    <div class="roadmap-item">
+      <div class="roadmap-dot"></div>
+      <div class="roadmap-ver">v1.0.0</div>
+      <div class="roadmap-date">August 2026 &mdash; Matrix Hub</div>
+      <ul class="roadmap-tasks">
+        <li><code>tamr benchmark</code> &mdash; multi-tool comparison on same tasks</li>
+        <li><code>tamr sync</code> &mdash; cross-machine config synchronization via git</li>
+        <li>goreleaser CI pipeline &mdash; automated releases for macOS, Linux, Windows</li>
+        <li>Homebrew tap &mdash; <code>brew install msalah0e/tap/tamr</code></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <div class="footer">
+    <div class="footer-brand">&#127796; tamr &mdash; The AI Tool Matrix Hub</div>
+    <p>Generated by Claude Opus 4.6 &middot; February 16, 2026 &middot; Research based on 130+ tools, 50+ sources</p>
+    <p style="margin-top:8px;">github.com/msalah0e/tamr</p>
+  </div>
+
+</div>
+
+<!-- ── Scroll-based TOC highlight ── -->
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const tocLinks = document.querySelectorAll('.toc a');
+
+  function highlightToc() {
+    let current = '';
+    sections.forEach(sec => {
+      const top = sec.offsetTop - 100;
+      if (window.scrollY >= top) current = sec.id;
+    });
+    tocLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  }
+
+  window.addEventListener('scroll', highlightToc, { passive: true });
+  highlightToc();
+
+  // Animate elements on scroll
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('animate');
+        entry.target.style.opacity = '1';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.cat-card, .gap-card, .feat-card, .layer').forEach(el => {
+    observer.observe(el);
+  });
+</script>
+
+</body>
+</html>
