@@ -1,0 +1,54 @@
+package cmd
+
+import (
+	"embed"
+
+	"github.com/msalah0e/tamr/internal/registry"
+	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/spf13/cobra"
+)
+
+var (
+	reg        *registry.Registry
+	registryFS embed.FS
+)
+
+// SetRegistryFS sets the embedded filesystem containing TOML registry files.
+func SetRegistryFS(fs embed.FS) {
+	registryFS = fs
+}
+
+func loadRegistry() *registry.Registry {
+	if reg != nil {
+		return reg
+	}
+	r, err := registry.LoadFromFS(registryFS, "registry")
+	if err != nil {
+		ui.Bad.Printf("tamr: failed to load registry: %v\n", err)
+		return registry.New(nil)
+	}
+	reg = r
+	return reg
+}
+
+func registerAICommands() {
+	aiCmd := &cobra.Command{
+		Use:   "ai",
+		Short: "Manage AI CLI tools",
+		Long:  ui.Brand.Sprint(ui.Palm+" tamr ai") + " — discover, install, and manage AI CLI tools",
+	}
+
+	aiCmd.AddCommand(
+		aiInstallCmd(),
+		aiRemoveCmd(),
+		aiListCmd(),
+		aiSearchCmd(),
+		aiInfoCmd(),
+		aiDoctorCmd(),
+		aiKeysCmd(),
+		aiDiscoverCmd(),
+		aiStatsCmd(),
+	)
+
+	rootCmd.AddCommand(aiCmd)
+}

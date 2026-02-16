@@ -1,0 +1,153 @@
+[[tools]]
+name = "fabric"
+display_name = "Fabric"
+description = "Modular AI framework with crowdsourced prompt patterns"
+category = "agents"
+tags = ["ai", "agents", "prompts", "framework"]
+homepage = "https://github.com/danielmiessler/fabric"
+repo = "https://github.com/danielmiessler/fabric"
+
+[tools.install]
+go = "github.com/danielmiessler/fabric@latest"
+pip = "fabric-ai"
+
+[tools.install.verify]
+command = "fabric --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "open-interpreter"
+display_name = "Open Interpreter"
+description = "Natural language interface for computer control"
+category = "agents"
+tags = ["ai", "agents", "interpreter", "code-execution"]
+homepage = "https://openinterpreter.com"
+repo = "https://github.com/OpenInterpreter/open-interpreter"
+
+[tools.install]
+pip = "open-interpreter"
+
+[tools.install.verify]
+command = "interpreter --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+optional = ["ANTHROPIC_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "shell-gpt"
+display_name = "ShellGPT"
+description = "AI-powered command-line productivity tool"
+category = "agents"
+tags = ["ai", "agents", "shell", "productivity"]
+homepage = "https://github.com/TheR1D/shell_gpt"
+repo = "https://github.com/TheR1D/shell_gpt"
+
+[tools.install]
+pip = "shell-gpt"
+
+[tools.install.verify]
+command = "sgpt --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "ai-shell"
+display_name = "AI Shell"
+description = "Natural language to shell command converter"
+category = "agents"
+tags = ["ai", "agents", "shell", "natural-language"]
+homepage = "https://github.com/BuilderIO/ai-shell"
+repo = "https://github.com/BuilderIO/ai-shell"
+
+[tools.install]
+npm = "@builder.io/ai-shell"
+
+[tools.install.verify]
+command = "ai --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "crewai"
+display_name = "CrewAI"
+description = "Multi-agent orchestration framework"
+category = "agents"
+tags = ["ai", "agents", "multi-agent", "orchestration"]
+homepage = "https://www.crewai.com"
+repo = "https://github.com/crewAIInc/crewAI"
+
+[tools.install]
+pip = "crewai"
+
+[tools.install.verify]
+command = "crewai version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "langchain-cli"
+display_name = "LangChain CLI"
+description = "LangChain project scaffolding and deployment"
+category = "agents"
+tags = ["ai", "agents", "langchain", "framework"]
+homepage = "https://python.langchain.com"
+repo = "https://github.com/langchain-ai/langchain"
+
+[tools.install]
+pip = "langchain-cli"
+
+[tools.install.verify]
+command = "langchain --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "LANGCHAIN_API_KEY"]
+
+[[tools]]
+name = "autogen"
+display_name = "AutoGen"
+description = "Microsoft's multi-agent conversation framework"
+category = "agents"
+tags = ["ai", "agents", "microsoft", "multi-agent"]
+homepage = "https://microsoft.github.io/autogen"
+repo = "https://github.com/microsoft/autogen"
+
+[tools.install]
+pip = "autogen-agentchat"
+
+[tools.install.verify]
+command = "python3 -c 'import autogen; print(autogen.__version__)'"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "goose"
+display_name = "Goose"
+description = "Block's autonomous coding agent"
+category = "agents"
+tags = ["ai", "agents", "coding", "autonomous"]
+homepage = "https://github.com/block/goose"
+repo = "https://github.com/block/goose"
+
+[tools.install]
+brew = "goose"
+
+[tools.install.verify]
+command = "goose --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]

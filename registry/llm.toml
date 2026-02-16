@@ -1,0 +1,144 @@
+[[tools]]
+name = "ollama"
+display_name = "Ollama"
+description = "Run LLMs locally — Llama, Mistral, Gemma, and more"
+category = "llm"
+tags = ["ai", "llm", "local", "inference"]
+homepage = "https://ollama.ai"
+repo = "https://github.com/ollama/ollama"
+
+[tools.install]
+brew = "ollama"
+
+[tools.install.verify]
+command = "ollama --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "llm"
+display_name = "LLM"
+description = "Multi-provider LLM CLI by Simon Willison"
+category = "llm"
+tags = ["ai", "llm", "cli", "multi-provider"]
+homepage = "https://llm.datasette.io"
+repo = "https://github.com/simonw/llm"
+
+[tools.install]
+brew = "llm"
+pip = "llm"
+
+[tools.install.verify]
+command = "llm --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "llamafile"
+display_name = "Llamafile"
+description = "Single-file LLM runner from Mozilla"
+category = "llm"
+tags = ["ai", "llm", "local", "portable"]
+homepage = "https://github.com/Mozilla-Ocho/llamafile"
+repo = "https://github.com/Mozilla-Ocho/llamafile"
+
+[tools.install]
+brew = "llamafile"
+
+[tools.install.verify]
+command = "llamafile --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "localai"
+display_name = "LocalAI"
+description = "Self-hosted OpenAI-compatible API for local inference"
+category = "llm"
+tags = ["ai", "llm", "local", "api", "openai-compatible"]
+homepage = "https://localai.io"
+repo = "https://github.com/mudler/LocalAI"
+
+[tools.install]
+brew = "localai"
+
+[tools.install.verify]
+command = "local-ai --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "gpt4all"
+display_name = "GPT4All"
+description = "Run local LLMs on consumer hardware"
+category = "llm"
+tags = ["ai", "llm", "local", "desktop"]
+homepage = "https://gpt4all.io"
+repo = "https://github.com/nomic-ai/gpt4all"
+
+[tools.install]
+pip = "gpt4all"
+
+[tools.install.verify]
+command = "python3 -c 'import gpt4all; print(gpt4all.__version__)'"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "jan"
+display_name = "Jan"
+description = "Open-source local-first AI assistant"
+category = "llm"
+tags = ["ai", "llm", "local", "desktop", "open-source"]
+homepage = "https://jan.ai"
+repo = "https://github.com/janhq/jan"
+
+[tools.install]
+brew = "jan"
+
+[tools.install.verify]
+command = "jan --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "msty"
+display_name = "Msty"
+description = "Run and manage LLMs locally with a sleek UI"
+category = "llm"
+tags = ["ai", "llm", "local", "desktop"]
+homepage = "https://msty.app"
+
+[tools.install]
+brew = "msty"
+
+[tools.install.verify]
+command = "msty --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "openrouter"
+display_name = "OpenRouter CLI"
+description = "Unified API gateway for 100+ LLM models"
+category = "llm"
+tags = ["ai", "llm", "api", "gateway"]
+homepage = "https://openrouter.ai"
+
+[tools.install]
+pip = "openrouter"
+
+[tools.install.verify]
+command = "python3 -c 'import openrouter; print(\"ok\")'"
+
+[tools.keys]
+required = ["OPENROUTER_API_KEY"]
+env_prefix = "OPENROUTER"

@@ -1,0 +1,152 @@
+[[tools]]
+name = "claude-code"
+display_name = "Claude Code"
+description = "Anthropic's AI coding agent for the terminal"
+category = "coding"
+tags = ["ai", "coding", "agent", "anthropic"]
+homepage = "https://claude.ai/claude-code"
+repo = "https://github.com/anthropics/claude-code"
+
+[tools.install]
+npm = "@anthropic-ai/claude-code"
+
+[tools.install.verify]
+command = "claude --version"
+
+[tools.keys]
+required = ["ANTHROPIC_API_KEY"]
+env_prefix = "ANTHROPIC"
+
+[[tools]]
+name = "aider"
+display_name = "Aider"
+description = "Git-native AI pair programming in the terminal"
+category = "coding"
+tags = ["ai", "coding", "git", "pair-programming"]
+homepage = "https://aider.chat"
+repo = "https://github.com/Aider-AI/aider"
+
+[tools.install]
+pip = "aider-chat"
+
+[tools.install.verify]
+command = "aider --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+optional = ["ANTHROPIC_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "copilot-cli"
+display_name = "GitHub Copilot CLI"
+description = "GitHub Copilot in the command line"
+category = "coding"
+tags = ["ai", "coding", "github", "copilot"]
+homepage = "https://github.com/features/copilot"
+repo = "https://github.com/github/gh-copilot"
+
+[tools.install]
+brew = "gh"
+
+[tools.install.verify]
+command = "gh copilot --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "cline"
+display_name = "Cline"
+description = "Autonomous coding agent for VS Code"
+category = "coding"
+tags = ["ai", "coding", "agent", "vscode"]
+homepage = "https://cline.bot"
+repo = "https://github.com/cline/cline"
+
+[tools.install]
+npm = "@anthropic-ai/claude-code"
+
+[tools.install.verify]
+command = "cline --version"
+
+[tools.keys]
+required = ["ANTHROPIC_API_KEY"]
+optional = ["OPENAI_API_KEY"]
+env_prefix = "ANTHROPIC"
+
+[[tools]]
+name = "continue"
+display_name = "Continue"
+description = "Open-source AI code assistant for IDEs"
+category = "coding"
+tags = ["ai", "coding", "ide", "open-source"]
+homepage = "https://continue.dev"
+repo = "https://github.com/continuedev/continue"
+
+[tools.install]
+pip = "continuedev"
+
+[tools.install.verify]
+command = "python3 -c 'import continuedev; print(continuedev.__version__)'"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "cody"
+display_name = "Cody"
+description = "Sourcegraph's AI coding assistant"
+category = "coding"
+tags = ["ai", "coding", "sourcegraph"]
+homepage = "https://sourcegraph.com/cody"
+repo = "https://github.com/sourcegraph/cody"
+
+[tools.install]
+npm = "@sourcegraph/cody"
+
+[tools.install.verify]
+command = "cody version"
+
+[tools.keys]
+required = ["SRC_ACCESS_TOKEN"]
+env_prefix = "SRC"
+
+[[tools]]
+name = "qodo"
+display_name = "Qodo"
+description = "AI-powered code quality and testing"
+category = "coding"
+tags = ["ai", "coding", "testing", "quality"]
+homepage = "https://www.qodo.ai"
+repo = "https://github.com/Codium-ai/cover-agent"
+
+[tools.install]
+pip = "cover-agent"
+
+[tools.install.verify]
+command = "cover-agent --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "codex"
+display_name = "OpenAI Codex CLI"
+description = "OpenAI's lightweight coding agent for the terminal"
+category = "coding"
+tags = ["ai", "coding", "agent", "openai"]
+homepage = "https://github.com/openai/codex"
+repo = "https://github.com/openai/codex"
+
+[tools.install]
+npm = "@openai/codex"
+
+[tools.install.verify]
+command = "codex --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"

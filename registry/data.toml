@@ -1,0 +1,127 @@
+[[tools]]
+name = "chromadb"
+display_name = "ChromaDB"
+description = "Open-source AI-native embedding database"
+category = "data"
+tags = ["ai", "data", "vector-db", "embeddings"]
+homepage = "https://www.trychroma.com"
+repo = "https://github.com/chroma-core/chroma"
+
+[tools.install]
+pip = "chromadb"
+
+[tools.install.verify]
+command = "chroma --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "qdrant"
+display_name = "Qdrant"
+description = "High-performance vector similarity search engine"
+category = "data"
+tags = ["ai", "data", "vector-db", "search"]
+homepage = "https://qdrant.tech"
+repo = "https://github.com/qdrant/qdrant"
+
+[tools.install]
+brew = "qdrant/tap/qdrant"
+cargo = "qdrant"
+
+[tools.install.verify]
+command = "qdrant --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "weaviate"
+display_name = "Weaviate"
+description = "AI-native vector database with semantic search"
+category = "data"
+tags = ["ai", "data", "vector-db", "semantic"]
+homepage = "https://weaviate.io"
+repo = "https://github.com/weaviate/weaviate"
+
+[tools.install]
+brew = "weaviate"
+
+[tools.install.verify]
+command = "weaviate --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "milvus"
+display_name = "Milvus"
+description = "Cloud-native vector database for scalable similarity search"
+category = "data"
+tags = ["ai", "data", "vector-db", "scalable"]
+homepage = "https://milvus.io"
+repo = "https://github.com/milvus-io/milvus"
+
+[tools.install]
+pip = "pymilvus"
+
+[tools.install.verify]
+command = "python3 -c 'import pymilvus; print(pymilvus.__version__)'"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "lance"
+display_name = "LanceDB"
+description = "Serverless vector database built on Lance format"
+category = "data"
+tags = ["ai", "data", "vector-db", "serverless"]
+homepage = "https://lancedb.com"
+repo = "https://github.com/lancedb/lancedb"
+
+[tools.install]
+pip = "lancedb"
+
+[tools.install.verify]
+command = "python3 -c 'import lancedb; print(lancedb.__version__)'"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "pgvector"
+display_name = "pgvector"
+description = "Vector similarity search extension for PostgreSQL"
+category = "data"
+tags = ["ai", "data", "vector-db", "postgresql"]
+homepage = "https://github.com/pgvector/pgvector"
+repo = "https://github.com/pgvector/pgvector"
+
+[tools.install]
+brew = "pgvector"
+
+[tools.install.verify]
+command = "brew list pgvector 2>/dev/null && echo 'installed'"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "datasette"
+display_name = "Datasette"
+description = "Explore and publish data with AI-powered queries"
+category = "data"
+tags = ["ai", "data", "sqlite", "exploration"]
+homepage = "https://datasette.io"
+repo = "https://github.com/simonw/datasette"
+
+[tools.install]
+brew = "datasette"
+pip = "datasette"
+
+[tools.install.verify]
+command = "datasette --version"
+
+[tools.keys]
+required = []

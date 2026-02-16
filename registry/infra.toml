@@ -1,0 +1,110 @@
+[[tools]]
+name = "vllm"
+display_name = "vLLM"
+description = "High-throughput LLM serving engine with PagedAttention"
+category = "infra"
+tags = ["ai", "infra", "serving", "inference"]
+homepage = "https://docs.vllm.ai"
+repo = "https://github.com/vllm-project/vllm"
+
+[tools.install]
+pip = "vllm"
+
+[tools.install.verify]
+command = "python3 -c 'import vllm; print(vllm.__version__)'"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "litellm"
+display_name = "LiteLLM"
+description = "Unified API proxy for 100+ LLM providers"
+category = "infra"
+tags = ["ai", "infra", "proxy", "api", "openai-compatible"]
+homepage = "https://litellm.ai"
+repo = "https://github.com/BerriAI/litellm"
+
+[tools.install]
+pip = "litellm"
+
+[tools.install.verify]
+command = "litellm --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "mlflow"
+display_name = "MLflow"
+description = "Open-source ML lifecycle management platform"
+category = "infra"
+tags = ["ai", "infra", "mlops", "tracking", "deployment"]
+homepage = "https://mlflow.org"
+repo = "https://github.com/mlflow/mlflow"
+
+[tools.install]
+brew = "mlflow"
+pip = "mlflow"
+
+[tools.install.verify]
+command = "mlflow --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "bentoml"
+display_name = "BentoML"
+description = "Build and deploy ML models as APIs"
+category = "infra"
+tags = ["ai", "infra", "deployment", "serving"]
+homepage = "https://bentoml.com"
+repo = "https://github.com/bentoml/BentoML"
+
+[tools.install]
+pip = "bentoml"
+
+[tools.install.verify]
+command = "bentoml --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "ray"
+display_name = "Ray"
+description = "Distributed computing framework for ML workloads"
+category = "infra"
+tags = ["ai", "infra", "distributed", "compute"]
+homepage = "https://www.ray.io"
+repo = "https://github.com/ray-project/ray"
+
+[tools.install]
+pip = "ray"
+
+[tools.install.verify]
+command = "ray --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "modal"
+display_name = "Modal"
+description = "Serverless cloud for AI and ML workloads"
+category = "infra"
+tags = ["ai", "infra", "serverless", "cloud"]
+homepage = "https://modal.com"
+
+[tools.install]
+pip = "modal"
+
+[tools.install.verify]
+command = "modal --version"
+
+[tools.keys]
+required = ["MODAL_TOKEN_ID"]
+optional = ["MODAL_TOKEN_SECRET"]
+env_prefix = "MODAL"
