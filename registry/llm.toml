@@ -47,7 +47,7 @@ homepage = "https://github.com/Mozilla-Ocho/llamafile"
 repo = "https://github.com/Mozilla-Ocho/llamafile"
 
 [tools.install]
-brew = "llamafile"
+script = "curl -fsSL -o /tmp/llamafile https://github.com/Mozilla-Ocho/llamafile/releases/latest/download/llamafile && chmod +x /tmp/llamafile && mkdir -p ~/.local/bin && mv /tmp/llamafile ~/.local/bin/llamafile"
 
 [tools.install.verify]
 command = "llamafile --version"

@@ -2,7 +2,7 @@ BINARY = palm
 INSTALL_DIR = $(HOME)/.local/bin
 VERSION = 1.5.0
 
-.PHONY: build install clean test completions build-all
+.PHONY: build install clean test test-e2e completions build-all
 
 build:
 	go build -ldflags "-X github.com/msalah0e/palm/cmd.version=$(VERSION)" -o $(BINARY) .
@@ -16,6 +16,9 @@ clean:
 
 test:
 	go test ./...
+
+test-e2e:
+	go test -tags e2e -count=1 -v -timeout 120s .
 
 completions: build
 	mkdir -p completions

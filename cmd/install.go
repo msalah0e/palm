@@ -112,8 +112,8 @@ func installParallel(reg *registry.Registry, names []string, concurrency int) {
 		t := *tool // copy
 		tasks = append(tasks, parallel.Task{
 			Name: t.DisplayName,
-			Fn: func() error {
-				return doInstall(&t)
+			Fn: func() (string, error) {
+				return doInstallQuiet(&t)
 			},
 		})
 	}
@@ -156,4 +156,21 @@ func doInstall(tool *registry.Tool) error {
 	_ = hooks.Run("post_install", tool.Name, tool.Category)
 
 	return nil
+}
+
+func doInstallQuiet(tool *registry.Tool) (string, error) {
+	_ = hooks.Run("pre_install", tool.Name, tool.Category)
+
+	output, err := installer.InstallQuiet(*tool)
+	if err != nil {
+		return output, err
+	}
+
+	backend, pkg := tool.InstallMethod()
+	dt := registry.DetectOne(*tool)
+	_ = state.Record(tool.Name, dt.Version, backend, pkg, dt.Path)
+
+	_ = hooks.Run("post_install", tool.Name, tool.Category)
+
+	return output, nil
 }

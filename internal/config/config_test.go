@@ -54,6 +54,11 @@ func TestSaveAndLoad(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", tmpDir)
 
+	// Run from tmpDir so Load() won't pick up a project-level .palm.toml
+	origDir, _ := os.Getwd()
+	os.Chdir(tmpDir)
+	defer os.Chdir(origDir)
+
 	cfg := Default()
 	cfg.Parallel.Concurrency = 8
 	cfg.Install.PreferUV = false
@@ -93,6 +98,11 @@ func TestEnsureExists(t *testing.T) {
 func TestSetupConfig(t *testing.T) {
 	tmpDir := t.TempDir()
 	t.Setenv("XDG_CONFIG_HOME", tmpDir)
+
+	// Run from tmpDir so Load() won't pick up a project-level .palm.toml
+	origDir, _ := os.Getwd()
+	os.Chdir(tmpDir)
+	defer os.Chdir(origDir)
 
 	cfg := Default()
 	if cfg.Setup.Complete {

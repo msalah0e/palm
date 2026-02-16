@@ -9,9 +9,9 @@ import (
 
 func TestRun_Success(t *testing.T) {
 	tasks := []Task{
-		{Name: "task1", Fn: func() error { return nil }},
-		{Name: "task2", Fn: func() error { return nil }},
-		{Name: "task3", Fn: func() error { return nil }},
+		{Name: "task1", Fn: func() (string, error) { return "", nil }},
+		{Name: "task2", Fn: func() (string, error) { return "", nil }},
+		{Name: "task3", Fn: func() (string, error) { return "", nil }},
 	}
 
 	results := Run(tasks, 4)
@@ -30,8 +30,8 @@ func TestRun_Success(t *testing.T) {
 
 func TestRun_WithErrors(t *testing.T) {
 	tasks := []Task{
-		{Name: "ok-task", Fn: func() error { return nil }},
-		{Name: "fail-task", Fn: func() error { return fmt.Errorf("simulated failure") }},
+		{Name: "ok-task", Fn: func() (string, error) { return "", nil }},
+		{Name: "fail-task", Fn: func() (string, error) { return "some output", fmt.Errorf("simulated failure") }},
 	}
 
 	results := Run(tasks, 4)
@@ -49,6 +49,9 @@ func TestRun_WithErrors(t *testing.T) {
 	if results[1].Err == nil {
 		t.Error("second task should have error")
 	}
+	if results[1].Output != "some output" {
+		t.Errorf("expected output %q, got %q", "some output", results[1].Output)
+	}
 }
 
 func TestRun_Concurrency(t *testing.T) {
@@ -59,7 +62,7 @@ func TestRun_Concurrency(t *testing.T) {
 	for i := range tasks {
 		tasks[i] = Task{
 			Name: fmt.Sprintf("task-%d", i),
-			Fn: func() error {
+			Fn: func() (string, error) {
 				c := atomic.AddInt64(&current, 1)
 				// Track max concurrent
 				for {
@@ -70,7 +73,7 @@ func TestRun_Concurrency(t *testing.T) {
 				}
 				time.Sleep(50 * time.Millisecond)
 				atomic.AddInt64(&current, -1)
-				return nil
+				return "", nil
 			},
 		}
 	}
@@ -88,7 +91,7 @@ func TestRun_Concurrency(t *testing.T) {
 
 func TestRun_DefaultConcurrency(t *testing.T) {
 	tasks := []Task{
-		{Name: "test", Fn: func() error { return nil }},
+		{Name: "test", Fn: func() (string, error) { return "", nil }},
 	}
 
 	// Should not panic with 0 concurrency (defaults to 4)
@@ -100,14 +103,25 @@ func TestRun_DefaultConcurrency(t *testing.T) {
 
 func TestRun_TimingTracked(t *testing.T) {
 	tasks := []Task{
-		{Name: "slow", Fn: func() error {
+		{Name: "slow", Fn: func() (string, error) {
 			time.Sleep(50 * time.Millisecond)
-			return nil
+			return "", nil
 		}},
 	}
 
 	results := Run(tasks, 1)
 	if results[0].Elapsed < 50*time.Millisecond {
 		t.Errorf("expected elapsed >= 50ms, got %v", results[0].Elapsed)
+	}
+}
+
+func TestRun_OutputCaptured(t *testing.T) {
+	tasks := []Task{
+		{Name: "with-output", Fn: func() (string, error) { return "hello world", nil }},
+	}
+
+	results := Run(tasks, 1)
+	if results[0].Output != "hello world" {
+		t.Errorf("expected output %q, got %q", "hello world", results[0].Output)
 	}
 }
