@@ -418,7 +418,7 @@ echo "📋 Compose Tests"
 echo ""
 
 OUTPUT=$(palm compose --help 2>&1)
-assert_contains "$OUTPUT" "multi-tool" "compose help shows description"
+assert_contains "$OUTPUT" "multi-step" "compose help shows description"
 assert_contains "$OUTPUT" "workflow" "compose help shows workflow alias"
 
 COMPDIR="/tmp/palm-compose-test"
@@ -445,7 +445,7 @@ echo ""
 
 OUTPUT=$(palm speedtest --help 2>&1)
 assert_contains "$OUTPUT" "speedtest" "speedtest help shows name"
-assert_contains "$OUTPUT" "benchmark" "speedtest help shows benchmark"
+assert_contains "$OUTPUT" "scorecard" "speedtest help shows scorecard"
 assert_contains "$OUTPUT" "speed" "speedtest has speed alias"
 
 # ────────────────────────────────────────
