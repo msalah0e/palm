@@ -18,7 +18,7 @@ type Model struct {
 	Context     int     `toml:"context"`
 	InputCost   float64 `toml:"input_cost"`  // per 1M tokens
 	OutputCost  float64 `toml:"output_cost"` // per 1M tokens
-	Type        string  `toml:"type"` // chat, completion, embedding, image
+	Type        string  `toml:"type"`        // chat, completion, embedding, image
 	Released    string  `toml:"released"`
 	Description string  `toml:"description"`
 }

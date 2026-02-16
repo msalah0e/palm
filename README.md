@@ -76,6 +76,28 @@ palm run aider                  # Run with vault keys injected
 palm pipe "echo 'explain quicksort'" "|" "ollama run llama3.3"
 ```
 
+### AI Collaboration
+```bash
+# Squad: run same task through multiple tools
+palm squad "fix the bug" --tools aider,codex --mode race
+palm squad "write tests" --tools aider,codex --judge ollama --mode vote
+palm squad "review code" --tools aider,codex --judge ollama --mode merge
+
+# Compose: multi-tool workflows from TOML
+palm compose init               # Create .palm-compose.toml
+palm compose                    # Run the workflow
+palm compose --dry-run          # See what would run
+
+# Speedtest: visual AI benchmark
+palm speedtest                  # Test all configured providers
+palm speedtest --quick          # Faster test
+
+# Eval: AI accuracy & hallucination detection
+palm eval "What is the capital of France?" --tools ollama,mods
+palm eval "Explain TCP" --tools ollama,aider --context "networking"
+palm eval "When was Python released?" --tools ollama --judge ollama
+```
+
 ### API Key Vault
 ```bash
 palm keys add ANTHROPIC_API_KEY # Store in macOS Keychain or encrypted file
@@ -160,6 +182,10 @@ palm models [list|info|pull|providers]  LLM model management
 palm budget [set|status|reset]  Spending controls
 palm proxy [start|stop|status|logs]  Local LLM API proxy
 palm benchmark <prompt>         Compare AI tools
+palm squad "<task>" --tools a,b  Ensemble: race/vote/merge modes
+palm compose                    Run multi-tool TOML workflows
+palm speedtest                  Visual AI stack benchmark
+palm eval "<question>" --tools   AI accuracy & hallucination scoring
 palm sessions                   Session history & costs
 palm matrix                     Terminal dashboard
 palm discover                   Browse curated catalog

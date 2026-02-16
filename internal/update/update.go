@@ -12,8 +12,8 @@ import (
 )
 
 const (
-	repo        = "msalah0e/palm"
-	checkEvery  = 24 * time.Hour
+	repo       = "msalah0e/palm"
+	checkEvery = 24 * time.Hour
 )
 
 type releaseInfo struct {

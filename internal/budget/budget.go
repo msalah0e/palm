@@ -20,17 +20,17 @@ type Budget struct {
 
 // Status represents current budget status.
 type Status struct {
-	MonthlyLimit  float64
-	MonthlySpend  float64
-	DailyLimit    float64
-	DailySpend    float64
-	PercentUsed   float64
-	IsOverBudget  bool
-	IsNearBudget  bool
-	ByTool        map[string]float64
-	ByProvider    map[string]float64
-	TotalTokens   int64
-	CurrentMonth  string
+	MonthlyLimit float64
+	MonthlySpend float64
+	DailyLimit   float64
+	DailySpend   float64
+	PercentUsed  float64
+	IsOverBudget bool
+	IsNearBudget bool
+	ByTool       map[string]float64
+	ByProvider   map[string]float64
+	TotalTokens  int64
+	CurrentMonth string
 }
 
 func budgetPath() string {
@@ -90,7 +90,7 @@ func GetStatus() (*Status, error) {
 		MonthlyLimit: b.MonthlyLimit,
 		DailyLimit:   b.DailyLimit,
 		ByTool:       make(map[string]float64),
-		ByProvider:    make(map[string]float64),
+		ByProvider:   make(map[string]float64),
 		CurrentMonth: now.Format("January 2006"),
 	}
 

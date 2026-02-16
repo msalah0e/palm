@@ -28,7 +28,7 @@ func discoverCmd() *cobra.Command {
 				"testing":       "\U0001F9EA Testing & Evaluation",
 				"security":      "\U0001F6E1\ufe0f  Security & Safety",
 				"observability": "\U0001F4E1 Observability",
-				"search":       "\U0001F50D Search & RAG",
+				"search":        "\U0001F50D Search & RAG",
 				"writing":       "\u270D\ufe0f  Writing & Documents",
 			}
 

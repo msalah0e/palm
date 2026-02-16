@@ -163,8 +163,17 @@ func runBenchmark(name, bin, prompt string, tool *registry.Tool, v vault.Vault, 
 	c.Stdin = strings.NewReader(prompt)
 
 	start := time.Now()
+	if err := c.Start(); err != nil {
+		return BenchResult{
+			Tool:     name,
+			Duration: time.Since(start),
+			ExitCode: 1,
+			Error:    err.Error(),
+		}
+	}
+
 	done := make(chan error, 1)
-	go func() { done <- c.Run() }()
+	go func() { done <- c.Wait() }()
 
 	select {
 	case err := <-done:

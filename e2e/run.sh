@@ -42,7 +42,8 @@ echo ""
 echo "📋 Unit Tests"
 echo ""
 
-cd /workspace
+WORKSPACE="${GITHUB_WORKSPACE:-/workspace}"
+cd "$WORKSPACE" 2>/dev/null || cd "$(dirname "$0")/.."
 OUTPUT=$(go test ./... -count=1 2>&1) || true
 if echo "$OUTPUT" | grep -q "FAIL"; then
     fail "go test ./..." "unit tests failed"
@@ -77,6 +78,9 @@ assert_contains "$OUTPUT" "matrix" "palm --help shows matrix command"
 assert_contains "$OUTPUT" "pipe" "palm --help shows pipe command"
 assert_contains "$OUTPUT" "env" "palm --help shows env command"
 assert_contains "$OUTPUT" "sessions" "palm --help shows sessions command"
+assert_contains "$OUTPUT" "squad" "palm --help shows squad command"
+assert_contains "$OUTPUT" "compose" "palm --help shows compose command"
+assert_contains "$OUTPUT" "speedtest" "palm --help shows speedtest command"
 
 # ────────────────────────────────────────
 echo ""
@@ -201,7 +205,7 @@ assert_contains "$OUTPUT" "claude-code" "workspace status shows claude-code"
 OUTPUT=$(palm workspace remove aider 2>&1)
 assert_contains "$OUTPUT" "removed" "workspace remove works"
 
-cd /workspace
+cd "$WORKSPACE"
 rm -rf "$WSDIR"
 
 # ────────────────────────────────────────
@@ -223,7 +227,7 @@ assert_contains "$OUTPUT" "Go" "context detects Go project"
 OUTPUT=$(palm context show 2>&1)
 assert_contains "$OUTPUT" "Project Context" "context show displays content"
 
-cd /workspace
+cd "$WORKSPACE"
 rm -rf "$CTXDIR"
 
 # ────────────────────────────────────────
@@ -345,7 +349,7 @@ concurrency = 2
 TOML
 cd /tmp/palm-project/sub
 assert_exit_0 "palm list" ".palm.toml project config doesn't crash"
-cd /workspace
+cd "$WORKSPACE"
 
 # ────────────────────────────────────────
 echo ""
@@ -399,6 +403,73 @@ assert_exit_0 "palm completion fish" "fish completion generates"
 
 # ────────────────────────────────────────
 echo ""
+echo "📋 Squad Tests"
+echo ""
+
+OUTPUT=$(palm squad --help 2>&1)
+assert_contains "$OUTPUT" "multiple AI tools" "squad help shows description"
+assert_contains "$OUTPUT" "race" "squad help shows race mode"
+assert_contains "$OUTPUT" "vote" "squad help shows vote mode"
+assert_contains "$OUTPUT" "merge" "squad help shows merge mode"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Compose Tests"
+echo ""
+
+OUTPUT=$(palm compose --help 2>&1)
+assert_contains "$OUTPUT" "multi-tool" "compose help shows description"
+assert_contains "$OUTPUT" "workflow" "compose help shows workflow alias"
+
+COMPDIR="/tmp/palm-compose-test"
+mkdir -p "$COMPDIR"
+cd "$COMPDIR"
+
+palm compose init 2>&1
+if [ -f ".palm-compose.toml" ]; then
+    pass "compose init creates .palm-compose.toml"
+else
+    fail "compose init" "file not created"
+fi
+
+OUTPUT=$(palm compose --dry-run 2>&1)
+assert_contains "$OUTPUT" "Dry run" "compose dry-run shows plan"
+
+cd "$WORKSPACE"
+rm -rf "$COMPDIR"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Speedtest Tests"
+echo ""
+
+OUTPUT=$(palm speedtest --help 2>&1)
+assert_contains "$OUTPUT" "speedtest" "speedtest help shows name"
+assert_contains "$OUTPUT" "benchmark" "speedtest help shows benchmark"
+assert_contains "$OUTPUT" "speed" "speedtest has speed alias"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Eval Tests"
+echo ""
+
+OUTPUT=$(palm eval --help 2>&1)
+assert_contains "$OUTPUT" "eval" "eval help shows name"
+assert_contains "$OUTPUT" "hallucination" "eval help shows hallucination"
+assert_contains "$OUTPUT" "accuracy" "eval help shows accuracy"
+assert_contains "$OUTPUT" "evaluate" "eval has evaluate alias"
+assert_contains "$OUTPUT" "check" "eval has check alias"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Help Completeness (all commands)"
+echo ""
+
+OUTPUT=$(palm --help 2>&1)
+assert_contains "$OUTPUT" "eval" "palm --help shows eval command"
+
+# ────────────────────────────────────────
+echo ""
 echo "📋 No 'tamr' References Check"
 echo ""
 
@@ -409,7 +480,8 @@ else
     pass "no 'tamr' references in any CLI output"
 fi
 
-if strings /usr/local/bin/palm | grep -q "tamr"; then
+PALM_BIN=$(which palm 2>/dev/null || echo "/usr/local/bin/palm")
+if strings "$PALM_BIN" | grep -q "tamr"; then
     fail "no tamr in binary" "found 'tamr' in binary strings"
 else
     pass "no 'tamr' in compiled binary"

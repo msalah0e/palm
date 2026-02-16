@@ -234,8 +234,11 @@
     <a href="#search-discover">Search & Discover</a>
     <a href="#run-tools">Running Tools</a>
 
-    <div class="group-title">Pipelines</div>
+    <div class="group-title">Collaboration</div>
     <a href="#pipe">Tool Pipelines</a>
+    <a href="#squad">AI Squad</a>
+    <a href="#compose">Compose Workflows</a>
+    <a href="#speedtest">Speedtest</a>
 
     <div class="group-title">Key Vault</div>
     <a href="#keys">Managing Keys</a>
@@ -465,6 +468,147 @@ palm completion fish | source
     <div class="info-box">
       <strong>Note:</strong> Each segment between <code>|</code> runs as a separate command. The <code>|</code> must be quoted as a separate argument to prevent shell interpretation.
     </div>
+
+    <!-- ────────────────── SQUAD ────────────────── -->
+
+    <h2 id="squad">AI Squad</h2>
+
+    <p>Squad runs the same task through multiple AI tools in parallel, then optionally uses a "judge" AI to evaluate results. Four modes are available:</p>
+
+    <table class="doc-table">
+      <tr><th>Mode</th><th>Behavior</th></tr>
+      <tr><td>race</td><td>First successful tool wins (fastest response)</td></tr>
+      <tr><td>all</td><td>Show all outputs side by side for comparison</td></tr>
+      <tr><td>vote</td><td>All tools run, a judge AI picks the best result</td></tr>
+      <tr><td>merge</td><td>All tools run, a judge AI synthesizes/merges all results</td></tr>
+    </table>
+
+    <div class="codeblock">
+<span class="comment"># Race mode — first tool to finish wins</span>
+<span class="prompt">$</span> palm squad "explain quicksort" --tools ollama,mods --mode race
+
+<span class="comment"># Vote — judge picks the best result</span>
+<span class="prompt">$</span> palm squad "fix this bug" --tools aider,codex --judge ollama --mode vote
+
+<span class="comment"># Merge — judge synthesizes all outputs into one</span>
+<span class="prompt">$</span> palm squad "write unit tests" --tools aider,codex,claude-code \
+    --judge ollama --mode merge
+
+<span class="comment"># Show all outputs for manual comparison</span>
+<span class="prompt">$</span> palm squad "review this code" --tools ollama,mods --mode all --verbose
+    </div>
+
+    <div class="info-box">
+      <strong>Tip:</strong> Use <code>--judge ollama</code> for vote and merge modes. The judge receives all tool outputs and produces a verdict or synthesized result.
+    </div>
+
+    <!-- ────────────────── COMPOSE ────────────────── -->
+
+    <h2 id="compose">Compose Workflows</h2>
+
+    <p>Define reusable multi-tool AI workflows in TOML files. Steps can depend on each other, run in parallel, and pass data between them. Think of it as Docker Compose for AI.</p>
+
+    <div class="codeblock">
+<span class="comment"># Create a sample workflow</span>
+<span class="prompt">$</span> palm compose init
+<span class="success">  Created .palm-compose.toml</span>
+
+<span class="comment"># Run the workflow</span>
+<span class="prompt">$</span> palm compose
+
+<span class="comment"># Dry run — see what would execute</span>
+<span class="prompt">$</span> palm compose --dry-run
+
+<span class="comment"># Use a specific workflow file</span>
+<span class="prompt">$</span> palm compose --file review.toml
+    </div>
+
+    <h3>Workflow File Format</h3>
+    <div class="codeblock">
+<span class="comment"># .palm-compose.toml</span>
+name = "code-review"
+description = "Multi-tool code review pipeline"
+
+<span class="comment"># Step 1: Read code</span>
+[[steps]]
+name = "read-code"
+run = "cat src/main.py"
+
+<span class="comment"># Step 2: AI reviews (waits for step 1)</span>
+[[steps]]
+name = "ai-review"
+tool = "ollama"
+args = ["run", "llama3.3", "Review this code:"]
+input = "step:read-code"
+depends_on = ["read-code"]
+
+<span class="comment"># Step 3: Tests (runs in parallel with review)</span>
+[[steps]]
+name = "run-tests"
+run = "go test ./..."
+timeout = 60
+
+<span class="comment"># Step 4: Summary (waits for both)</span>
+[[steps]]
+name = "summary"
+tool = "ollama"
+args = ["run", "llama3.3", "Summarize:"]
+input = "step:ai-review,step:run-tests"
+depends_on = ["ai-review", "run-tests"]
+    </div>
+
+    <h3>Input Sources</h3>
+    <table class="doc-table">
+      <tr><th>Prefix</th><th>Description</th><th>Example</th></tr>
+      <tr><td>step:</td><td>Output from a previous step</td><td>step:read-code</td></tr>
+      <tr><td>file:</td><td>Contents of a file</td><td>file:src/main.py</td></tr>
+      <tr><td>git:diff</td><td>Current git diff</td><td>git:diff</td></tr>
+      <tr><td>git:log</td><td>Recent git log</td><td>git:log</td></tr>
+    </table>
+
+    <!-- ────────────────── SPEEDTEST ────────────────── -->
+
+    <h2 id="speedtest">AI Speedtest</h2>
+
+    <p>A visual benchmark for your AI stack, like an internet speed test. Tests all configured providers, shows progress bars, tok/s throughput, and assigns a letter grade.</p>
+
+    <div class="codeblock">
+<span class="comment"># Run the speedtest</span>
+<span class="prompt">$</span> palm speedtest
+<span class="output">  ╔═══════════════════════════════════════════════╗</span>
+<span class="output">  ║   🌴  palm speedtest                          ║</span>
+<span class="output">  ╚═══════════════════════════════════════════════╝</span>
+<span class="output"></span>
+<span class="output">  Testing Ollama (llama3.3)...</span>
+<span class="success">  ✓ Ollama: 2.34s, ~45 tok/s</span>
+<span class="output"></span>
+<span class="output">  ┌─────────────────────────────────────────────┐</span>
+<span class="output">  │  RESULTS                                    │</span>
+<span class="output">  │  Ollama    llama3.3                          │</span>
+<span class="output">  │  ████████████████████████░░░░  45.2 tok/s    │</span>
+<span class="output">  │  2.34s  724B  ~181 tokens                    │</span>
+<span class="output">  └─────────────────────────────────────────────┘</span>
+<span class="output"></span>
+<span class="output">  🏆 Fastest: Ollama (llama3.3) at 45.2 tok/s</span>
+<span class="success">  Your AI Stack Grade: B  (avg 45.2 tok/s)</span>
+
+<span class="comment"># Custom prompt</span>
+<span class="prompt">$</span> palm speedtest --prompt "explain recursion in 50 words"
+
+<span class="comment"># Quick test (shorter prompt)</span>
+<span class="prompt">$</span> palm speedtest --quick
+    </div>
+
+    <h3>Grade Scale</h3>
+    <table class="doc-table">
+      <tr><th>Grade</th><th>Average tok/s</th></tr>
+      <tr><td>A+</td><td>100+ tok/s</td></tr>
+      <tr><td>A</td><td>50-99 tok/s</td></tr>
+      <tr><td>B</td><td>25-49 tok/s</td></tr>
+      <tr><td>C</td><td>10-24 tok/s</td></tr>
+      <tr><td>D</td><td>5-9 tok/s</td></tr>
+      <tr><td>F</td><td>&lt;5 tok/s</td></tr>
+    </table>
 
     <!-- ────────────────── KEY VAULT ────────────────── -->
 

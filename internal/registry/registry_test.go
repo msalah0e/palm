@@ -80,14 +80,14 @@ func TestSearch(t *testing.T) {
 		query    string
 		expected int
 	}{
-		{"coding", 2},       // category match
-		{"aider", 1},        // name match
-		{"llm", 2},          // tag + category match (ollama + vllm)
-		{"local", 1},        // tag match
-		{"terminal", 1},     // description match
-		{"nonexistent", 0},  // no match
-		{"claude", 1},       // name/tag match
-		{"serving", 1},      // tag match
+		{"coding", 2},      // category match
+		{"aider", 1},       // name match
+		{"llm", 2},         // tag + category match (ollama + vllm)
+		{"local", 1},       // tag match
+		{"terminal", 1},    // description match
+		{"nonexistent", 0}, // no match
+		{"claude", 1},      // name/tag match
+		{"serving", 1},     // tag match
 	}
 
 	for _, tt := range tests {

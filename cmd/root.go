@@ -78,6 +78,10 @@ func init() {
 		matrixCmd(),
 		completionCmd(),
 		pipeCmd(),
+		squadCmd(),
+		composeCmd(),
+		speedtestCmd(),
+		evalCmd(),
 	)
 }
 

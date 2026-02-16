@@ -6,7 +6,7 @@ import (
 
 // Registry holds all known AI tools.
 type Registry struct {
-	tools []Tool
+	tools  []Tool
 	byName map[string]*Tool
 }
 

@@ -27,16 +27,16 @@ type Config struct {
 
 // RequestLog represents a logged API request.
 type RequestLog struct {
-	Timestamp   time.Time `json:"ts"`
-	Method      string    `json:"method"`
-	Path        string    `json:"path"`
-	Provider    string    `json:"provider"`
-	Model       string    `json:"model,omitempty"`
-	Status      int       `json:"status"`
-	Duration    float64   `json:"duration_ms"`
-	InputTokens int64    `json:"input_tokens,omitempty"`
-	OutputTokens int64   `json:"output_tokens,omitempty"`
-	Cost        float64   `json:"cost,omitempty"`
+	Timestamp    time.Time `json:"ts"`
+	Method       string    `json:"method"`
+	Path         string    `json:"path"`
+	Provider     string    `json:"provider"`
+	Model        string    `json:"model,omitempty"`
+	Status       int       `json:"status"`
+	Duration     float64   `json:"duration_ms"`
+	InputTokens  int64     `json:"input_tokens,omitempty"`
+	OutputTokens int64     `json:"output_tokens,omitempty"`
+	Cost         float64   `json:"cost,omitempty"`
 }
 
 // Server is the palm proxy server.
