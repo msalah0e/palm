@@ -8,19 +8,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiListCmd() *cobra.Command {
+func listCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "list",
-		Short: "List installed AI tools with status",
+		Use:     "list",
+		Aliases: []string{"ls"},
+		Short:   "List installed AI tools with status",
 		Run: func(cmd *cobra.Command, args []string) {
 			reg := loadRegistry()
 			detected := registry.DetectInstalled(reg)
 
-			ui.Banner("installed AI tools")
+			ui.Banner("installed tools")
 
 			if len(detected) == 0 {
 				fmt.Println("  No AI tools detected.")
-				fmt.Println("  Run `tamr ai discover` to explore available tools")
+				fmt.Println("  Run `tamr discover` to explore available tools")
 				return
 			}
 
@@ -61,7 +62,7 @@ func aiListCmd() *cobra.Command {
 			fmt.Println()
 			msg := fmt.Sprintf("  %d tools installed", len(detected))
 			if needsAttention > 0 {
-				msg += fmt.Sprintf(" \u00b7 %d needs attention", needsAttention)
+				msg += fmt.Sprintf(" · %d needs attention", needsAttention)
 			}
 			fmt.Println(msg)
 		},

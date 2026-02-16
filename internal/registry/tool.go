@@ -21,6 +21,7 @@ type Install struct {
 	Cargo  string `toml:"cargo"`
 	Go     string `toml:"go"`
 	Binary string `toml:"binary"`
+	Script string `toml:"script"`
 	Verify Verify `toml:"verify"`
 }
 
@@ -41,6 +42,8 @@ func (t Tool) InstallMethod() (backend, pkg string) {
 	switch {
 	case t.Install.Brew != "":
 		return "brew", t.Install.Brew
+	case t.Install.Script != "":
+		return "script", t.Install.Script
 	case t.Install.Binary != "":
 		return "binary", t.Install.Binary
 	case t.Install.Pip != "":

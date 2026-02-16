@@ -151,3 +151,60 @@ command = "goose --version"
 [tools.keys]
 required = []
 optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "mods"
+display_name = "Mods"
+description = "Charmbracelet's pipe-friendly AI CLI for the terminal"
+category = "agents"
+tags = ["ai", "agents", "cli", "charmbracelet", "pipes"]
+homepage = "https://github.com/charmbracelet/mods"
+repo = "https://github.com/charmbracelet/mods"
+
+[tools.install]
+brew = "mods"
+go = "github.com/charmbracelet/mods@latest"
+
+[tools.install.verify]
+command = "mods --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "tgpt"
+display_name = "tgpt"
+description = "Free AI chatbot in the terminal — no API key needed"
+category = "agents"
+tags = ["ai", "agents", "chatbot", "free", "no-key"]
+homepage = "https://github.com/aandrew-me/tgpt"
+repo = "https://github.com/aandrew-me/tgpt"
+
+[tools.install]
+go = "github.com/aandrew-me/tgpt/v2@latest"
+
+[tools.install.verify]
+command = "tgpt --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "openhands"
+display_name = "OpenHands"
+description = "Open-source AI software development agent"
+category = "agents"
+tags = ["ai", "agents", "coding", "open-source"]
+homepage = "https://www.all-hands.dev"
+repo = "https://github.com/All-Hands-AI/OpenHands"
+
+[tools.install]
+pip = "openhands-ai"
+
+[tools.install.verify]
+command = "openhands --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]

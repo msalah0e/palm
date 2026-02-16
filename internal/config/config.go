@@ -13,13 +13,13 @@ type Config struct {
 	Stats   StatsConfig   `toml:"stats"`
 	Install InstallConfig `toml:"install"`
 	Keys    KeysConfig    `toml:"keys"`
+	Vault   VaultConfig   `toml:"vault"`
 }
 
 // UIConfig controls display options.
 type UIConfig struct {
-	Emoji   bool `toml:"emoji"`
-	Color   bool `toml:"color"`
-	Rebrand bool `toml:"rebrand"`
+	Emoji bool `toml:"emoji"`
+	Color bool `toml:"color"`
 }
 
 // StatsConfig controls usage tracking.
@@ -38,13 +38,19 @@ type KeysConfig struct {
 	AutoExport bool `toml:"auto_export"`
 }
 
+// VaultConfig controls vault backend selection.
+type VaultConfig struct {
+	Backend string `toml:"backend"` // "auto", "keychain", "file"
+}
+
 // Default returns the default configuration.
 func Default() *Config {
 	return &Config{
-		UI:      UIConfig{Emoji: true, Color: true, Rebrand: true},
+		UI:      UIConfig{Emoji: true, Color: true},
 		Stats:   StatsConfig{Enabled: false},
 		Install: InstallConfig{PreferUV: true, CleanupAfter: false},
 		Keys:    KeysConfig{AutoExport: false},
+		Vault:   VaultConfig{Backend: "auto"},
 	}
 }
 

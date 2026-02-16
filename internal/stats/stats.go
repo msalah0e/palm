@@ -19,8 +19,6 @@ type Entry struct {
 // Summary holds aggregated stats.
 type Summary struct {
 	TotalCommands  int
-	AICommands     int
-	BrewCommands   int
 	ToolsInstalled int
 	LastUsed       time.Time
 }
@@ -81,12 +79,7 @@ func Summarize() (*Summary, error) {
 		if e.Timestamp.After(s.LastUsed) {
 			s.LastUsed = e.Timestamp
 		}
-		if len(e.Command) >= 2 && e.Command[:2] == "ai" {
-			s.AICommands++
-		} else {
-			s.BrewCommands++
-		}
-		if e.Command == "ai install" && e.OK && e.Tool != "" {
+		if e.Command == "install" && e.OK && e.Tool != "" {
 			installed[e.Tool] = true
 		}
 	}

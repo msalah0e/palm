@@ -150,3 +150,116 @@ command = "codex --version"
 [tools.keys]
 required = ["OPENAI_API_KEY"]
 env_prefix = "OPENAI"
+
+[[tools]]
+name = "specify"
+display_name = "Specify"
+description = "GitHub's spec-driven development CLI"
+category = "coding"
+tags = ["ai", "coding", "github", "spec-driven"]
+homepage = "https://github.com/specifyapp/specify"
+repo = "https://github.com/specifyapp/specify"
+
+[tools.install]
+npm = "@specifyapp/cli"
+
+[tools.install.verify]
+command = "specify --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "gemini-cli"
+display_name = "Gemini CLI"
+description = "Google's Gemini AI agent for the terminal"
+category = "coding"
+tags = ["ai", "coding", "agent", "google", "gemini"]
+homepage = "https://github.com/google-gemini/gemini-cli"
+repo = "https://github.com/google-gemini/gemini-cli"
+
+[tools.install]
+npm = "@anthropic-ai/claude-code"
+
+[tools.install.verify]
+command = "gemini --version"
+
+[tools.keys]
+required = ["GEMINI_API_KEY"]
+env_prefix = "GEMINI"
+
+[[tools]]
+name = "opencode"
+display_name = "OpenCode"
+description = "Multi-provider terminal coding agent"
+category = "coding"
+tags = ["ai", "coding", "agent", "multi-provider"]
+homepage = "https://github.com/opencode-ai/opencode"
+repo = "https://github.com/opencode-ai/opencode"
+
+[tools.install]
+go = "github.com/opencode-ai/opencode@latest"
+
+[tools.install.verify]
+command = "opencode --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "crush"
+display_name = "Crush"
+description = "Charmbracelet's AI coding agent for the terminal"
+category = "coding"
+tags = ["ai", "coding", "agent", "charmbracelet"]
+homepage = "https://github.com/charmbracelet/crush"
+repo = "https://github.com/charmbracelet/crush"
+
+[tools.install]
+go = "github.com/charmbracelet/crush@latest"
+
+[tools.install.verify]
+command = "crush --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "plandex"
+display_name = "Plandex"
+description = "Plan-first AI coding agent for complex tasks"
+category = "coding"
+tags = ["ai", "coding", "agent", "planning"]
+homepage = "https://plandex.ai"
+repo = "https://github.com/plandex-ai/plandex"
+
+[tools.install]
+script = "https://plandex.ai/install.sh"
+
+[tools.install.verify]
+command = "plandex version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "gptme"
+display_name = "gptme"
+description = "Minimalist personal AI agent for the terminal"
+category = "coding"
+tags = ["ai", "coding", "agent", "minimalist"]
+homepage = "https://gptme.org"
+repo = "https://github.com/ErikBjare/gptme"
+
+[tools.install]
+pip = "gptme"
+
+[tools.install.verify]
+command = "gptme --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]

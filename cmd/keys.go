@@ -11,30 +11,30 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiKeysCmd() *cobra.Command {
+func keysCmd() *cobra.Command {
 	keysCmd := &cobra.Command{
 		Use:   "keys",
-		Short: "Manage API keys in macOS Keychain",
+		Short: "Manage API keys in the vault",
 	}
 
 	keysCmd.AddCommand(
-		aiKeysAddCmd(),
-		aiKeysRmCmd(),
-		aiKeysListCmd(),
-		aiKeysExportCmd(),
+		keysAddCmd(),
+		keysRmCmd(),
+		keysListCmd(),
+		keysExportCmd(),
 	)
 
 	return keysCmd
 }
 
-func aiKeysAddCmd() *cobra.Command {
+func keysAddCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "add <KEY_NAME>",
-		Short: "Store an API key in macOS Keychain",
+		Short: "Store an API key in the vault",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			keyName := args[0]
-			v := vault.NewKeychain()
+			v := vault.New()
 
 			fmt.Printf("  Enter value for %s: ", ui.Brand.Sprint(keyName))
 			reader := bufio.NewReader(os.Stdin)
@@ -51,37 +51,37 @@ func aiKeysAddCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			ui.Good.Printf("  %s %s stored in Keychain\n", ui.StatusIcon(true), keyName)
+			ui.Good.Printf("  %s %s stored in vault\n", ui.StatusIcon(true), keyName)
 		},
 	}
 }
 
-func aiKeysRmCmd() *cobra.Command {
+func keysRmCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:     "rm <KEY_NAME>",
 		Aliases: []string{"remove", "delete"},
-		Short:   "Remove an API key from Keychain",
+		Short:   "Remove an API key from the vault",
 		Args:    cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			keyName := args[0]
-			v := vault.NewKeychain()
+			v := vault.New()
 
 			if err := v.Delete(keyName); err != nil {
 				ui.Bad.Printf("  Failed to remove key: %v\n", err)
 				os.Exit(1)
 			}
 
-			ui.Good.Printf("  %s %s removed from Keychain\n", ui.StatusIcon(true), keyName)
+			ui.Good.Printf("  %s %s removed from vault\n", ui.StatusIcon(true), keyName)
 		},
 	}
 }
 
-func aiKeysListCmd() *cobra.Command {
+func keysListCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "list",
 		Short: "List stored API keys (masked values)",
 		Run: func(cmd *cobra.Command, args []string) {
-			v := vault.NewKeychain()
+			v := vault.New()
 
 			ui.Banner("stored API keys")
 
@@ -93,7 +93,7 @@ func aiKeysListCmd() *cobra.Command {
 
 			if len(keys) == 0 {
 				fmt.Println("  No API keys stored.")
-				fmt.Println("  Run `tamr ai keys add <KEY>` to add one")
+				fmt.Println("  Run `tamr keys add <KEY>` to add one")
 				return
 			}
 
@@ -111,12 +111,12 @@ func aiKeysListCmd() *cobra.Command {
 	}
 }
 
-func aiKeysExportCmd() *cobra.Command {
+func keysExportCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "export",
 		Short: "Print export statements for shell (eval-able)",
 		Run: func(cmd *cobra.Command, args []string) {
-			v := vault.NewKeychain()
+			v := vault.New()
 
 			keys, err := v.List()
 			if err != nil {
@@ -129,7 +129,7 @@ func aiKeysExportCmd() *cobra.Command {
 				return
 			}
 
-			fmt.Println("# tamr vault — eval $(tamr ai keys export)")
+			fmt.Println("# tamr vault — eval $(tamr keys export)")
 			for _, key := range keys {
 				val, err := v.Get(key)
 				if err == nil {

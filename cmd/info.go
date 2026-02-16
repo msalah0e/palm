@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiInfoCmd() *cobra.Command {
+func infoCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "info <tool>",
 		Short: "Show detailed info about a tool",
@@ -27,7 +27,6 @@ func aiInfoCmd() *cobra.Command {
 
 			ui.Banner("tool info")
 
-			// Detect installation status
 			detected := registry.Detect(reg)
 			var dt *registry.DetectedTool
 			for i := range detected {
@@ -65,7 +64,7 @@ func aiInfoCmd() *cobra.Command {
 				}
 			} else {
 				fmt.Printf("  Status:    not installed\n")
-				fmt.Printf("  Install:   tamr ai install %s\n", name)
+				fmt.Printf("  Install:   tamr install %s\n", name)
 			}
 
 			if tool.NeedsAPIKey() {

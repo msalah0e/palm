@@ -8,11 +8,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiSearchCmd() *cobra.Command {
+func searchCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "search <query>",
-		Short: "Search the AI tool registry",
-		Args:  cobra.ExactArgs(1),
+		Use:     "search <query>",
+		Aliases: []string{"s", "find"},
+		Short:   "Search the AI tool registry",
+		Args:    cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			reg := loadRegistry()
 			query := args[0]
@@ -38,7 +39,7 @@ func aiSearchCmd() *cobra.Command {
 
 			ui.Table(headers, rows)
 
-			fmt.Printf("\n  %d results \u00b7 `tamr ai install <tool>` to install\n", len(results))
+			fmt.Printf("\n  %d results · `tamr install <tool>` to install\n", len(results))
 		},
 	}
 }

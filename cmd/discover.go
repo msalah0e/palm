@@ -7,10 +7,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiDiscoverCmd() *cobra.Command {
+func discoverCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "discover",
-		Short: "Show curated AI tools by category",
+		Short: "Browse curated AI tools by category",
 		Run: func(cmd *cobra.Command, args []string) {
 			reg := loadRegistry()
 
@@ -49,7 +49,7 @@ func aiDiscoverCmd() *cobra.Command {
 				fmt.Println()
 			}
 
-			fmt.Println("  `tamr ai info <tool>` for details")
+			fmt.Println("  `tamr info <tool>` for details · `tamr install <tool>` to install")
 		},
 	}
 }

@@ -142,3 +142,20 @@ command = "python3 -c 'import openrouter; print(\"ok\")'"
 [tools.keys]
 required = ["OPENROUTER_API_KEY"]
 env_prefix = "OPENROUTER"
+
+[[tools]]
+name = "lm-studio"
+display_name = "LM Studio"
+description = "Discover, download, and run local LLMs"
+category = "llm"
+tags = ["ai", "llm", "local", "desktop", "gui"]
+homepage = "https://lmstudio.ai"
+
+[tools.install]
+brew = "lm-studio"
+
+[tools.install.verify]
+command = "lms version"
+
+[tools.keys]
+required = []

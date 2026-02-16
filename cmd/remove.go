@@ -9,10 +9,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiRemoveCmd() *cobra.Command {
+func removeCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:     "remove <tool>",
-		Aliases: []string{"uninstall"},
+		Aliases: []string{"uninstall", "rm"},
 		Short:   "Remove an AI tool",
 		Args:    cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
@@ -25,7 +25,7 @@ func aiRemoveCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			ui.Banner("removing AI tool")
+			ui.Banner("removing")
 
 			if err := installer.Uninstall(*tool); err != nil {
 				ui.Bad.Printf("\n  Remove failed: %v\n", err)

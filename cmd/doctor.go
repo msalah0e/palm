@@ -9,15 +9,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiDoctorCmd() *cobra.Command {
+func doctorCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "doctor",
-		Short: "Health check — verify tools, keys, versions",
+		Use:     "doctor",
+		Aliases: []string{"dr"},
+		Short:   "Health check — verify tools, keys, and runtimes",
 		Run: func(cmd *cobra.Command, args []string) {
 			reg := loadRegistry()
 			detected := registry.DetectInstalled(reg)
 
-			ui.Banner("AI tool health check")
+			ui.Banner("health check")
 
 			healthy := 0
 			warnings := 0
@@ -47,20 +48,19 @@ func aiDoctorCmd() *cobra.Command {
 				fmt.Println("  No AI tools installed.")
 			}
 
-			// Check system runtimes
 			fmt.Println()
-			checkRuntime("Homebrew", "brew", "--version")
 			checkRuntime("Python", "python3", "--version")
 			checkRuntime("uv", "uv", "--version")
 			checkRuntime("Node", "node", "--version")
 			checkRuntime("npm", "npm", "--version")
 			checkRuntime("Go", "go", "version")
 			checkRuntime("Cargo", "cargo", "--version")
+			checkRuntime("Homebrew", "brew", "--version")
 
 			if len(detected) > 0 {
-				fmt.Printf("\n  %d/%d AI tools healthy", healthy, len(detected))
+				fmt.Printf("\n  %d/%d tools healthy", healthy, len(detected))
 				if warnings > 0 {
-					fmt.Printf(" \u00b7 %d warning(s)", warnings)
+					fmt.Printf(" · %d warning(s)", warnings)
 				}
 				fmt.Println()
 			}

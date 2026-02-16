@@ -108,3 +108,22 @@ command = "modal --version"
 required = ["MODAL_TOKEN_ID"]
 optional = ["MODAL_TOKEN_SECRET"]
 env_prefix = "MODAL"
+
+[[tools]]
+name = "k8sgpt"
+display_name = "K8sGPT"
+description = "AI-powered Kubernetes troubleshooting and diagnostics"
+category = "infra"
+tags = ["ai", "infra", "kubernetes", "troubleshooting"]
+homepage = "https://k8sgpt.ai"
+repo = "https://github.com/k8sgpt-ai/k8sgpt"
+
+[tools.install]
+brew = "k8sgpt"
+
+[tools.install.verify]
+command = "k8sgpt version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]

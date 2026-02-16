@@ -10,7 +10,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiStatsCmd() *cobra.Command {
+func statsCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "stats",
 		Short: "Show local usage statistics",
@@ -30,8 +30,6 @@ func aiStatsCmd() *cobra.Command {
 			}
 
 			fmt.Printf("  Total commands:     %d\n", summary.TotalCommands)
-			fmt.Printf("  AI commands:        %d\n", summary.AICommands)
-			fmt.Printf("  Brew commands:      %d\n", summary.BrewCommands)
 			fmt.Printf("  Tools installed:    %d\n", summary.ToolsInstalled)
 
 			if !summary.LastUsed.IsZero() {

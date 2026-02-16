@@ -29,10 +29,34 @@ func Install(tool registry.Tool) error {
 		return cargoInstall(pkg)
 	case "go":
 		return goInstall(pkg)
+	case "script":
+		return scriptInstall(pkg)
 	case "binary":
 		return fmt.Errorf("binary install not yet supported — download from %s", pkg)
 	default:
 		return fmt.Errorf("unknown backend: %s", backend)
+	}
+}
+
+// Update updates a tool by re-running its install with upgrade flags.
+func Update(tool registry.Tool) error {
+	backend, pkg := tool.InstallMethod()
+
+	switch backend {
+	case "brew":
+		return runCmd("brew", "upgrade", pkg)
+	case "pip":
+		return pipUpdate(pkg)
+	case "npm":
+		return runCmd("npm", "update", "-g", pkg)
+	case "cargo":
+		return cargoInstall(pkg) // cargo install re-compiles latest
+	case "go":
+		return goInstall(pkg) // go install @latest gets latest
+	case "script":
+		return scriptInstall(pkg) // re-run the script
+	default:
+		return fmt.Errorf("cannot auto-update %s tools", backend)
 	}
 }
 
@@ -59,7 +83,6 @@ func brewInstall(pkg string) error {
 }
 
 func pipInstall(pkg string) error {
-	// Prefer uv over pip
 	if hasCommand("uv") {
 		return runCmd("uv", "pip", "install", pkg)
 	}
@@ -68,6 +91,16 @@ func pipInstall(pkg string) error {
 	}
 	if hasCommand("pip") {
 		return runCmd("pip", "install", pkg)
+	}
+	return fmt.Errorf("no pip/uv found — install Python first")
+}
+
+func pipUpdate(pkg string) error {
+	if hasCommand("uv") {
+		return runCmd("uv", "pip", "install", "--upgrade", pkg)
+	}
+	if hasCommand("pip3") {
+		return runCmd("pip3", "install", "--upgrade", pkg)
 	}
 	return fmt.Errorf("no pip/uv found — install Python first")
 }
@@ -98,6 +131,13 @@ func goInstall(pkg string) error {
 		return fmt.Errorf("go not found — install Go first")
 	}
 	return runCmd("go", "install", pkg)
+}
+
+func scriptInstall(url string) error {
+	if !hasCommand("curl") {
+		return fmt.Errorf("curl not found")
+	}
+	return runCmd("sh", "-c", fmt.Sprintf("curl -fsSL %s | sh", url))
 }
 
 func hasCommand(name string) bool {

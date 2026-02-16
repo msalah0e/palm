@@ -9,11 +9,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func aiInstallCmd() *cobra.Command {
+func installCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "install <tool>",
-		Short: "Install an AI tool",
-		Args:  cobra.ExactArgs(1),
+		Use:     "install <tool>",
+		Aliases: []string{"i", "add"},
+		Short:   "Install an AI tool",
+		Args:    cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			reg := loadRegistry()
 			name := args[0]
@@ -21,11 +22,11 @@ func aiInstallCmd() *cobra.Command {
 			tool := reg.Get(name)
 			if tool == nil {
 				ui.Warn.Printf("tamr: unknown tool %q\n", name)
-				fmt.Println("  Run `tamr ai search` to find tools")
+				fmt.Println("  Run `tamr search` to find tools")
 				os.Exit(1)
 			}
 
-			ui.Banner("installing AI tool")
+			ui.Banner("installing")
 
 			backend, pkg := tool.InstallMethod()
 			fmt.Printf("  %s %s\n", ui.Brand.Sprint(tool.DisplayName), ui.Subtle.Sprintf("(%s via %s)", pkg, backend))
@@ -41,7 +42,7 @@ func aiInstallCmd() *cobra.Command {
 
 			if tool.NeedsAPIKey() {
 				fmt.Printf("\n  %s Requires: %s\n", ui.WarnIcon(), tool.Keys.Required)
-				fmt.Println("  Run `tamr ai keys add <KEY>` to store API keys")
+				fmt.Println("  Run `tamr keys add <KEY>` to store API keys")
 			}
 		},
 	}
