@@ -152,6 +152,7 @@ nav .links a.active { color: var(--palm); }
   margin-bottom: 1.5rem;
   overflow-x: auto;
   color: var(--text-dim);
+  white-space: pre-wrap;
 }
 .codeblock .prompt { color: var(--palm); }
 .codeblock .comment { color: var(--text-muted); font-style: italic; }
