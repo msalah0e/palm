@@ -10,13 +10,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+func selfCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:     "self",
+		Aliases: []string{"self-update", "selfupdate"},
+		Short:   "Manage palm itself",
+	}
+
+	cmd.AddCommand(
+		selfUpdateCmd(),
+	)
+
+	return cmd
+}
+
 func selfUpdateCmd() *cobra.Command {
 	var check bool
 
 	cmd := &cobra.Command{
-		Use:     "self-update",
-		Aliases: []string{"selfupdate"},
-		Short:   "Update palm itself to the latest version",
+		Use:   "update",
+		Short: "Update palm to the latest version",
 		Run: func(cmd *cobra.Command, args []string) {
 			if check {
 				ui.Banner("version check")

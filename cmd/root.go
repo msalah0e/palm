@@ -63,7 +63,7 @@ func init() {
 		doctorCmd(),
 		keysCmd(),
 		statsCmd(),
-		selfUpdateCmd(),
+		selfCmd(),
 		cacheCmd(),
 		workspaceCmd(),
 		contextCmd(),

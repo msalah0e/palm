@@ -391,8 +391,12 @@ echo ""
 echo "📋 Self-Update Tests"
 echo ""
 
-OUTPUT=$(palm self-update --check 2>&1) || true
-assert_contains "$OUTPUT" "palm\|update\|version" "self-update check runs"
+OUTPUT=$(palm self update --check 2>&1) || true
+assert_contains "$OUTPUT" "palm\|update\|version" "self update check runs"
+
+# Aliases still work
+assert_exit_0 "palm self-update --help" "self-update alias works"
+assert_exit_0 "palm selfupdate --help" "selfupdate alias works"
 
 # ────────────────────────────────────────
 echo ""
