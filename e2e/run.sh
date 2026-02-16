@@ -555,6 +555,186 @@ assert_exit_0 "palm graph remove OtherNode" "graph remove"
 
 # ────────────────────────────────────────
 echo ""
+echo "📋 MCP Server Tests"
+echo ""
+
+assert_exit_0 "palm mcp --help" "mcp help works"
+OUTPUT=$(palm mcp list 2>&1)
+assert_contains "$OUTPUT" "filesystem\|postgres\|github" "mcp list shows servers"
+OUTPUT=$(palm mcp search github 2>&1)
+assert_contains "$OUTPUT" "github" "mcp search finds github"
+assert_exit_0 "palm mcp info filesystem" "mcp info works"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Token Counter Tests"
+echo ""
+
+assert_exit_0 "palm tokens --help" "tokens help works"
+OUTPUT=$(palm tokens count . 2>&1)
+assert_contains "$OUTPUT" "token\|Token" "tokens count shows results"
+OUTPUT=$(palm tokens budget . 2>&1)
+assert_contains "$OUTPUT" "context budget\|Budget" "tokens budget shows models"
+assert_exit_0 "palm tokens top . -n 5" "tokens top works"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Rules Tests"
+echo ""
+
+RULESDIR="/tmp/palm-rules-test"
+mkdir -p "$RULESDIR"
+cd "$RULESDIR"
+
+assert_exit_0 "palm rules" "rules overview works"
+assert_exit_0 "palm rules init" "rules init works"
+assert_exit_0 "palm rules add 'test rule'" "rules add works"
+assert_exit_0 "palm rules check" "rules check works"
+assert_exit_0 "palm rules sync" "rules sync works"
+
+cd "$WORKSPACE"
+rm -rf "$RULESDIR"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Audit Tests"
+echo ""
+
+assert_exit_0 "palm audit --help" "audit help works"
+OUTPUT=$(palm audit . 2>&1)
+assert_contains "$OUTPUT" "issue\|No issues" "audit scans current dir"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Cost Tests"
+echo ""
+
+assert_exit_0 "palm cost" "cost overview works"
+assert_exit_0 "palm cost today" "cost today works"
+assert_exit_0 "palm cost week" "cost week works"
+assert_exit_0 "palm cost export" "cost export works"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Prompt Library Tests"
+echo ""
+
+assert_exit_0 "palm prompt" "prompt overview works"
+assert_exit_0 "palm prompt add test-prompt 'Hello {{name}}'" "prompt add works"
+OUTPUT=$(palm prompt show test-prompt 2>&1)
+assert_contains "$OUTPUT" "Hello" "prompt show displays content"
+OUTPUT=$(palm prompt run test-prompt name=World 2>&1)
+assert_contains "$OUTPUT" "World" "prompt run substitutes vars"
+assert_exit_0 "palm prompt list" "prompt list works"
+assert_exit_0 "palm prompt delete test-prompt" "prompt delete works"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Migrate Tests"
+echo ""
+
+assert_exit_0 "palm migrate --help" "migrate help works"
+OUTPUT=$(palm migrate list 2>&1)
+assert_contains "$OUTPUT" "cursor" "migrate list shows cursor"
+assert_contains "$OUTPUT" "claude-code" "migrate list shows claude-code"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Benchmark Tests"
+echo ""
+
+assert_exit_0 "palm benchmark --help" "benchmark help works"
+OUTPUT=$(palm benchmark 'echo hello' -n 2 2>&1)
+assert_contains "$OUTPUT" "Fastest\|Average" "benchmark shows results"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Shield Tests"
+echo ""
+
+assert_exit_0 "palm shield --help" "shield help works"
+OUTPUT=$(palm shield 2>&1)
+assert_contains "$OUTPUT" "shield\|check" "shield shows status"
+assert_exit_0 "palm shield pre" "shield pre works"
+assert_exit_0 "palm shield post" "shield post works"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Sync Tests"
+echo ""
+
+assert_exit_0 "palm sync" "sync status works"
+assert_exit_0 "palm sync export /tmp/palm-sync-test" "sync export works"
+assert_exit_0 "palm sync import /tmp/palm-sync-test" "sync import works"
+rm -rf /tmp/palm-sync-test
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Team Tests"
+echo ""
+
+TEAMDIR="/tmp/palm-team-test"
+mkdir -p "$TEAMDIR"
+cd "$TEAMDIR"
+
+assert_exit_0 "palm team init test-team" "team init works"
+assert_exit_0 "palm team add-tool aider" "team add-tool works"
+assert_exit_0 "palm team add-rule 'no console.log'" "team add-rule works"
+OUTPUT=$(palm team 2>&1)
+assert_contains "$OUTPUT" "test-team" "team shows name"
+assert_exit_0 "palm team export" "team export works"
+
+cd "$WORKSPACE"
+rm -rf "$TEAMDIR"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Activity Log Tests"
+echo ""
+
+assert_exit_0 "palm log" "log overview works"
+assert_exit_0 "palm log stats" "log stats works"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Health Tests"
+echo ""
+
+assert_exit_0 "palm health" "health overview works"
+assert_exit_0 "palm health check" "health check works"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Pirate Mode Tests"
+echo ""
+
+assert_exit_0 "palm pirate --help" "pirate help works"
+OUTPUT=$(palm pirate status 2>&1)
+assert_contains "$OUTPUT" "pirate\|provider\|Provider" "pirate status shows providers"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Help Completeness (new commands)"
+echo ""
+
+OUTPUT=$(palm --help 2>&1)
+assert_contains "$OUTPUT" "mcp" "palm --help shows mcp command"
+assert_contains "$OUTPUT" "tokens" "palm --help shows tokens command"
+assert_contains "$OUTPUT" "rules" "palm --help shows rules command"
+assert_contains "$OUTPUT" "audit" "palm --help shows audit command"
+assert_contains "$OUTPUT" "cost" "palm --help shows cost command"
+assert_contains "$OUTPUT" "prompt" "palm --help shows prompt command"
+assert_contains "$OUTPUT" "migrate" "palm --help shows migrate command"
+assert_contains "$OUTPUT" "benchmark" "palm --help shows benchmark command"
+assert_contains "$OUTPUT" "shield" "palm --help shows shield command"
+assert_contains "$OUTPUT" "sync" "palm --help shows sync command"
+assert_contains "$OUTPUT" "team" "palm --help shows team command"
+assert_contains "$OUTPUT" "log" "palm --help shows log command"
+assert_contains "$OUTPUT" "health" "palm --help shows health command"
+assert_contains "$OUTPUT" "pirate" "palm --help shows pirate command"
+
+# ────────────────────────────────────────
+echo ""
 echo "📋 No 'tamr' References Check"
 echo ""
 

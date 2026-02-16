@@ -82,6 +82,20 @@ func init() {
 		gpuCmd(),
 		tuiCmd(),
 		graphCmd(),
+		mcpCmd(),
+		tokensCmd(),
+		rulesCmd(),
+		auditCmd(),
+		costCmd(),
+		promptCmd(),
+		migrateCmd(),
+		benchmarkCmd(),
+		shieldCmd(),
+		cloudsyncCmd(),
+		teamCmd(),
+		actlogCmd(),
+		healthCmd(),
+		pirateCmd(),
 	)
 }
 

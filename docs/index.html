@@ -1038,7 +1038,7 @@
 <section id="commands">
   <div class="section-header">
     <h2>All <span class="palm">Commands</span></h2>
-    <p>32 commands to manage your entire AI stack.</p>
+    <p>45+ commands to manage your entire AI stack.</p>
   </div>
 
   <div class="commands-wrap">
@@ -1126,10 +1126,72 @@
       <tr><td>palm graph view</td><td>Open interactive graph visualization in browser</td></tr>
     </table>
 
+    <div class="cmd-group-title">MCP Servers</div>
+    <table class="cmd-table">
+      <tr><td>palm mcp list [--category C]</td><td>Browse MCP server registry</td></tr>
+      <tr><td>palm mcp search &lt;query&gt;</td><td>Search MCP servers</td></tr>
+      <tr><td>palm mcp install &lt;server&gt;</td><td>Install an MCP server</td></tr>
+      <tr><td>palm mcp sync</td><td>Sync MCP config across all AI tools</td></tr>
+      <tr><td>palm mcp info &lt;server&gt;</td><td>Show server details</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Token &amp; Context</div>
+    <table class="cmd-table">
+      <tr><td>palm tokens count &lt;file|dir&gt;</td><td>Count tokens in files or directories</td></tr>
+      <tr><td>palm tokens budget [dir]</td><td>Show context window fit across all models</td></tr>
+      <tr><td>palm tokens top [dir]</td><td>Show files with highest token counts</td></tr>
+    </table>
+
+    <div class="cmd-group-title">AI Rules &amp; Audit</div>
+    <table class="cmd-table">
+      <tr><td>palm rules init</td><td>Create .palm-rules.md as single source of truth</td></tr>
+      <tr><td>palm rules sync [--tools T]</td><td>Sync rules to all AI tool config files</td></tr>
+      <tr><td>palm rules check</td><td>Check which configs are stale</td></tr>
+      <tr><td>palm audit [file|dir]</td><td>Detect AI code smells and security issues</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Cost Tracking</div>
+    <table class="cmd-table">
+      <tr><td>palm cost</td><td>Cost breakdown by tool</td></tr>
+      <tr><td>palm cost today / week</td><td>Time-period spending reports</td></tr>
+      <tr><td>palm cost export</td><td>Export cost data as JSON</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Prompt Library</div>
+    <table class="cmd-table">
+      <tr><td>palm prompt add &lt;name&gt; &lt;content&gt;</td><td>Save a reusable prompt template</td></tr>
+      <tr><td>palm prompt run &lt;name&gt; [var=val]</td><td>Render prompt with variable substitution</td></tr>
+      <tr><td>palm prompt list / show / delete</td><td>Manage saved prompts</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Migration &amp; Safety</div>
+    <table class="cmd-table">
+      <tr><td>palm migrate &lt;from&gt; &lt;to&gt;</td><td>Migrate configs between AI tools</td></tr>
+      <tr><td>palm shield</td><td>Pre/post-flight safety checks for AI sessions</td></tr>
+      <tr><td>palm shield pre / post / scan</td><td>Run specific safety checks</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Team &amp; Sync</div>
+    <table class="cmd-table">
+      <tr><td>palm team init [name]</td><td>Create shared team config</td></tr>
+      <tr><td>palm team validate</td><td>Check local setup matches team standards</td></tr>
+      <tr><td>palm sync export / import</td><td>Backup and restore palm state across machines</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Pirate Mode</div>
+    <table class="cmd-table">
+      <tr><td>palm pirate "&lt;prompt&gt;"</td><td>Auto-switch AI providers when quota is hit</td></tr>
+      <tr><td>palm pirate status</td><td>Show available providers and priority</td></tr>
+      <tr><td>palm pirate --local</td><td>Prefer local models (ollama, llama-cpp)</td></tr>
+    </table>
+
     <div class="cmd-group-title">More</div>
     <table class="cmd-table">
       <tr><td>palm matrix</td><td>Terminal dashboard &mdash; everything at a glance</td></tr>
-      <tr><td>palm doctor</td><td>Health check for tools, keys, runtimes</td></tr>
+      <tr><td>palm doctor [--deep]</td><td>Health check for tools, keys, runtimes</td></tr>
+      <tr><td>palm health</td><td>System health overview with data file sizes</td></tr>
+      <tr><td>palm log</td><td>Unified activity log across all AI tools</td></tr>
+      <tr><td>palm benchmark &lt;cmd&gt;</td><td>Benchmark AI tool commands</td></tr>
       <tr><td>palm ui [dir]</td><td>Interactive TUI project navigator</td></tr>
       <tr><td>palm cache fetch [tool...]</td><td>Pre-download for offline use</td></tr>
       <tr><td>palm cache bundle &lt;out.tar.gz&gt;</td><td>Create portable tool bundle</td></tr>

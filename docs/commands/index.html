@@ -62,7 +62,33 @@
     <a href="#graph">Graph Commands</a>
     <a href="#graph-view">Graph Visualization</a>
 
+    <div class="group-title">MCP Servers</div>
+    <a href="#mcp">MCP Management</a>
+
+    <div class="group-title">Tokens &amp; Rules</div>
+    <a href="#tokens">Token Counter</a>
+    <a href="#rules">Universal Rules</a>
+    <a href="#audit">Code Audit</a>
+
+    <div class="group-title">Prompt &amp; Cost</div>
+    <a href="#cost-tracking">Cost Tracking</a>
+    <a href="#prompts">Prompt Library</a>
+
+    <div class="group-title">Migration &amp; Safety</div>
+    <a href="#migrate">Tool Migration</a>
+    <a href="#shield">Shield</a>
+
+    <div class="group-title">Team &amp; Sync</div>
+    <a href="#team">Team Config</a>
+    <a href="#sync">Cross-Machine Sync</a>
+
+    <div class="group-title">Pirate Mode</div>
+    <a href="#pirate">Auto-Switch</a>
+
     <div class="group-title">More</div>
+    <a href="#benchmark">Benchmark</a>
+    <a href="#health">Health</a>
+    <a href="#actlog">Activity Log</a>
     <a href="#cache">Offline Cache</a>
     <a href="#matrix">Dashboard</a>
     <a href="#doctor">Doctor</a>
@@ -553,6 +579,332 @@ depends_on = ["read-code"]
       <strong>Features:</strong> Drag nodes to rearrange, scroll to zoom, search to highlight, hover for details. All data is embedded in a single HTML file &mdash; no external dependencies.
     </div>
 
+    <!-- ────────────────── MCP SERVERS ────────────────── -->
+
+    <h2 id="mcp">MCP Server Management</h2>
+
+    <p>Manage Model Context Protocol servers across all your AI tools from one place. palm ships with a registry of 20 popular MCP servers.</p>
+
+    <div class="codeblock">
+<span class="comment"># List all available MCP servers</span>
+<span class="prompt">$</span> palm mcp list
+
+<span class="comment"># Search for database-related servers</span>
+<span class="prompt">$</span> palm mcp search database
+
+<span class="comment"># Install an MCP server</span>
+<span class="prompt">$</span> palm mcp install postgres
+
+<span class="comment"># Show server details</span>
+<span class="prompt">$</span> palm mcp info filesystem
+
+<span class="comment"># Sync MCP config across all AI tools</span>
+<span class="prompt">$</span> palm mcp sync
+
+<span class="comment"># Remove a server</span>
+<span class="prompt">$</span> palm mcp remove postgres
+    </div>
+
+    <div class="info-box">
+      <strong>Tip:</strong> <code>palm mcp sync</code> writes to Claude Code, Cursor, and VS Code config files simultaneously.
+    </div>
+
+    <!-- ────────────────── TOKENS ────────────────── -->
+
+    <h2 id="tokens">Token Counter</h2>
+
+    <p>Count tokens in files or directories and see how your project fits in model context windows.</p>
+
+    <div class="codeblock">
+<span class="comment"># Count tokens in a file</span>
+<span class="prompt">$</span> palm tokens count main.go
+
+<span class="comment"># Count tokens in a directory</span>
+<span class="prompt">$</span> palm tokens count ./src
+
+<span class="comment"># Show context budget across 20+ models</span>
+<span class="prompt">$</span> palm tokens budget .
+<span class="output">  Project: myapp (45.2K tokens, 87 files)</span>
+<span class="output"></span>
+<span class="output">     Model              Context  Used   Budget</span>
+<span class="output">  ✓  Claude Opus 4      200K     22.6%  ████░░░░░░░░░░░░░░░░</span>
+<span class="output">  ✓  GPT-4o             128K     35.3%  ███████░░░░░░░░░░░░░</span>
+<span class="output">  ✓  Gemini 2.5 Pro     1M       4.5%   █░░░░░░░░░░░░░░░░░░░</span>
+
+<span class="comment"># Top files by token count</span>
+<span class="prompt">$</span> palm tokens top . -n 10
+
+<span class="comment"># JSON output for scripting</span>
+<span class="prompt">$</span> palm tokens count ./src --json
+    </div>
+
+    <!-- ────────────────── RULES ────────────────── -->
+
+    <h2 id="rules">Universal AI Rules</h2>
+
+    <p>Write your project rules once in <code>.palm-rules.md</code> and sync to all 8 AI tools at once.</p>
+
+    <div class="codeblock">
+<span class="comment"># Create .palm-rules.md (detects project language)</span>
+<span class="prompt">$</span> palm rules init
+
+<span class="comment"># Sync rules to all AI tool configs</span>
+<span class="prompt">$</span> palm rules sync
+<span class="success">  ✓ synced → CLAUDE.md (claude-code)</span>
+<span class="success">  ✓ synced → .cursor/rules/palm.mdc (cursor)</span>
+<span class="success">  ✓ synced → .github/copilot-instructions.md (copilot)</span>
+<span class="success">  ✓ synced → AGENTS.md (codex)</span>
+<span class="success">  ✓ synced → .windsurfrules (windsurf)</span>
+
+<span class="comment"># Sync only specific tools</span>
+<span class="prompt">$</span> palm rules sync --tools claude-code,cursor
+
+<span class="comment"># Add a rule quickly</span>
+<span class="prompt">$</span> palm rules add "Always use TypeScript strict mode"
+
+<span class="comment"># Check which configs are stale</span>
+<span class="prompt">$</span> palm rules check
+    </div>
+
+    <h3>Supported Tools</h3>
+    <table class="doc-table">
+      <tr><th>Tool</th><th>Config File</th></tr>
+      <tr><td>Claude Code</td><td><code>CLAUDE.md</code></td></tr>
+      <tr><td>Cursor</td><td><code>.cursor/rules/palm.mdc</code></td></tr>
+      <tr><td>GitHub Copilot</td><td><code>.github/copilot-instructions.md</code></td></tr>
+      <tr><td>OpenAI Codex</td><td><code>AGENTS.md</code></td></tr>
+      <tr><td>Windsurf</td><td><code>.windsurfrules</code></td></tr>
+      <tr><td>Aider</td><td><code>.aider.conf.yml</code></td></tr>
+      <tr><td>Gemini</td><td><code>GEMINI.md</code></td></tr>
+      <tr><td>Trae</td><td><code>.trae/rules/palm.md</code></td></tr>
+    </table>
+
+    <!-- ────────────────── AUDIT ────────────────── -->
+
+    <h2 id="audit">Code Audit</h2>
+
+    <p>Detect common AI-generated code issues: placeholder TODOs, hardcoded secrets, debug statements, and more.</p>
+
+    <div class="codeblock">
+<span class="comment"># Audit current directory</span>
+<span class="prompt">$</span> palm audit
+
+<span class="comment"># Audit a specific file</span>
+<span class="prompt">$</span> palm audit src/main.go
+
+<span class="comment"># Checks performed:</span>
+<span class="output">  ✗ src/config.go:42 — Possible hardcoded password</span>
+<span class="output">  ⚠ src/api.go:15 — Placeholder TODO — likely unimplemented</span>
+<span class="output">  i src/utils.js:8 — Debug console.log left in code</span>
+    </div>
+
+    <!-- ────────────────── COST TRACKING ────────────────── -->
+
+    <h2 id="cost-tracking">Cost Tracking</h2>
+
+    <p>Track AI tool spending across providers with per-tool breakdowns.</p>
+
+    <div class="codeblock">
+<span class="comment"># Show cost breakdown by tool</span>
+<span class="prompt">$</span> palm cost
+
+<span class="comment"># Today's spending</span>
+<span class="prompt">$</span> palm cost today
+
+<span class="comment"># This week's spending with daily average</span>
+<span class="prompt">$</span> palm cost week
+
+<span class="comment"># Export as JSON</span>
+<span class="prompt">$</span> palm cost export
+    </div>
+
+    <!-- ────────────────── PROMPT LIBRARY ────────────────── -->
+
+    <h2 id="prompts">Prompt Library</h2>
+
+    <p>Save, organize, and reuse prompt templates with <code>{{variable}}</code> substitution.</p>
+
+    <div class="codeblock">
+<span class="comment"># Save a prompt</span>
+<span class="prompt">$</span> palm prompt add review "Review {{file}} for {{focus}}"
+
+<span class="comment"># Run with variables</span>
+<span class="prompt">$</span> palm prompt run review file=main.go focus=security
+<span class="output">  Review main.go for security</span>
+
+<span class="comment"># List all prompts</span>
+<span class="prompt">$</span> palm prompt list
+
+<span class="comment"># Show prompt content</span>
+<span class="prompt">$</span> palm prompt show review --json
+
+<span class="comment"># Export all prompts</span>
+<span class="prompt">$</span> palm prompt export
+    </div>
+
+    <!-- ────────────────── MIGRATION ────────────────── -->
+
+    <h2 id="migrate">Tool Migration</h2>
+
+    <p>Migrate configs and keys between AI tools. palm maps config files and environment variables.</p>
+
+    <div class="codeblock">
+<span class="comment"># Migrate from Cursor to Claude Code</span>
+<span class="prompt">$</span> palm migrate cursor claude-code
+
+<span class="comment"># Migrate from Copilot to Claude Code</span>
+<span class="prompt">$</span> palm migrate copilot claude-code
+
+<span class="comment"># See all available migration paths</span>
+<span class="prompt">$</span> palm migrate list
+    </div>
+
+    <!-- ────────────────── SHIELD ────────────────── -->
+
+    <h2 id="shield">AI Safety Shield</h2>
+
+    <p>Pre-flight and post-flight checks to keep your codebase safe when using AI tools.</p>
+
+    <div class="codeblock">
+<span class="comment"># Show shield status</span>
+<span class="prompt">$</span> palm shield
+
+<span class="comment"># Run before starting an AI session</span>
+<span class="prompt">$</span> palm shield pre
+<span class="success">  ✓ Git repository detected</span>
+<span class="success">  ✓ Working tree clean</span>
+<span class="success">  ✓ AI rules file found</span>
+
+<span class="comment"># Run after AI session, before committing</span>
+<span class="prompt">$</span> palm shield post
+
+<span class="comment"># Scan directory for sensitive files</span>
+<span class="prompt">$</span> palm shield scan ./src
+    </div>
+
+    <!-- ────────────────── TEAM ────────────────── -->
+
+    <h2 id="team">Team Collaboration</h2>
+
+    <p>Share AI tool configs, prompts, and standards across your team via <code>.palm-team.json</code>.</p>
+
+    <div class="codeblock">
+<span class="comment"># Create team config</span>
+<span class="prompt">$</span> palm team init my-team
+
+<span class="comment"># Add recommended tools</span>
+<span class="prompt">$</span> palm team add-tool aider
+
+<span class="comment"># Add team rules</span>
+<span class="prompt">$</span> palm team add-rule "Always write tests"
+
+<span class="comment"># Validate local setup matches team config</span>
+<span class="prompt">$</span> palm team validate
+    </div>
+
+    <!-- ────────────────── SYNC ────────────────── -->
+
+    <h2 id="sync">Cross-Machine Sync</h2>
+
+    <p>Backup and restore your palm state (vault, graph, sessions, prompts) across machines.</p>
+
+    <div class="codeblock">
+<span class="comment"># Show sync status (what data exists)</span>
+<span class="prompt">$</span> palm sync
+
+<span class="comment"># Export to a backup directory</span>
+<span class="prompt">$</span> palm sync export ~/palm-backup
+
+<span class="comment"># Restore on another machine</span>
+<span class="prompt">$</span> palm sync import ~/palm-backup
+    </div>
+
+    <div class="info-box">
+      <strong>Note:</strong> Encrypted files (vault.enc, graph.enc) are machine-specific. They use hostname+username for key derivation, so they only decrypt on the same user account.
+    </div>
+
+    <!-- ────────────────── PIRATE MODE ────────────────── -->
+
+    <h2 id="pirate">Pirate Mode</h2>
+
+    <p>Auto-switch between AI providers when one hits its rate limit or quota. Like a pirate hopping ships.</p>
+
+    <div class="codeblock">
+<span class="comment"># Run a prompt with auto-failover</span>
+<span class="prompt">$</span> palm pirate "Explain this error in my Go code"
+
+<span class="comment"># Prefer local models first</span>
+<span class="prompt">$</span> palm pirate --local "Write a Python script to parse CSV"
+
+<span class="comment"># Show available providers and priority</span>
+<span class="prompt">$</span> palm pirate status
+
+<span class="comment"># Run a specific provider with fallback</span>
+<span class="prompt">$</span> palm pirate run ollama "Summarize this"
+    </div>
+
+    <h3>Provider Priority</h3>
+    <table class="doc-table">
+      <tr><th>Priority</th><th>Provider</th><th>Type</th></tr>
+      <tr><td>1</td><td>Ollama</td><td>Local (free)</td></tr>
+      <tr><td>2</td><td>llama-cpp</td><td>Local (free)</td></tr>
+      <tr><td>3</td><td>Claude Code</td><td>Cloud (API key)</td></tr>
+      <tr><td>4</td><td>Aider</td><td>Cloud (API key)</td></tr>
+      <tr><td>5</td><td>Codex</td><td>Cloud (API key)</td></tr>
+      <tr><td>6</td><td>Gemini</td><td>Cloud (API key)</td></tr>
+    </table>
+
+    <!-- ────────────────── BENCHMARK ────────────────── -->
+
+    <h2 id="benchmark">Benchmark</h2>
+
+    <p>Measure speed and reliability of AI tool commands.</p>
+
+    <div class="codeblock">
+<span class="comment"># Benchmark a command (3 iterations by default)</span>
+<span class="prompt">$</span> palm benchmark "ollama run llama3.2 'hello'"
+
+<span class="comment"># More iterations for accuracy</span>
+<span class="prompt">$</span> palm benchmark "aider --message test" -n 5
+    </div>
+
+    <!-- ────────────────── HEALTH ────────────────── -->
+
+    <h2 id="health">System Health</h2>
+
+    <p>Overview of your palm installation — platform, tools, data files, and disk usage.</p>
+
+    <div class="codeblock">
+<span class="comment"># Quick health overview</span>
+<span class="prompt">$</span> palm health
+
+<span class="comment"># Run comprehensive checks</span>
+<span class="prompt">$</span> palm health check
+    </div>
+
+    <!-- ────────────────── ACTIVITY LOG ────────────────── -->
+
+    <h2 id="actlog">Activity Log</h2>
+
+    <p>Unified activity log tracking all AI tool usage across sessions.</p>
+
+    <div class="codeblock">
+<span class="comment"># Show recent activity</span>
+<span class="prompt">$</span> palm log
+
+<span class="comment"># Search activity entries</span>
+<span class="prompt">$</span> palm log search "aider"
+
+<span class="comment"># Activity statistics</span>
+<span class="prompt">$</span> palm log stats
+
+<span class="comment"># Export as JSON</span>
+<span class="prompt">$</span> palm log export
+
+<span class="comment"># Clear the log</span>
+<span class="prompt">$</span> palm log clear
+    </div>
+
     <!-- ────────────────── MORE ────────────────── -->
 
     <h2 id="cache">Offline Cache</h2>
@@ -601,6 +953,9 @@ depends_on = ["read-code"]
 <span class="output">  ✗ Docker not found</span>
 <span class="output">  Vault</span>
 <span class="success">  ✓ 2 keys stored</span>
+
+<span class="comment"># Deep checks — configs, network, disk, AI rule files</span>
+<span class="prompt">$</span> palm doctor --deep
     </div>
 
     <h2 id="tui">TUI Navigator</h2>
