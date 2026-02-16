@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"os"
 	"os/exec"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/msalah0e/palm/internal/registry"
 	"github.com/msalah0e/palm/internal/ui"
 	"github.com/msalah0e/palm/internal/vault"
 	"github.com/spf13/cobra"
@@ -29,26 +31,45 @@ type SpeedResult struct {
 
 func speedtestCmd() *cobra.Command {
 	var (
-		prompt string
-		quick  bool
+		prompt     string
+		quick      bool
+		tools      string
+		timeout    int
+		showOutput bool
 	)
 
 	cmd := &cobra.Command{
-		Use:     "speedtest",
+		Use:     "speedtest [prompt]",
 		Short:   "AI speedtest — benchmark your LLM stack like an internet speed test",
-		Aliases: []string{"speed"},
+		Aliases: []string{"speed", "benchmark", "bench"},
 		Long: `Run a visual AI speedtest across all configured providers.
 Tests latency, throughput, and quality — displayed with progress bars and a scorecard.
 
+When --tools is provided, runs a direct comparison between specific tools (benchmark mode).
+
 Examples:
-  palm speedtest                              # Test all configured providers
-  palm speedtest --prompt "explain recursion"  # Custom prompt
-  palm speedtest --quick                       # Faster test (shorter prompt)`,
+  palm speedtest                                      # Test all configured providers
+  palm speedtest --prompt "explain recursion"          # Custom prompt
+  palm speedtest --quick                               # Faster test (shorter prompt)
+  palm speedtest "explain quicksort" --tools ollama,mods  # Compare specific tools
+  palm speedtest "fix the bug" --tools aider,codex --output  # Show tool output`,
+		Args: cobra.MaximumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			// If positional arg provided, use as prompt
+			if len(args) > 0 {
+				prompt = args[0]
+			}
+
+			// Benchmark mode: compare specific tools
+			if tools != "" {
+				runBenchmarkMode(prompt, tools, timeout, showOutput)
+				return
+			}
+
+			// Speedtest mode: auto-detect and test all providers
 			v := vault.New()
 			env := buildVaultEnv(v)
 
-			// Determine which providers are available
 			type testTarget struct {
 				Provider string
 				Model    string
@@ -57,7 +78,6 @@ Examples:
 
 			var targets []testTarget
 
-			// Check Ollama
 			if _, err := exec.LookPath("ollama"); err == nil {
 				targets = append(targets, testTarget{
 					Provider: "Ollama",
@@ -66,7 +86,6 @@ Examples:
 				})
 			}
 
-			// Check other tools
 			if _, err := exec.LookPath("aider"); err == nil {
 				targets = append(targets, testTarget{
 					Provider: "Aider",
@@ -114,7 +133,6 @@ Examples:
 			fmt.Printf("  Targets:  %d providers\n", len(targets))
 			fmt.Println()
 
-			// Run tests
 			var mu sync.Mutex
 			var wg sync.WaitGroup
 			results := make([]SpeedResult, len(targets))
@@ -151,8 +169,6 @@ Examples:
 			}
 
 			wg.Wait()
-
-			// Print visual results
 			fmt.Println()
 			printSpeedtestResults(results)
 		},
@@ -160,7 +176,180 @@ Examples:
 
 	cmd.Flags().StringVar(&prompt, "prompt", "", "Custom test prompt")
 	cmd.Flags().BoolVar(&quick, "quick", false, "Quick test with shorter prompt")
+	cmd.Flags().StringVar(&tools, "tools", "", "Compare specific tools (e.g., ollama,mods)")
+	cmd.Flags().IntVar(&timeout, "timeout", 30, "Timeout per tool in seconds (benchmark mode)")
+	cmd.Flags().BoolVar(&showOutput, "output", false, "Show tool output (benchmark mode)")
 	return cmd
+}
+
+// runBenchmarkMode compares specific tools on the same prompt.
+func runBenchmarkMode(prompt, tools string, timeout int, showOutput bool) {
+	reg := loadRegistry()
+	v := vault.New()
+
+	toolNames := strings.Split(tools, ",")
+	if len(toolNames) < 2 {
+		ui.Warn.Println("  Provide at least 2 tools to compare: --tools tool1,tool2")
+		os.Exit(1)
+	}
+
+	if prompt == "" {
+		prompt = "Explain the difference between a stack and a queue in 100 words"
+	}
+
+	ui.Banner("benchmark")
+	fmt.Printf("  Prompt: %s\n", ui.Brand.Sprint(prompt))
+	fmt.Printf("  Tools:  %s\n", strings.Join(toolNames, ", "))
+	fmt.Printf("  Timeout: %ds\n\n", timeout)
+
+	var results []BenchResult
+
+	for _, name := range toolNames {
+		name = strings.TrimSpace(name)
+		tool := reg.Get(name)
+
+		bin := name
+		if tool != nil && tool.Install.Verify.Command != "" {
+			parts := strings.Fields(tool.Install.Verify.Command)
+			if len(parts) > 0 {
+				bin = parts[0]
+			}
+		}
+
+		if _, err := exec.LookPath(bin); err != nil {
+			results = append(results, BenchResult{
+				Tool:     name,
+				ExitCode: -1,
+				Error:    "not installed",
+			})
+			continue
+		}
+
+		fmt.Printf("  Running %s... ", ui.Brand.Sprint(name))
+
+		result := runBenchmark(name, bin, prompt, tool, v, timeout)
+		results = append(results, result)
+
+		if result.Error != "" {
+			ui.Bad.Printf("failed (%s)\n", result.Error)
+		} else {
+			ui.Good.Printf("%.2fs\n", result.Duration.Seconds())
+		}
+	}
+
+	fmt.Println()
+	headers := []string{"Tool", "Time", "Output Length", "Status"}
+	var rows [][]string
+
+	for _, r := range results {
+		status := ui.StatusIcon(true) + " ok"
+		dur := fmt.Sprintf("%.2fs", r.Duration.Seconds())
+		outLen := fmt.Sprintf("%d chars", len(r.Output))
+
+		if r.Error != "" {
+			status = ui.StatusIcon(false) + " " + r.Error
+			dur = "-"
+			outLen = "-"
+		}
+
+		rows = append(rows, []string{r.Tool, dur, outLen, status})
+	}
+
+	ui.Table(headers, rows)
+
+	if showOutput {
+		fmt.Println()
+		for _, r := range results {
+			if r.Output != "" {
+				fmt.Printf("  === %s ===\n", ui.Brand.Sprint(r.Tool))
+				out := r.Output
+				if len(out) > 500 {
+					out = out[:500] + "\n  ... (truncated)"
+				}
+				fmt.Println(out)
+				fmt.Println()
+			}
+		}
+	}
+}
+
+// BenchResult holds the result of benchmarking a single tool.
+type BenchResult struct {
+	Tool     string
+	Duration time.Duration
+	Output   string
+	ExitCode int
+	Error    string
+}
+
+func runBenchmark(name, bin, prompt string, tool *registry.Tool, v vault.Vault, timeout int) BenchResult {
+	env := os.Environ()
+	if tool != nil {
+		allKeys := append(tool.Keys.Required, tool.Keys.Optional...)
+		for _, key := range allKeys {
+			if os.Getenv(key) == "" {
+				if val, err := v.Get(key); err == nil {
+					env = append(env, fmt.Sprintf("%s=%s", key, val))
+				}
+			}
+		}
+	}
+
+	var cmdArgs []string
+	switch name {
+	case "ollama":
+		cmdArgs = []string{bin, "run", "llama3.3", prompt}
+	default:
+		cmdArgs = []string{bin, prompt}
+	}
+
+	var stdout, stderr bytes.Buffer
+	c := exec.Command(cmdArgs[0], cmdArgs[1:]...)
+	c.Stdout = &stdout
+	c.Stderr = &stderr
+	c.Env = env
+	c.Stdin = strings.NewReader(prompt)
+
+	start := time.Now()
+	if err := c.Start(); err != nil {
+		return BenchResult{
+			Tool:     name,
+			Duration: time.Since(start),
+			ExitCode: 1,
+			Error:    err.Error(),
+		}
+	}
+
+	done := make(chan error, 1)
+	go func() { done <- c.Wait() }()
+
+	select {
+	case err := <-done:
+		elapsed := time.Since(start)
+		if err != nil {
+			return BenchResult{
+				Tool:     name,
+				Duration: elapsed,
+				Output:   stderr.String(),
+				ExitCode: 1,
+				Error:    err.Error(),
+			}
+		}
+		return BenchResult{
+			Tool:     name,
+			Duration: elapsed,
+			Output:   stdout.String(),
+			ExitCode: 0,
+		}
+	case <-time.After(time.Duration(timeout) * time.Second):
+		_ = c.Process.Kill()
+		return BenchResult{
+			Tool:     name,
+			Duration: time.Duration(timeout) * time.Second,
+			Error:    "timeout",
+			ExitCode: -1,
+		}
+	}
 }
 
 func printSpeedtestHeader() {
@@ -242,7 +431,6 @@ func printSpeedtestResults(results []SpeedResult) {
 	fmt.Println(ui.Brand.Sprint("  │") + "  " + ui.Brand.Sprint("RESULTS") + "                                                " + ui.Brand.Sprint("│"))
 	fmt.Println(ui.Brand.Sprint("  ├─────────────────────────────────────────────────────────┤"))
 
-	// Find max TPS for scaling bars
 	var maxTPS float64
 	for _, r := range results {
 		if r.TPS > maxTPS {
@@ -264,12 +452,10 @@ func printSpeedtestResults(results []SpeedResult) {
 			continue
 		}
 
-		// Provider + model line
 		provLine := fmt.Sprintf("  %-12s  %s", r.Provider, ui.Subtle.Sprint(r.Model))
 		pad1 := max(0, 55-len(r.Provider)-2-len(r.Model)-2)
 		fmt.Println(ui.Brand.Sprint("  │") + provLine + strings.Repeat(" ", pad1) + ui.Brand.Sprint("│"))
 
-		// Speed bar
 		barWidth := 30
 		filled := int(math.Round((r.TPS / maxTPS) * float64(barWidth)))
 		if filled < 1 && r.TPS > 0 {
@@ -282,7 +468,6 @@ func printSpeedtestResults(results []SpeedResult) {
 		fmt.Printf(ui.Brand.Sprint("  │")+"  %s  %s%s"+ui.Brand.Sprint("│")+"\n",
 			bar, tpsStr, strings.Repeat(" ", pad2))
 
-		// Stats line
 		timeStr := fmt.Sprintf("%.2fs", r.TotalTime.Seconds())
 		outStr := formatBytes(r.OutputLen)
 		tokStr := fmt.Sprintf("~%d tokens", r.TokensEst)
@@ -297,7 +482,6 @@ func printSpeedtestResults(results []SpeedResult) {
 	fmt.Println(ui.Brand.Sprint("  │") + "                                                         " + ui.Brand.Sprint("│"))
 	fmt.Println(ui.Brand.Sprint("  └─────────────────────────────────────────────────────────┘"))
 
-	// Print winner
 	var winner *SpeedResult
 	for i := range results {
 		if results[i].Error == "" && (winner == nil || results[i].TPS > winner.TPS) {
@@ -313,7 +497,6 @@ func printSpeedtestResults(results []SpeedResult) {
 			winner.TPS)
 	}
 
-	// Grade
 	fmt.Println()
 	printSpeedGrade(results)
 	fmt.Println()

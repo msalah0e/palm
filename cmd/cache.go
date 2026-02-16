@@ -9,7 +9,21 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func fetchCmd() *cobra.Command {
+func cacheCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "cache",
+		Short: "Manage offline cache — download tools and create bundles",
+	}
+
+	cmd.AddCommand(
+		cacheFetchCmd(),
+		cacheBundleCmd(),
+	)
+
+	return cmd
+}
+
+func cacheFetchCmd() *cobra.Command {
 	var all bool
 
 	cmd := &cobra.Command{
@@ -74,7 +88,7 @@ func fetchCmd() *cobra.Command {
 	return cmd
 }
 
-func bundleCmd() *cobra.Command {
+func cacheBundleCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "bundle <output.tar.gz>",
 		Short: "Create portable bundle of cached tools",

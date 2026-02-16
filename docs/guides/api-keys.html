@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API Key Management — palm</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.1</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a>
+    <a href="../getting-started/">Get Started</a>
+    <a href="../commands/">Commands</a>
+    <a href="../guides/api-keys.html" class="active">Guides</a>
+    <a href="https://github.com/msalah0e/palm">GitHub</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="group-title">Guides</div>
+    <a href="api-keys.html" class="active">API Key Management</a>
+    <a href="proxy.html">LLM Proxy</a>
+    <a href="offline-mode.html">Offline Mode</a>
+    <a href="local-llm.html">Local LLMs</a>
+    <a href="worktree.html">Git Worktrees</a>
+    <a href="ci-integration.html">CI/CD Integration</a>
+
+    <div class="group-title">Reference</div>
+    <a href="../getting-started/">Getting Started</a>
+    <a href="../commands/">Command Reference</a>
+  </aside>
+
+  <main class="content">
+    <h1><span class="palm">API Key</span> Management</h1>
+    <p class="lead">
+      Securely store, manage, and auto-inject API keys across all your AI tools.
+    </p>
+
+    <h2 id="vault">The Vault</h2>
+    <p>palm stores API keys in a secure vault:</p>
+    <ul>
+      <li><strong>macOS</strong>: macOS Keychain (system-level encryption)</li>
+      <li><strong>Linux &amp; Windows</strong>: AES-256-GCM encrypted file at <code>~/.config/palm/vault.enc</code></li>
+    </ul>
+    <p>Keys are never stored as plaintext on disk.</p>
+
+    <h2 id="adding-keys">Adding Keys</h2>
+    <div class="codeblock">
+<span class="comment"># Interactive — prompts for value</span>
+<span class="prompt">$</span> palm keys add ANTHROPIC_API_KEY
+<span class="key">  Enter value:</span> sk-ant-api03-...
+<span class="success">  ✓ Stored in vault</span>
+
+<span class="comment"># From pipe</span>
+<span class="prompt">$</span> echo "sk-ant-api03-..." | palm keys add ANTHROPIC_API_KEY
+
+<span class="comment"># Multiple keys</span>
+<span class="prompt">$</span> palm keys add OPENAI_API_KEY
+<span class="prompt">$</span> palm keys add GOOGLE_API_KEY
+    </div>
+
+    <h2 id="listing">Listing Keys</h2>
+    <div class="codeblock">
+<span class="prompt">$</span> palm keys list
+<span class="output">  ANTHROPIC_API_KEY  sk-ant-***********</span>
+<span class="output">  OPENAI_API_KEY     sk-***************</span>
+<span class="output">  2 keys stored</span>
+    </div>
+
+    <h2 id="export">Exporting Keys</h2>
+    <div class="codeblock">
+<span class="comment"># Print export statements</span>
+<span class="prompt">$</span> palm keys export
+<span class="output">  export ANTHROPIC_API_KEY=sk-ant-api03-...</span>
+<span class="output">  export OPENAI_API_KEY=sk-...</span>
+
+<span class="comment"># Shell integration (add to ~/.zshrc or ~/.bashrc)</span>
+eval "$(palm keys env)"
+    </div>
+
+    <div class="info-box">
+      <strong>palm keys env</strong> exports both vault keys AND tool PATH additions, so tools installed via palm are always available.
+    </div>
+
+    <h2 id="auto-injection">Auto-Injection</h2>
+    <p>When you run a tool with <code>palm run</code>, palm automatically injects the right keys:</p>
+    <div class="codeblock">
+<span class="prompt">$</span> palm run aider
+<span class="output">  Injected 1 key from vault</span>
+<span class="comment"># ANTHROPIC_API_KEY is now set in the tool's environment</span>
+    </div>
+
+    <p>The registry maps each tool to its required keys. palm reads this mapping, pulls matching keys from the vault, and sets them as environment variables.</p>
+
+    <h2 id="removing">Removing Keys</h2>
+    <div class="codeblock">
+<span class="prompt">$</span> palm keys rm OPENAI_API_KEY
+<span class="success">  ✓ Removed</span>
+    </div>
+
+    <h2 id="vault-config">Vault Configuration</h2>
+    <div class="codeblock">
+<span class="comment"># In ~/.config/palm/config.toml</span>
+[vault]
+backend = "auto"  <span class="comment"># auto | keychain | file</span>
+    </div>
+
+    <table class="doc-table">
+      <tr><th>Backend</th><th>Platform</th><th>Storage</th></tr>
+      <tr><td>keychain</td><td>macOS only</td><td>macOS Keychain</td></tr>
+      <tr><td>file</td><td>All platforms</td><td>AES-256-GCM encrypted file</td></tr>
+      <tr><td>auto</td><td>All platforms</td><td>Keychain on macOS, file elsewhere</td></tr>
+    </table>
+
+    <div class="page-nav">
+      <a href="../commands/">&larr; Commands</a>
+      <a href="proxy.html">LLM Proxy &rarr;</a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared/nav.js"></script>
+</body>
+</html>

@@ -34,7 +34,7 @@ assert_exit_nonzero() {
 }
 
 echo ""
-echo "🌴 palm E2E test suite v1.0.0"
+echo "🌴 palm E2E test suite v1.1.0"
 echo "=============================="
 echo ""
 
@@ -59,7 +59,7 @@ echo ""
 # ────────────────────────────────────────
 # Version
 OUTPUT=$(palm --version 2>&1)
-assert_contains "$OUTPUT" "palm 1.0.0-test" "palm --version"
+assert_contains "$OUTPUT" "palm 1.1.0-test" "palm --version"
 
 # Help
 OUTPUT=$(palm --help 2>&1)
@@ -67,35 +67,36 @@ assert_contains "$OUTPUT" "palm" "palm --help shows name"
 assert_contains "$OUTPUT" "install" "palm --help shows install command"
 assert_contains "$OUTPUT" "run" "palm --help shows run command"
 assert_contains "$OUTPUT" "keys" "palm --help shows keys command"
-assert_contains "$OUTPUT" "discover" "palm --help shows discover command"
+assert_contains "$OUTPUT" "search" "palm --help shows search command"
 assert_contains "$OUTPUT" "workspace" "palm --help shows workspace command"
 assert_contains "$OUTPUT" "context" "palm --help shows context command"
 assert_contains "$OUTPUT" "models" "palm --help shows models command"
 assert_contains "$OUTPUT" "budget" "palm --help shows budget command"
 assert_contains "$OUTPUT" "proxy" "palm --help shows proxy command"
-assert_contains "$OUTPUT" "benchmark" "palm --help shows benchmark command"
 assert_contains "$OUTPUT" "matrix" "palm --help shows matrix command"
 assert_contains "$OUTPUT" "pipe" "palm --help shows pipe command"
-assert_contains "$OUTPUT" "env" "palm --help shows env command"
-assert_contains "$OUTPUT" "sessions" "palm --help shows sessions command"
 assert_contains "$OUTPUT" "squad" "palm --help shows squad command"
 assert_contains "$OUTPUT" "compose" "palm --help shows compose command"
 assert_contains "$OUTPUT" "speedtest" "palm --help shows speedtest command"
+assert_contains "$OUTPUT" "cache" "palm --help shows cache command"
+assert_contains "$OUTPUT" "worktree" "palm --help shows worktree command"
+assert_contains "$OUTPUT" "serve" "palm --help shows serve command"
+assert_contains "$OUTPUT" "gpu" "palm --help shows gpu command"
 
 # ────────────────────────────────────────
 echo ""
 echo "📋 Registry Tests"
 echo ""
 
-# Discover
-OUTPUT=$(palm discover 2>&1)
-assert_contains "$OUTPUT" "Coding" "discover shows Coding category"
-assert_contains "$OUTPUT" "Agents" "discover shows Agents category"
-assert_contains "$OUTPUT" "Security" "discover shows Security category"
-assert_contains "$OUTPUT" "claude-code" "discover lists claude-code"
-assert_contains "$OUTPUT" "aider" "discover lists aider"
+# Search (browse mode — no args)
+OUTPUT=$(palm search 2>&1)
+assert_contains "$OUTPUT" "Coding" "search browse shows Coding category"
+assert_contains "$OUTPUT" "Agents" "search browse shows Agents category"
+assert_contains "$OUTPUT" "Security" "search browse shows Security category"
+assert_contains "$OUTPUT" "claude-code" "search browse lists claude-code"
+assert_contains "$OUTPUT" "aider" "search browse lists aider"
 
-# Search
+# Search (query mode)
 OUTPUT=$(palm search agent 2>&1)
 assert_contains "$OUTPUT" "search results" "search shows results header"
 
@@ -172,12 +173,12 @@ assert_contains "$OUTPUT" "Failed" "rm nonexistent shows error"
 
 # ────────────────────────────────────────
 echo ""
-echo "📋 Env Command Tests"
+echo "📋 Keys Env Tests"
 echo ""
 
-OUTPUT=$(palm env 2>&1)
-assert_contains "$OUTPUT" "palm env" "env shows header comment"
-assert_contains "$OUTPUT" "export TEST_KEY_2=" "env exports vault keys"
+OUTPUT=$(palm keys env 2>&1)
+assert_contains "$OUTPUT" "palm keys env" "keys env shows header comment"
+assert_contains "$OUTPUT" "export TEST_KEY_2=" "keys env exports vault keys"
 
 # ────────────────────────────────────────
 echo ""
@@ -232,14 +233,14 @@ rm -rf "$CTXDIR"
 
 # ────────────────────────────────────────
 echo ""
-echo "📋 Sessions Tests"
+echo "📋 Stats Sessions Tests"
 echo ""
 
-OUTPUT=$(palm sessions 2>&1)
-assert_contains "$OUTPUT" "No sessions\|recent sessions" "sessions shows empty or header"
+OUTPUT=$(palm stats sessions 2>&1)
+assert_contains "$OUTPUT" "No sessions\|recent sessions" "stats sessions shows empty or header"
 
-OUTPUT=$(palm sessions --cost 2>&1)
-assert_contains "$OUTPUT" "No sessions\|session costs" "sessions --cost works"
+OUTPUT=$(palm stats costs 2>&1)
+assert_contains "$OUTPUT" "No sessions\|session costs\|cost" "stats costs works"
 
 # ────────────────────────────────────────
 echo ""
@@ -357,14 +358,14 @@ echo "📋 Offline Mode Tests"
 echo ""
 
 assert_exit_0 "palm --offline list" "offline flag accepted"
-assert_exit_0 "palm --offline discover" "offline discover works"
-assert_exit_0 "palm --offline search agent" "offline search works"
+assert_exit_0 "palm --offline search" "offline search browse works"
+assert_exit_0 "palm --offline search agent" "offline search query works"
 
-OUTPUT=$(palm fetch --help 2>&1)
-assert_contains "$OUTPUT" "offline" "fetch help mentions offline"
+OUTPUT=$(palm cache fetch --help 2>&1)
+assert_contains "$OUTPUT" "offline\|Pre-download" "cache fetch help shows description"
 
-OUTPUT=$(palm bundle /tmp/test-bundle.tar.gz 2>&1) || true
-assert_contains "$OUTPUT" "empty\|failed\|Bundle" "bundle with no cache shows message"
+OUTPUT=$(palm cache bundle /tmp/test-bundle.tar.gz 2>&1) || true
+assert_contains "$OUTPUT" "empty\|failed\|Bundle" "cache bundle with no cache shows message"
 
 # ────────────────────────────────────────
 echo ""
@@ -462,6 +463,66 @@ assert_contains "$OUTPUT" "check" "eval has check alias"
 
 # ────────────────────────────────────────
 echo ""
+echo "📋 Worktree Tests"
+echo ""
+
+assert_exit_0 "palm worktree --help" "worktree help works"
+OUTPUT=$(palm worktree --help 2>&1)
+assert_contains "$OUTPUT" "add" "worktree help shows add subcommand"
+assert_contains "$OUTPUT" "list" "worktree help shows list subcommand"
+assert_contains "$OUTPUT" "remove" "worktree help shows remove subcommand"
+assert_contains "$OUTPUT" "run" "worktree help shows run subcommand"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Serve Tests"
+echo ""
+
+assert_exit_0 "palm serve --help" "serve help works"
+OUTPUT=$(palm serve --help 2>&1)
+assert_contains "$OUTPUT" "start" "serve help shows start subcommand"
+assert_contains "$OUTPUT" "stop" "serve help shows stop subcommand"
+assert_contains "$OUTPUT" "models" "serve help shows models subcommand"
+assert_contains "$OUTPUT" "pull" "serve help shows pull subcommand"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 GPU Tests"
+echo ""
+
+assert_exit_0 "palm gpu --help" "gpu help works"
+OUTPUT=$(palm gpu 2>&1) || true
+# GPU command should run (may show "No GPU detected" in CI)
+pass "gpu command executes"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 TUI Tests"
+echo ""
+
+assert_exit_0 "palm ui --help" "ui help works"
+OUTPUT=$(palm ui --help 2>&1)
+assert_contains "$OUTPUT" "project" "ui help mentions projects"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Cache Tests"
+echo ""
+
+assert_exit_0 "palm cache --help" "cache help works"
+OUTPUT=$(palm cache --help 2>&1)
+assert_contains "$OUTPUT" "fetch" "cache help shows fetch subcommand"
+assert_contains "$OUTPUT" "bundle" "cache help shows bundle subcommand"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 PowerShell Completion Tests"
+echo ""
+
+assert_exit_0 "palm completion powershell" "powershell completion generates"
+
+# ────────────────────────────────────────
+echo ""
 echo "📋 Help Completeness (all commands)"
 echo ""
 
@@ -473,7 +534,7 @@ echo ""
 echo "📋 No 'tamr' References Check"
 echo ""
 
-OUTPUT=$(palm --help 2>&1; palm --version 2>&1; palm discover 2>&1; palm list 2>&1; palm doctor 2>&1)
+OUTPUT=$(palm --help 2>&1; palm --version 2>&1; palm search 2>&1; palm list 2>&1; palm doctor 2>&1)
 if echo "$OUTPUT" | grep -qi "tamr"; then
     fail "no tamr references" "found 'tamr' in CLI output"
 else

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"syscall"
 
@@ -72,7 +73,25 @@ func runCmd() *cobra.Command {
 				}
 			}
 
-			// Replace this process with the tool
+			// On Unix, replace this process with the tool.
+			// On Windows, use exec.Command (syscall.Exec not supported).
+			if runtime.GOOS == "windows" {
+				c := exec.Command(binPath, toolArgs...)
+				c.Env = env
+				c.Stdin = os.Stdin
+				c.Stdout = os.Stdout
+				c.Stderr = os.Stderr
+				if err := c.Run(); err != nil {
+					if exitErr, ok := err.(*exec.ExitError); ok {
+						os.Exit(exitErr.ExitCode())
+					}
+					ui.Bad.Printf("palm: failed to run %s: %v\n", bin, err)
+					os.Exit(1)
+				}
+				return
+			}
+
+			// Unix: replace process
 			if err := syscall.Exec(binPath, append([]string{bin}, toolArgs...), env); err != nil {
 				ui.Bad.Printf("palm: failed to exec %s: %v\n", bin, err)
 				os.Exit(1)

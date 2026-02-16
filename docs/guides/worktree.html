@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Git Worktrees — palm</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.1</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a>
+    <a href="../getting-started/">Get Started</a>
+    <a href="../commands/">Commands</a>
+    <a href="../guides/api-keys.html" class="active">Guides</a>
+    <a href="https://github.com/msalah0e/palm">GitHub</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="group-title">Guides</div>
+    <a href="api-keys.html">API Key Management</a>
+    <a href="proxy.html">LLM Proxy</a>
+    <a href="offline-mode.html">Offline Mode</a>
+    <a href="local-llm.html">Local LLMs</a>
+    <a href="worktree.html" class="active">Git Worktrees</a>
+    <a href="ci-integration.html">CI/CD Integration</a>
+
+    <div class="group-title">Reference</div>
+    <a href="../getting-started/">Getting Started</a>
+    <a href="../commands/">Command Reference</a>
+  </aside>
+
+  <main class="content">
+    <h1><span class="palm">Git</span> Worktrees</h1>
+    <p class="lead">
+      Work on multiple branches simultaneously with AI tools using <code>palm worktree</code>.
+    </p>
+
+    <h2 id="why">Why Worktrees?</h2>
+    <p>When using AI tools on a feature branch, you often need to check another branch &mdash; review a PR, fix a hotfix, or experiment. Git worktrees let you have multiple branches checked out at once.</p>
+
+    <h2 id="create">Creating a Worktree</h2>
+    <div class="codeblock">
+<span class="comment"># Create a worktree for an existing branch</span>
+<span class="prompt">$</span> palm worktree add feature-auth
+<span class="success">  ✓ Worktree created at ../myrepo-feature-auth</span>
+
+<span class="comment"># Specify a custom path</span>
+<span class="prompt">$</span> palm worktree add feature-auth --path ~/worktrees/auth
+    </div>
+
+    <p>If the branch doesn't exist, palm creates it from the current HEAD.</p>
+
+    <h2 id="list">Listing Worktrees</h2>
+    <div class="codeblock">
+<span class="prompt">$</span> palm worktree list
+<span class="output">  Path                           Branch          HEAD</span>
+<span class="output">  /Users/me/myrepo               main            abc1234</span>
+<span class="output">  /Users/me/myrepo-feature-auth  feature-auth    def5678</span>
+    </div>
+
+    <h2 id="run">Running Tools in Worktrees</h2>
+    <p>The key feature: run any AI tool inside a worktree without leaving your current branch.</p>
+
+    <div class="codeblock">
+<span class="comment"># Run aider in the feature-auth worktree</span>
+<span class="prompt">$</span> palm worktree run feature-auth aider "add login form"
+
+<span class="comment"># Run claude-code in a worktree</span>
+<span class="prompt">$</span> palm worktree run feature-auth claude-code
+    </div>
+
+    <div class="info-box">
+      <strong>Key injection:</strong> <code>palm worktree run</code> injects vault keys just like <code>palm run</code>. The tool runs in the worktree directory with full vault access.
+    </div>
+
+    <h2 id="remove">Removing Worktrees</h2>
+    <div class="codeblock">
+<span class="prompt">$</span> palm worktree remove feature-auth
+<span class="success">  ✓ Worktree removed</span>
+    </div>
+
+    <h2 id="workflow">Typical Workflow</h2>
+    <div class="codeblock">
+<span class="comment"># You're on main, need to work on a feature</span>
+<span class="prompt">$</span> palm worktree add feature-auth
+
+<span class="comment"># Run an AI tool in that worktree</span>
+<span class="prompt">$</span> palm worktree run feature-auth aider "implement JWT auth"
+
+<span class="comment"># Meanwhile, fix a hotfix on main (your current branch)</span>
+<span class="prompt">$</span> palm run aider "fix the login bug"
+
+<span class="comment"># Done with the feature worktree</span>
+<span class="prompt">$</span> palm worktree remove feature-auth
+    </div>
+
+    <div class="page-nav">
+      <a href="local-llm.html">&larr; Local LLMs</a>
+      <a href="ci-integration.html">CI/CD &rarr;</a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared/nav.js"></script>
+</body>
+</html>

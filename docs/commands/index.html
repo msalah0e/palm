@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Command Reference — palm</title>
+<meta name="description" content="Complete reference for all palm commands — tool management, key vault, models, budget, proxy, and more.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.1</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a>
+    <a href="../getting-started/">Get Started</a>
+    <a href="../commands/" class="active">Commands</a>
+    <a href="../guides/api-keys.html">Guides</a>
+    <a href="https://github.com/msalah0e/palm">GitHub</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="group-title">Tool Management</div>
+    <a href="#install-tools">Installing Tools</a>
+    <a href="#remove-update">Remove &amp; Update</a>
+    <a href="#search">Search &amp; Discover</a>
+    <a href="#run-tools">Running Tools</a>
+
+    <div class="group-title">Collaboration</div>
+    <a href="#pipe">Tool Pipelines</a>
+    <a href="#squad">AI Squad</a>
+    <a href="#compose">Compose Workflows</a>
+    <a href="#speedtest">Speedtest</a>
+
+    <div class="group-title">Key Vault</div>
+    <a href="#keys">Managing Keys</a>
+
+    <div class="group-title">Workspace</div>
+    <a href="#workspace">Project Pinning</a>
+    <a href="#context">Context Sync</a>
+
+    <div class="group-title">Models</div>
+    <a href="#models">Model Management</a>
+    <a href="#providers">Providers</a>
+
+    <div class="group-title">Cost Control</div>
+    <a href="#budget">Budget</a>
+    <a href="#stats">Stats &amp; Sessions</a>
+
+    <div class="group-title">Infrastructure</div>
+    <a href="#proxy">LLM Proxy</a>
+    <a href="#serve">Local LLM Server</a>
+    <a href="#gpu">GPU Detection</a>
+
+    <div class="group-title">Git</div>
+    <a href="#worktree">Worktrees</a>
+
+    <div class="group-title">More</div>
+    <a href="#cache">Offline Cache</a>
+    <a href="#matrix">Dashboard</a>
+    <a href="#doctor">Doctor</a>
+    <a href="#tui">TUI Navigator</a>
+    <a href="#config">Configuration</a>
+    <a href="#plugins">Custom Plugins</a>
+  </aside>
+
+  <main class="content">
+    <h1><span class="palm">Command</span> Reference</h1>
+    <p class="lead">
+      Complete guide to all palm commands &mdash; v1.1.0.
+    </p>
+
+    <!-- ────────────────── TOOL MANAGEMENT ────────────────── -->
+
+    <h2 id="install-tools">Installing Tools</h2>
+
+    <p>Install one or more AI tools. palm auto-detects the best backend.</p>
+
+    <div class="codeblock">
+<span class="comment"># Install a single tool</span>
+<span class="prompt">$</span> palm install aider
+
+<span class="comment"># Install multiple tools in parallel</span>
+<span class="prompt">$</span> palm install claude-code aider ollama
+
+<span class="comment"># Install sequentially (disable parallel)</span>
+<span class="prompt">$</span> palm install --seq claude-code aider
+    </div>
+
+    <h3>Install Backends</h3>
+    <table class="doc-table">
+      <tr><th>Backend</th><th>Tools</th><th>Examples</th></tr>
+      <tr><td>pip / uv</td><td>Python tools</td><td>aider, crewai, deepeval</td></tr>
+      <tr><td>npm</td><td>Node.js tools</td><td>claude-code, codex</td></tr>
+      <tr><td>go install</td><td>Go tools</td><td>mods, fabric, opencode</td></tr>
+      <tr><td>cargo</td><td>Rust tools</td><td>qdrant</td></tr>
+      <tr><td>docker</td><td>Containers</td><td>vllm, localai, chromadb</td></tr>
+      <tr><td>brew</td><td>macOS packages</td><td>ollama, k8sgpt</td></tr>
+      <tr><td>script</td><td>curl installers</td><td>plandex</td></tr>
+    </table>
+
+    <div class="info-box">
+      <strong>Tip:</strong> palm prefers <code>uv</code> over <code>pipx</code> over <code>pip3</code> for Python tools. Install <code>uv</code> for fastest installs.
+    </div>
+
+    <h2 id="remove-update">Remove &amp; Update</h2>
+
+    <div class="codeblock">
+<span class="comment"># Remove a tool</span>
+<span class="prompt">$</span> palm remove aider
+
+<span class="comment"># Update a specific tool</span>
+<span class="prompt">$</span> palm update aider
+
+<span class="comment"># Update all installed tools</span>
+<span class="prompt">$</span> palm update --all
+    </div>
+
+    <h2 id="search">Search &amp; Discover</h2>
+
+    <div class="codeblock">
+<span class="comment"># Search by name or keyword</span>
+<span class="prompt">$</span> palm search "local llm"
+<span class="prompt">$</span> palm search agent
+
+<span class="comment"># Browse the full catalog by category (no argument)</span>
+<span class="prompt">$</span> palm search
+
+<span class="comment"># Get detailed info about a tool</span>
+<span class="prompt">$</span> palm info claude-code
+<span class="output">  Name:      Claude Code</span>
+<span class="output">  Category:  Coding</span>
+<span class="output">  Install:   npm install -g @anthropic-ai/claude-code</span>
+<span class="output">  Keys:      ANTHROPIC_API_KEY</span>
+    </div>
+
+    <h2 id="run-tools">Running Tools</h2>
+
+    <p><code>palm run</code> launches a tool with all relevant vault keys injected as environment variables.</p>
+
+    <div class="codeblock">
+<span class="comment"># Run with vault key injection</span>
+<span class="prompt">$</span> palm run aider
+
+<span class="comment"># Pass arguments through</span>
+<span class="prompt">$</span> palm run aider --model gpt-4o
+
+<span class="comment"># Run any tool (not just registered ones)</span>
+<span class="prompt">$</span> palm run python my_script.py
+    </div>
+
+    <div class="info-box">
+      <strong>How it works:</strong> palm reads the tool's required keys from the registry, pulls them from the vault, and injects them as env vars. Your keys never touch disk as plaintext.
+    </div>
+
+    <!-- ────────────────── PIPELINES ────────────────── -->
+
+    <h2 id="pipe">Tool Pipelines</h2>
+
+    <p>Chain AI tools together by piping output. Vault keys are injected across the entire pipeline.</p>
+
+    <div class="codeblock">
+<span class="comment"># Pipe code through an AI for review</span>
+<span class="prompt">$</span> palm pipe "cat main.py" "|" "ollama run llama3.3 'review this code'"
+
+<span class="comment"># Verbose mode shows each step</span>
+<span class="prompt">$</span> palm pipe -v "cat README.md" "|" "aider --message 'improve this'"
+<span class="output">  [1/2] cat: README.md (2.1KB)</span>
+<span class="output">  [2/2] aider: processing...</span>
+<span class="success">  ✓ Pipeline complete in 12.3s</span>
+    </div>
+
+    <h2 id="squad">AI Squad</h2>
+
+    <p>Run the same task through multiple AI tools in parallel. Four modes:</p>
+
+    <table class="doc-table">
+      <tr><th>Mode</th><th>Behavior</th></tr>
+      <tr><td>race</td><td>First successful tool wins (fastest response)</td></tr>
+      <tr><td>all</td><td>Show all outputs side by side for comparison</td></tr>
+      <tr><td>vote</td><td>All tools run, a judge AI picks the best result</td></tr>
+      <tr><td>merge</td><td>All tools run, a judge AI synthesizes all results</td></tr>
+    </table>
+
+    <div class="codeblock">
+<span class="comment"># Race mode</span>
+<span class="prompt">$</span> palm squad "explain quicksort" --tools ollama,mods --mode race
+
+<span class="comment"># Vote with judge</span>
+<span class="prompt">$</span> palm squad "fix this bug" --tools aider,codex --judge ollama --mode vote
+
+<span class="comment"># Merge all outputs</span>
+<span class="prompt">$</span> palm squad "write tests" --tools aider,codex,claude-code --judge ollama --mode merge
+    </div>
+
+    <h2 id="compose">Compose Workflows</h2>
+
+    <p>Define reusable multi-tool AI workflows in TOML files. Like Docker Compose for AI.</p>
+
+    <div class="codeblock">
+<span class="comment"># Create a sample workflow</span>
+<span class="prompt">$</span> palm compose init
+<span class="success">  Created .palm-compose.toml</span>
+
+<span class="comment"># Run the workflow</span>
+<span class="prompt">$</span> palm compose
+
+<span class="comment"># Dry run</span>
+<span class="prompt">$</span> palm compose --dry-run
+    </div>
+
+    <h3>Workflow File Format</h3>
+    <div class="codeblock">
+<span class="comment"># .palm-compose.toml</span>
+name = "code-review"
+
+[[steps]]
+name = "read-code"
+run = "cat src/main.py"
+
+[[steps]]
+name = "ai-review"
+tool = "ollama"
+args = ["run", "llama3.3", "Review this code:"]
+input = "step:read-code"
+depends_on = ["read-code"]
+    </div>
+
+    <h2 id="speedtest">AI Speedtest</h2>
+
+    <p>Visual benchmark for your AI stack. Progress bars, tok/s, and a letter grade.</p>
+
+    <div class="codeblock">
+<span class="comment"># Run the speedtest</span>
+<span class="prompt">$</span> palm speedtest
+<span class="output">  Testing Ollama (llama3.3)...</span>
+<span class="success">  ✓ Ollama: 2.34s, ~45 tok/s</span>
+<span class="output">  🏆 Fastest: Ollama (llama3.3) at 45.2 tok/s</span>
+<span class="success">  Your AI Stack Grade: B  (avg 45.2 tok/s)</span>
+
+<span class="comment"># Compare specific tools (benchmark mode)</span>
+<span class="prompt">$</span> palm speedtest --tools ollama,aider
+
+<span class="comment"># Quick test</span>
+<span class="prompt">$</span> palm speedtest --quick
+    </div>
+
+    <!-- ────────────────── KEY VAULT ────────────────── -->
+
+    <h2 id="keys">Managing Keys</h2>
+
+    <p>palm stores API keys in macOS Keychain (macOS) or AES-256-GCM encrypted file (Linux/Windows). Keys are never stored as plaintext.</p>
+
+    <div class="codeblock">
+<span class="comment"># Add a key (prompts for value)</span>
+<span class="prompt">$</span> palm keys add ANTHROPIC_API_KEY
+
+<span class="comment"># List stored keys (values masked)</span>
+<span class="prompt">$</span> palm keys list
+<span class="output">  ANTHROPIC_API_KEY  sk-ant-***********</span>
+<span class="output">  OPENAI_API_KEY     sk-***************</span>
+
+<span class="comment"># Export as shell statements</span>
+<span class="prompt">$</span> palm keys export
+
+<span class="comment"># Shell integration (add to shell profile)</span>
+<span class="prompt">$</span> eval "$(palm keys env)"
+
+<span class="comment"># Remove a key</span>
+<span class="prompt">$</span> palm keys rm OPENAI_API_KEY
+    </div>
+
+    <!-- ────────────────── WORKSPACE ────────────────── -->
+
+    <h2 id="workspace">Project Pinning</h2>
+
+    <div class="codeblock">
+<span class="comment"># Initialize workspace</span>
+<span class="prompt">$</span> palm workspace init
+<span class="success">  Created .palm.toml</span>
+
+<span class="comment"># Pin tools</span>
+<span class="prompt">$</span> palm workspace add aider claude-code
+
+<span class="comment"># Teammates install pinned tools</span>
+<span class="prompt">$</span> palm workspace install
+
+<span class="comment"># Check status</span>
+<span class="prompt">$</span> palm workspace status
+    </div>
+
+    <h2 id="context">Context Sync</h2>
+
+    <div class="codeblock">
+<span class="comment"># Generate context file</span>
+<span class="prompt">$</span> palm context init
+<span class="success">  Created .palm-context.md</span>
+<span class="output">  Synced to: CLAUDE.md, .cursorrules, AGENTS.md</span>
+
+<span class="comment"># Sync after editing</span>
+<span class="prompt">$</span> palm context sync
+    </div>
+
+    <table class="doc-table">
+      <tr><th>Tool</th><th>Config File</th></tr>
+      <tr><td>Claude Code</td><td>CLAUDE.md</td></tr>
+      <tr><td>Cursor</td><td>.cursorrules</td></tr>
+      <tr><td>GitHub Copilot</td><td>.github/copilot-instructions.md</td></tr>
+      <tr><td>Aider</td><td>.aider.conf.yml</td></tr>
+      <tr><td>Windsurf</td><td>.windsurfrules</td></tr>
+      <tr><td>OpenAI Codex</td><td>AGENTS.md</td></tr>
+    </table>
+
+    <!-- ────────────────── MODELS ────────────────── -->
+
+    <h2 id="models">Model Management</h2>
+
+    <div class="codeblock">
+<span class="comment"># List all models</span>
+<span class="prompt">$</span> palm models list
+
+<span class="comment"># Filter by provider</span>
+<span class="prompt">$</span> palm models list --provider openai
+
+<span class="comment"># Model details</span>
+<span class="prompt">$</span> palm models info gpt-4o
+<span class="output">  Name:     GPT-4o</span>
+<span class="output">  Provider: openai</span>
+<span class="output">  Context:  128K tokens</span>
+<span class="output">  Input:    $5.00 / 1M tokens</span>
+
+<span class="comment"># Pull local model</span>
+<span class="prompt">$</span> palm models pull llama3.3
+    </div>
+
+    <h2 id="providers">Providers</h2>
+
+    <div class="codeblock">
+<span class="prompt">$</span> palm models providers
+<span class="output">  OpenAI     6 models  ✓ OPENAI_API_KEY set</span>
+<span class="output">  Anthropic  3 models  ✓ ANTHROPIC_API_KEY set</span>
+<span class="output">  Google     3 models  ✗ GOOGLE_API_KEY not set</span>
+<span class="output">  Ollama     8 models  (local)</span>
+    </div>
+
+    <!-- ────────────────── COST CONTROL ────────────────── -->
+
+    <h2 id="budget">Budget Controls</h2>
+
+    <div class="codeblock">
+<span class="comment"># Set limits</span>
+<span class="prompt">$</span> palm budget set --monthly 50
+<span class="prompt">$</span> palm budget set --daily 10
+
+<span class="comment"># Check spend</span>
+<span class="prompt">$</span> palm budget status
+<span class="output">  Monthly Limit: $50.00</span>
+<span class="output">  This Month:    $12.40 (24.8%)</span>
+<span class="output">  ████████░░░░░░░░░░░░</span>
+
+<span class="comment"># Reset</span>
+<span class="prompt">$</span> palm budget reset
+    </div>
+
+    <h2 id="stats">Stats &amp; Sessions</h2>
+
+    <div class="codeblock">
+<span class="comment"># Usage statistics</span>
+<span class="prompt">$</span> palm stats
+
+<span class="comment"># View recent sessions</span>
+<span class="prompt">$</span> palm stats sessions
+<span class="output">  #1  aider    12m  exit 0  $1.20</span>
+<span class="output">  #2  claude   5m   exit 0  $0.80</span>
+
+<span class="comment"># Cost breakdown</span>
+<span class="prompt">$</span> palm stats costs
+<span class="output">  Tool      Sessions  Total Cost</span>
+<span class="output">  aider     12        $8.20</span>
+<span class="output">  claude    5         $4.20</span>
+    </div>
+
+    <!-- ────────────────── INFRASTRUCTURE ────────────────── -->
+
+    <h2 id="proxy">LLM Proxy</h2>
+
+    <p>Local reverse proxy that routes API requests to any LLM provider. Auto-injects keys and logs requests.</p>
+
+    <div class="codeblock">
+<span class="comment"># Start in background</span>
+<span class="prompt">$</span> palm proxy start --bg
+
+<span class="comment"># Point tools at the proxy</span>
+<span class="prompt">$</span> export OPENAI_BASE_URL=http://localhost:4778/openai/v1
+<span class="prompt">$</span> export ANTHROPIC_BASE_URL=http://localhost:4778/anthropic/v1
+
+<span class="comment"># View logs</span>
+<span class="prompt">$</span> palm proxy logs
+
+<span class="comment"># Stop</span>
+<span class="prompt">$</span> palm proxy stop
+    </div>
+
+    <table class="doc-table">
+      <tr><th>Path Prefix</th><th>Upstream</th></tr>
+      <tr><td>/openai/</td><td>https://api.openai.com</td></tr>
+      <tr><td>/anthropic/</td><td>https://api.anthropic.com</td></tr>
+      <tr><td>/google/</td><td>https://generativelanguage.googleapis.com</td></tr>
+      <tr><td>/groq/</td><td>https://api.groq.com</td></tr>
+      <tr><td>/mistral/</td><td>https://api.mistral.ai</td></tr>
+      <tr><td>/ollama/</td><td>http://localhost:11434</td></tr>
+    </table>
+
+    <h2 id="serve">Local LLM Server</h2>
+
+    <p>Orchestrate local LLM runtimes with GPU detection. Delegates to ollama, llama.cpp, or vllm.</p>
+
+    <div class="codeblock">
+<span class="comment"># Start local LLM server</span>
+<span class="prompt">$</span> palm serve start
+<span class="output">  Detected GPU: Apple M2 Pro (Metal)</span>
+<span class="output">  Starting ollama...</span>
+<span class="success">  ✓ Server running on :11434</span>
+
+<span class="comment"># Pull a model</span>
+<span class="prompt">$</span> palm serve pull llama3.3
+
+<span class="comment"># List available models</span>
+<span class="prompt">$</span> palm serve models
+
+<span class="comment"># Status</span>
+<span class="prompt">$</span> palm serve status
+
+<span class="comment"># Stop</span>
+<span class="prompt">$</span> palm serve stop
+    </div>
+
+    <h2 id="gpu">GPU Detection</h2>
+
+    <div class="codeblock">
+<span class="prompt">$</span> palm gpu
+<span class="output">  GPU      Vendor  Model            VRAM    Compute</span>
+<span class="output">  GPU 0    Apple   M2 Pro           16 GB   Metal</span>
+<span class="output"></span>
+<span class="output">  Recommended models for 16 GB VRAM:</span>
+<span class="output">    llama3.3, codellama, mistral, phi3:mini</span>
+    </div>
+
+    <!-- ────────────────── GIT ────────────────── -->
+
+    <h2 id="worktree">Git Worktrees</h2>
+
+    <p>Manage git worktrees to work on multiple branches with AI tools simultaneously.</p>
+
+    <div class="codeblock">
+<span class="comment"># Create worktree for a branch</span>
+<span class="prompt">$</span> palm worktree add feature-auth
+
+<span class="comment"># List active worktrees</span>
+<span class="prompt">$</span> palm worktree list
+
+<span class="comment"># Run an AI tool inside a worktree</span>
+<span class="prompt">$</span> palm worktree run feature-auth aider "add login form"
+
+<span class="comment"># Clean up</span>
+<span class="prompt">$</span> palm worktree remove feature-auth
+    </div>
+
+    <div class="info-box">
+      <strong>Key feature:</strong> <code>palm worktree run</code> launches any AI tool inside the worktree directory with vault keys injected. Your current branch stays untouched.
+    </div>
+
+    <!-- ────────────────── MORE ────────────────── -->
+
+    <h2 id="cache">Offline Cache</h2>
+
+    <div class="codeblock">
+<span class="comment"># Pre-download specific tools</span>
+<span class="prompt">$</span> palm cache fetch aider ollama
+
+<span class="comment"># Pre-download everything</span>
+<span class="prompt">$</span> palm cache fetch --all
+
+<span class="comment"># Create a portable bundle</span>
+<span class="prompt">$</span> palm cache bundle tools.tar.gz
+
+<span class="comment"># Install from cache (no network)</span>
+<span class="prompt">$</span> palm --offline install aider
+    </div>
+
+    <h2 id="matrix">Terminal Dashboard</h2>
+
+    <div class="codeblock">
+<span class="prompt">$</span> palm matrix
+<span class="output">  🌴 palm 1.1.0</span>
+<span class="output">  ═══════════════════════════════════</span>
+<span class="output">  Installed Tools  3 installed</span>
+<span class="output">    claude-code  v3.2.0   npm</span>
+<span class="output">    aider        v0.65.0  uv</span>
+<span class="output">    ollama       v0.3.0   brew</span>
+<span class="output">  Vault Keys  2 stored</span>
+<span class="output">  LLM Providers  6 (2 configured)</span>
+<span class="output">  Budget  $12.40 / $50.00 monthly</span>
+<span class="output">  Proxy   not running</span>
+<span class="output">  GPU     Apple M2 Pro (Metal, 16 GB)</span>
+<span class="output">  Registry  102 tools, 13 categories</span>
+    </div>
+
+    <h2 id="doctor">Health Check</h2>
+
+    <div class="codeblock">
+<span class="prompt">$</span> palm doctor
+<span class="output">  Runtimes</span>
+<span class="success">  ✓ Python 3.14.0</span>
+<span class="success">  ✓ Node.js 24.0.0</span>
+<span class="success">  ✓ Go 1.24.0</span>
+<span class="output">  ✗ Cargo not found</span>
+<span class="output">  ✗ Docker not found</span>
+<span class="output">  Vault</span>
+<span class="success">  ✓ 2 keys stored</span>
+    </div>
+
+    <h2 id="tui">TUI Navigator</h2>
+
+    <div class="codeblock">
+<span class="comment"># Launch interactive project browser</span>
+<span class="prompt">$</span> palm ui
+
+<span class="comment"># Scan a specific directory</span>
+<span class="prompt">$</span> palm ui ~/Projects
+    </div>
+
+    <p>Scans for projects containing <code>.palm.toml</code>, <code>go.mod</code>, <code>package.json</code>, <code>pyproject.toml</code>, etc. Shows installed tools and key status per project.</p>
+
+    <h2 id="config">Configuration</h2>
+
+    <h3>Global Config: <code>~/.config/palm/config.toml</code></h3>
+    <div class="codeblock">
+[parallel]
+enabled = true
+concurrency = 4
+
+[install]
+prefer_uv = true
+
+[vault]
+backend = "auto"  <span class="comment"># auto | keychain | file</span>
+    </div>
+
+    <h3>Project Config: <code>.palm.toml</code></h3>
+    <div class="codeblock">
+[workspace]
+name = "my-project"
+tools = ["aider", "claude-code"]
+keys = ["ANTHROPIC_API_KEY"]
+    </div>
+
+    <p>Project config overrides global config. palm searches up from your current directory to find <code>.palm.toml</code>.</p>
+
+    <h2 id="plugins">Custom Plugins</h2>
+
+    <p>Add custom tools by creating TOML files in <code>~/.config/palm/plugins/</code>.</p>
+
+    <div class="codeblock">
+<span class="comment"># ~/.config/palm/plugins/my-tools.toml</span>
+
+[[tools]]
+name = "my-tool"
+display_name = "My Custom Tool"
+description = "A custom AI tool"
+category = "coding"
+
+[tools.install]
+pip = "my-tool"
+
+[tools.keys]
+required = ["MY_API_KEY"]
+    </div>
+
+    <div class="page-nav">
+      <a href="../getting-started/">&larr; Getting Started</a>
+      <a href="../guides/api-keys.html">Guides &rarr;</a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared/nav.js"></script>
+</body>
+</html>

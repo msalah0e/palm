@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Offline Mode — palm</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.1</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a>
+    <a href="../getting-started/">Get Started</a>
+    <a href="../commands/">Commands</a>
+    <a href="../guides/api-keys.html" class="active">Guides</a>
+    <a href="https://github.com/msalah0e/palm">GitHub</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="group-title">Guides</div>
+    <a href="api-keys.html">API Key Management</a>
+    <a href="proxy.html">LLM Proxy</a>
+    <a href="offline-mode.html" class="active">Offline Mode</a>
+    <a href="local-llm.html">Local LLMs</a>
+    <a href="worktree.html">Git Worktrees</a>
+    <a href="ci-integration.html">CI/CD Integration</a>
+
+    <div class="group-title">Reference</div>
+    <a href="../getting-started/">Getting Started</a>
+    <a href="../commands/">Command Reference</a>
+  </aside>
+
+  <main class="content">
+    <h1><span class="palm">Offline</span> Mode</h1>
+    <p class="lead">
+      Pre-download packages and create portable bundles for air-gapped environments.
+    </p>
+
+    <h2 id="fetching">Pre-downloading Tools</h2>
+    <div class="codeblock">
+<span class="comment"># Pre-download specific tools</span>
+<span class="prompt">$</span> palm cache fetch aider ollama
+
+<span class="comment"># Pre-download everything in the registry</span>
+<span class="prompt">$</span> palm cache fetch --all
+    </div>
+
+    <p>Downloaded packages are stored in <code>~/.cache/palm/</code> and used automatically when installing offline.</p>
+
+    <h2 id="bundles">Creating Bundles</h2>
+    <div class="codeblock">
+<span class="comment"># Create a portable bundle with all cached packages</span>
+<span class="prompt">$</span> palm cache bundle tools.tar.gz
+<span class="output">  Bundled 5 tools (12.3 MB)</span>
+    </div>
+
+    <p>Bundles include the cached packages for all pre-downloaded tools. Transfer the archive to an air-gapped machine and install from it.</p>
+
+    <h2 id="installing">Installing Offline</h2>
+    <div class="codeblock">
+<span class="comment"># Install from cache (no network required)</span>
+<span class="prompt">$</span> palm --offline install aider
+
+<span class="comment"># Install from a bundle</span>
+<span class="prompt">$</span> tar xzf tools.tar.gz -C ~/.cache/palm/
+<span class="prompt">$</span> palm --offline install aider
+    </div>
+
+    <div class="info-box">
+      <strong>Note:</strong> Not all install backends support offline mode. pip/uv and docker work well. npm and go may require additional setup.
+    </div>
+
+    <div class="page-nav">
+      <a href="proxy.html">&larr; LLM Proxy</a>
+      <a href="local-llm.html">Local LLMs &rarr;</a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared/nav.js"></script>
+</body>
+</html>

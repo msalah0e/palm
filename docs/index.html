@@ -563,7 +563,7 @@
 <body>
 
 <nav>
-  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.0</span></a>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.1</span></a>
   <div class="links">
     <a href="#features">Features</a>
     <a href="#providers">Providers</a>
@@ -571,7 +571,8 @@
     <a href="#examples">Examples</a>
     <a href="#commands">Commands</a>
     <a href="#roadmap">Roadmap</a>
-    <a href="docs.html">Docs</a>
+    <a href="getting-started/">Get Started</a>
+    <a href="commands/">Docs</a>
     <a class="gh-btn" href="https://github.com/msalah0e/palm">
       <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       GitHub
@@ -582,8 +583,8 @@
 <!-- ██ HERO ██ -->
 <div class="hero">
   <div class="hero-announce">
-    <span class="tag">v1.0</span>
-    LLM Proxy &middot; Budget Controls &middot; Model Management &middot; Tool Pipelines
+    <span class="tag">v1.1</span>
+    Windows &middot; Local LLMs &middot; Git Worktrees &middot; GPU Detection &middot; TUI
   </div>
   <h1>
     <span class="palm">palm</span> <span class="thin">is the</span><br>
@@ -596,7 +597,7 @@
   <div class="cta-group">
     <a href="#install" class="btn btn-primary">Get Started</a>
     <a href="#examples" class="btn btn-secondary">See Examples</a>
-    <a href="docs.html" class="btn btn-secondary">Documentation</a>
+    <a href="commands/" class="btn btn-secondary">Documentation</a>
   </div>
 
   <div class="terminal">
@@ -637,7 +638,7 @@
       <div class="lbl">Providers</div>
     </div>
     <div class="stat-item">
-      <div class="num">28</div>
+      <div class="num">32</div>
       <div class="lbl">Commands</div>
     </div>
     <div class="stat-item">
@@ -704,10 +705,10 @@
       <code>palm matrix</code>
     </div>
     <div class="f-card">
-      <div class="f-icon">🏁</div>
-      <h3>Benchmark</h3>
-      <p>Run the same prompt through multiple AI tools. Compare response time, quality, and cost side by side.</p>
-      <code>palm benchmark "explain quicksort"</code>
+      <div class="f-icon">🖥️</div>
+      <h3>Local LLM Server</h3>
+      <p>GPU-aware local model orchestration. Auto-detects ollama, llama.cpp, or vllm and your GPU hardware.</p>
+      <code>palm serve start</code>
     </div>
     <div class="f-card">
       <div class="f-icon">📁</div>
@@ -740,10 +741,10 @@
       <code>palm speedtest</code>
     </div>
     <div class="f-card">
-      <div class="f-icon">✈️</div>
-      <h3>Offline Mode</h3>
-      <p>Pre-download packages for air-gapped environments. Create portable bundles. Install from local cache.</p>
-      <code>palm fetch --all</code>
+      <div class="f-icon">🌿</div>
+      <h3>Git Worktrees</h3>
+      <p>Work on multiple branches simultaneously. Run AI tools in any worktree with vault key injection.</p>
+      <code>palm worktree run feature aider</code>
     </div>
   </div>
 </section>
@@ -963,7 +964,7 @@
         <div><span class="output">  Daily:   $3.20  / $10.00</span> <span class="success">████░░░░░░░░░░</span></div>
         <div>&nbsp;</div>
         <div><span class="comment"># View session costs</span></div>
-        <div><span class="prompt">$</span> palm sessions --cost</div>
+        <div><span class="prompt">$</span> palm stats costs</div>
         <div><span class="output">  aider    $8.20   12 sessions</span></div>
         <div><span class="output">  claude   $4.20    5 sessions</span></div>
       </div>
@@ -1013,20 +1014,21 @@
 
     <div class="example-card">
       <div class="ex-header">
-        <span class="ex-icon">🏁</span>
-        <h4>Benchmark</h4>
-        <p>Compare AI tools side by side</p>
+        <span class="ex-icon">🖥️</span>
+        <h4>Local LLMs</h4>
+        <p>Run models locally with GPU</p>
       </div>
       <div class="ex-body">
-        <div><span class="comment"># Compare tools on the same prompt</span></div>
-        <div><span class="prompt">$</span> palm benchmark "explain quicksort" --tools ollama,aider</div>
+        <div><span class="comment"># Check your GPU</span></div>
+        <div><span class="prompt">$</span> palm gpu</div>
+        <div><span class="output">  Apple M2 Pro  16 GB  Metal</span></div>
         <div>&nbsp;</div>
-        <div><span class="output">  Tool        Duration  Exit  Output</span></div>
-        <div><span class="output">  ollama      1.2s      0     842B</span></div>
-        <div><span class="output">  aider       3.4s      0     1.2KB</span></div>
+        <div><span class="comment"># Start local server</span></div>
+        <div><span class="prompt">$</span> palm serve start</div>
+        <div><span class="success">  ✓ Server running on :11434</span></div>
         <div>&nbsp;</div>
-        <div><span class="comment"># Show outputs for comparison</span></div>
-        <div><span class="prompt">$</span> palm benchmark "write a haiku" --tools ollama,aider --output</div>
+        <div><span class="comment"># Pull and use a model</span></div>
+        <div><span class="prompt">$</span> palm serve pull llama3.3</div>
       </div>
     </div>
   </div>
@@ -1036,7 +1038,7 @@
 <section id="commands">
   <div class="section-header">
     <h2>All <span class="palm">Commands</span></h2>
-    <p>28 commands to manage your entire AI stack.</p>
+    <p>32 commands to manage your entire AI stack.</p>
   </div>
 
   <div class="commands-wrap">
@@ -1046,9 +1048,8 @@
       <tr><td>palm remove &lt;tool&gt;</td><td>Remove an AI tool</td></tr>
       <tr><td>palm update [tool|--all]</td><td>Update AI tool(s)</td></tr>
       <tr><td>palm list</td><td>List installed AI tools with status</td></tr>
-      <tr><td>palm search &lt;query&gt;</td><td>Search the registry by name, category, or tag</td></tr>
+      <tr><td>palm search [query]</td><td>Search or browse catalog (no args = browse by category)</td></tr>
       <tr><td>palm info &lt;tool&gt;</td><td>Detailed tool info</td></tr>
-      <tr><td>palm discover</td><td>Browse curated catalog by category</td></tr>
     </table>
 
     <div class="cmd-group-title">Run & Pipe</div>
@@ -1063,7 +1064,7 @@
       <tr><td>palm keys rm &lt;KEY&gt;</td><td>Remove a stored key</td></tr>
       <tr><td>palm keys list</td><td>Show stored keys (masked)</td></tr>
       <tr><td>palm keys export</td><td>Print export statements</td></tr>
-      <tr><td>palm env</td><td>Shell integration: <code style="background:rgba(45,182,130,0.1);color:var(--palm);padding:1px 6px;border-radius:4px;font-size:0.8rem;">eval $(palm env)</code></td></tr>
+      <tr><td>palm keys env</td><td>Shell integration: <code style="background:rgba(45,182,130,0.1);color:var(--palm);padding:1px 6px;border-radius:4px;font-size:0.8rem;">eval $(palm keys env)</code></td></tr>
     </table>
 
     <div class="cmd-group-title">Workspace & Context</div>
@@ -1083,38 +1084,47 @@
       <tr><td>palm models providers</td><td>Show provider status and key availability</td></tr>
     </table>
 
-    <div class="cmd-group-title">Budget & Cost Tracking</div>
+    <div class="cmd-group-title">Budget & Stats</div>
     <table class="cmd-table">
       <tr><td>palm budget set --monthly 50</td><td>Set spending limits</td></tr>
       <tr><td>palm budget status</td><td>Current spend vs limits</td></tr>
-      <tr><td>palm sessions</td><td>View session history and costs</td></tr>
+      <tr><td>palm stats</td><td>Usage statistics</td></tr>
+      <tr><td>palm stats sessions</td><td>View session history</td></tr>
+      <tr><td>palm stats costs</td><td>Cost breakdown by tool</td></tr>
     </table>
 
-    <div class="cmd-group-title">LLM Proxy</div>
+    <div class="cmd-group-title">Infrastructure</div>
     <table class="cmd-table">
       <tr><td>palm proxy start [--bg]</td><td>Start local API proxy on :4778</td></tr>
-      <tr><td>palm proxy status</td><td>Check if proxy is running</td></tr>
-      <tr><td>palm proxy logs</td><td>View recent request logs</td></tr>
-      <tr><td>palm proxy stop</td><td>Stop the proxy</td></tr>
+      <tr><td>palm proxy status / logs / stop</td><td>Manage the LLM proxy</td></tr>
+      <tr><td>palm serve start [--model M]</td><td>Start local LLM server (GPU-aware)</td></tr>
+      <tr><td>palm serve pull &lt;model&gt;</td><td>Download a model for local serving</td></tr>
+      <tr><td>palm gpu</td><td>Detect GPU hardware and recommend models</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Git</div>
+    <table class="cmd-table">
+      <tr><td>palm worktree add &lt;branch&gt;</td><td>Create git worktree for a branch</td></tr>
+      <tr><td>palm worktree run &lt;branch&gt; &lt;tool&gt;</td><td>Run AI tool inside a worktree</td></tr>
+      <tr><td>palm worktree list / remove</td><td>Manage worktrees</td></tr>
     </table>
 
     <div class="cmd-group-title">Collaboration</div>
     <table class="cmd-table">
       <tr><td>palm squad "&lt;task&gt;" --tools a,b</td><td>Run multiple tools on same task, pick the best</td></tr>
       <tr><td>palm compose</td><td>Run multi-tool workflows from .palm-compose.toml</td></tr>
-      <tr><td>palm speedtest</td><td>Visual AI benchmark with speed bars and grades</td></tr>
+      <tr><td>palm speedtest [--tools a,b]</td><td>Visual benchmark with speed bars and grades</td></tr>
     </table>
 
     <div class="cmd-group-title">More</div>
     <table class="cmd-table">
-      <tr><td>palm benchmark &lt;prompt&gt;</td><td>Compare AI tools on the same prompt</td></tr>
       <tr><td>palm matrix</td><td>Terminal dashboard &mdash; everything at a glance</td></tr>
       <tr><td>palm doctor</td><td>Health check for tools, keys, runtimes</td></tr>
-      <tr><td>palm fetch [tool...|--all]</td><td>Pre-download for offline use</td></tr>
-      <tr><td>palm bundle &lt;output.tar.gz&gt;</td><td>Create portable tool bundle</td></tr>
-      <tr><td>palm stats</td><td>Local usage statistics</td></tr>
+      <tr><td>palm ui [dir]</td><td>Interactive TUI project navigator</td></tr>
+      <tr><td>palm cache fetch [tool...]</td><td>Pre-download for offline use</td></tr>
+      <tr><td>palm cache bundle &lt;out.tar.gz&gt;</td><td>Create portable tool bundle</td></tr>
       <tr><td>palm self-update</td><td>Update palm itself</td></tr>
-      <tr><td>palm completion &lt;shell&gt;</td><td>Shell completions (zsh/bash/fish)</td></tr>
+      <tr><td>palm completion &lt;shell&gt;</td><td>Shell completions (zsh/bash/fish/powershell)</td></tr>
     </table>
   </div>
 </section>
@@ -1188,6 +1198,20 @@
       </ul>
     </div>
 
+    <div class="rm-item">
+      <div class="rm-ver">v1.1.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">Cross-Platform &amp; Local AI</div>
+      <ul class="rm-list">
+        <li>Windows support &mdash; CI builds, PowerShell installer + completions</li>
+        <li>palm serve &mdash; local LLM orchestration (ollama/llama.cpp/vllm)</li>
+        <li>palm gpu &mdash; cross-platform GPU detection and model recommendations</li>
+        <li>palm worktree &mdash; git worktrees with AI tool integration</li>
+        <li>palm ui &mdash; interactive TUI project navigator</li>
+        <li>Command simplification &mdash; merged discover/benchmark/env/fetch/sessions</li>
+        <li>Multi-page documentation site</li>
+      </ul>
+    </div>
+
     <div class="rm-item future">
       <div class="rm-ver" style="color: var(--text-muted);">Next</div>
       <div class="rm-title" style="color: var(--text-dim);">What's Next</div>
@@ -1195,7 +1219,6 @@
         <li>MCP server integration</li>
         <li>Team features &amp; shared workspaces</li>
         <li>Remote sync for vault keys</li>
-        <li>Windows support</li>
         <li>Plugin ecosystem</li>
       </ul>
     </div>
@@ -1216,8 +1239,11 @@
     <div class="install-alt">
       or <code>go install github.com/msalah0e/palm@latest</code>
     </div>
+    <div class="install-alt">
+      Windows: <code>irm https://msalah0e.github.io/palm/install.ps1 | iex</code>
+    </div>
     <div style="margin-top: 1.5rem;">
-      <a href="docs.html" class="btn btn-secondary" style="padding: 10px 24px; font-size: 0.9rem;">Read the Documentation</a>
+      <a href="commands/" class="btn btn-secondary" style="padding: 10px 24px; font-size: 0.9rem;">Read the Documentation</a>
     </div>
   </div>
 </div>
@@ -1225,7 +1251,7 @@
 <footer>
   <div class="footer-links">
     <a href="https://github.com/msalah0e/palm">GitHub</a>
-    <a href="docs.html">Documentation</a>
+    <a href="commands/">Documentation</a>
     <a href="https://github.com/msalah0e/palm/issues">Issues</a>
     <a href="https://github.com/msalah0e/palm/releases">Releases</a>
   </div>

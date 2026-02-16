@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Getting Started — palm</title>
+<meta name="description" content="Install palm and get up and running with AI tools in under a minute.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.1</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a>
+    <a href="../getting-started/" class="active">Get Started</a>
+    <a href="../commands/">Commands</a>
+    <a href="../guides/api-keys.html">Guides</a>
+    <a href="https://github.com/msalah0e/palm">GitHub</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="group-title">Getting Started</div>
+    <a href="#installation" class="active">Installation</a>
+    <a href="#quick-start">Quick Start</a>
+    <a href="#shell-setup">Shell Setup</a>
+    <a href="#requirements">Requirements</a>
+
+    <div class="group-title">Next Steps</div>
+    <a href="../commands/">Command Reference</a>
+    <a href="../guides/api-keys.html">API Key Management</a>
+    <a href="../guides/proxy.html">LLM Proxy</a>
+    <a href="../guides/offline-mode.html">Offline Mode</a>
+    <a href="../guides/local-llm.html">Local LLMs</a>
+    <a href="../guides/worktree.html">Git Worktrees</a>
+  </aside>
+
+  <main class="content">
+    <h1><span class="palm">Getting</span> Started</h1>
+    <p class="lead">
+      Install palm and start managing your AI tools in under a minute.
+    </p>
+
+    <h2 id="installation">Installation</h2>
+
+    <h3>Quick Install (recommended)</h3>
+    <div class="codeblock">
+<span class="prompt">$</span> curl -fsSL https://msalah0e.github.io/palm/install.sh | sh
+    </div>
+
+    <h3>Windows (PowerShell)</h3>
+    <div class="codeblock">
+<span class="prompt">PS&gt;</span> irm https://msalah0e.github.io/palm/install.ps1 | iex
+    </div>
+
+    <h3>With Go</h3>
+    <div class="codeblock">
+<span class="prompt">$</span> go install github.com/msalah0e/palm@latest
+    </div>
+
+    <h3>From Source</h3>
+    <div class="codeblock">
+<span class="prompt">$</span> git clone https://github.com/msalah0e/palm.git
+<span class="prompt">$</span> cd palm
+<span class="prompt">$</span> make install
+    </div>
+
+    <h2 id="quick-start">Quick Start</h2>
+
+    <p>Get up and running in under a minute:</p>
+    <div class="codeblock">
+<span class="comment"># 1. Install your favorite AI tools</span>
+<span class="prompt">$</span> palm install claude-code aider ollama
+<span class="success">  ✓ Claude Code</span> via npm
+<span class="success">  ✓ Aider</span> via uv
+<span class="success">  ✓ Ollama</span> via brew
+
+<span class="comment"># 2. Store your API keys securely</span>
+<span class="prompt">$</span> palm keys add ANTHROPIC_API_KEY
+<span class="key">  Enter value:</span> sk-ant-api03-...
+<span class="success">  ✓ Stored in vault</span>
+
+<span class="comment"># 3. Run any tool with keys auto-injected</span>
+<span class="prompt">$</span> palm run aider
+<span class="output">  Injected 1 key from vault</span>
+
+<span class="comment"># 4. See everything at a glance</span>
+<span class="prompt">$</span> palm matrix
+    </div>
+
+    <h2 id="shell-setup">Shell Setup</h2>
+
+    <p>Add completions and vault key exports to your shell:</p>
+
+    <h3>Zsh (add to ~/.zshrc)</h3>
+    <div class="codeblock">
+eval "$(palm completion zsh)"
+eval "$(palm keys env)"
+    </div>
+
+    <h3>Bash (add to ~/.bashrc)</h3>
+    <div class="codeblock">
+eval "$(palm completion bash)"
+eval "$(palm keys env)"
+    </div>
+
+    <h3>Fish</h3>
+    <div class="codeblock">
+palm completion fish | source
+    </div>
+
+    <h3>PowerShell</h3>
+    <div class="codeblock">
+palm completion powershell | Out-String | Invoke-Expression
+    </div>
+
+    <p>This gives you:</p>
+    <ul>
+      <li><strong>Tab completion</strong> for all commands, tool names, model IDs, and key names</li>
+      <li><strong>Vault key export</strong> &mdash; all stored API keys are available as environment variables</li>
+    </ul>
+
+    <h2 id="requirements">Requirements</h2>
+
+    <table class="doc-table">
+      <tr><th>Platform</th><th>Status</th></tr>
+      <tr><td>macOS (Apple Silicon + Intel)</td><td>Full support, Keychain vault</td></tr>
+      <tr><td>Linux (amd64 + arm64)</td><td>Full support, encrypted file vault</td></tr>
+      <tr><td>Windows (amd64)</td><td>Full support, encrypted file vault</td></tr>
+    </table>
+
+    <p>At least one install backend: pip/uv, npm, cargo, go, docker, or brew.</p>
+
+    <div class="info-box">
+      <strong>Tip:</strong> Run <code>palm doctor</code> to check which runtimes and backends are available on your system.
+    </div>
+
+    <div class="page-nav">
+      <span></span>
+      <a href="../commands/">Command Reference &rarr;</a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared/nav.js"></script>
+</body>
+</html>

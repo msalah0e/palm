@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CI/CD Integration — palm</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.1</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a>
+    <a href="../getting-started/">Get Started</a>
+    <a href="../commands/">Commands</a>
+    <a href="../guides/api-keys.html" class="active">Guides</a>
+    <a href="https://github.com/msalah0e/palm">GitHub</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="group-title">Guides</div>
+    <a href="api-keys.html">API Key Management</a>
+    <a href="proxy.html">LLM Proxy</a>
+    <a href="offline-mode.html">Offline Mode</a>
+    <a href="local-llm.html">Local LLMs</a>
+    <a href="worktree.html">Git Worktrees</a>
+    <a href="ci-integration.html" class="active">CI/CD Integration</a>
+
+    <div class="group-title">Reference</div>
+    <a href="../getting-started/">Getting Started</a>
+    <a href="../commands/">Command Reference</a>
+  </aside>
+
+  <main class="content">
+    <h1><span class="palm">CI/CD</span> Integration</h1>
+    <p class="lead">
+      Use palm in your CI/CD pipelines to ensure consistent AI tool setup across environments.
+    </p>
+
+    <h2 id="github-actions">GitHub Actions</h2>
+    <div class="codeblock">
+<span class="comment"># .github/workflows/ai-tools.yml</span>
+name: AI Tools
+on: [push]
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      <span class="comment"># Install palm</span>
+      - name: Install palm
+        run: curl -fsSL https://msalah0e.github.io/palm/install.sh | sh
+
+      <span class="comment"># Install workspace tools</span>
+      - name: Install AI tools
+        run: palm workspace install
+
+      <span class="comment"># Run evaluation</span>
+      - name: Run eval
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: palm eval run
+    </div>
+
+    <h2 id="workspace">Using Workspace Config</h2>
+    <p>Commit <code>.palm.toml</code> to your repo so CI uses the same tools as your team:</p>
+    <div class="codeblock">
+<span class="comment"># .palm.toml</span>
+[workspace]
+name = "my-project"
+tools = ["aider", "promptfoo"]
+keys = ["OPENAI_API_KEY"]
+    </div>
+
+    <div class="codeblock">
+<span class="comment"># In CI, install all pinned tools</span>
+<span class="prompt">$</span> palm workspace install
+    </div>
+
+    <h2 id="offline-ci">Offline CI</h2>
+    <p>For air-gapped CI environments, pre-cache tools:</p>
+    <div class="codeblock">
+<span class="comment"># On a machine with internet access</span>
+<span class="prompt">$</span> palm cache fetch aider promptfoo
+<span class="prompt">$</span> palm cache bundle ci-tools.tar.gz
+
+<span class="comment"># In CI (no internet required)</span>
+<span class="prompt">$</span> tar xzf ci-tools.tar.gz -C ~/.cache/palm/
+<span class="prompt">$</span> palm --offline workspace install
+    </div>
+
+    <div class="page-nav">
+      <a href="worktree.html">&larr; Git Worktrees</a>
+      <a href="../commands/">Command Reference &rarr;</a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared/nav.js"></script>
+</body>
+</html>

@@ -32,6 +32,7 @@ jobs:
           VERSION="${TAG#v}"
           LDFLAGS="-s -w -X github.com/msalah0e/palm/cmd.version=${VERSION}"
 
+          # Unix builds (tar.gz)
           for GOOS in darwin linux; do
             for GOARCH in amd64 arm64; do
               echo "Building palm-${GOOS}-${GOARCH}..."
@@ -40,8 +41,13 @@ jobs:
             done
           done
 
+          # Windows build (zip)
+          echo "Building palm-windows-amd64..."
+          GOOS=windows GOARCH=amd64 go build -ldflags "$LDFLAGS" -o "palm-windows-amd64.exe" .
+          zip "palm-windows-amd64.zip" "palm-windows-amd64.exe"
+
       - name: Generate checksums
-        run: sha256sum palm-*.tar.gz > checksums.txt
+        run: sha256sum palm-*.tar.gz palm-*.zip > checksums.txt
 
       - name: Create release
         env:
@@ -52,4 +58,5 @@ jobs:
             --title "palm $TAG" \
             --generate-notes \
             palm-*.tar.gz \
+            palm-*.zip \
             checksums.txt

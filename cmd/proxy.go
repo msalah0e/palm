@@ -5,7 +5,6 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
-	"syscall"
 
 	"github.com/msalah0e/palm/internal/proxy"
 	"github.com/msalah0e/palm/internal/ui"
@@ -52,7 +51,7 @@ func proxyStartCmd() *cobra.Command {
 				}
 				child.Stdout = nil
 				child.Stderr = nil
-				child.SysProcAttr = &syscall.SysProcAttr{Setsid: true}
+				setDetached(child)
 
 				if err := child.Start(); err != nil {
 					ui.Bad.Printf("  Failed to start proxy: %v\n", err)
@@ -110,7 +109,7 @@ func proxyStopCmd() *cobra.Command {
 				os.Exit(1)
 			}
 
-			if err := proc.Signal(syscall.SIGTERM); err != nil {
+			if err := stopProcess(proc); err != nil {
 				ui.Bad.Printf("  Failed to stop proxy: %v\n", err)
 				os.Exit(1)
 			}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Local LLMs — palm</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+<link rel="stylesheet" href="../shared/style.css">
+</head>
+<body>
+
+<nav>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.1</span></a>
+  <div class="links">
+    <a href="../index.html">Home</a>
+    <a href="../getting-started/">Get Started</a>
+    <a href="../commands/">Commands</a>
+    <a href="../guides/api-keys.html" class="active">Guides</a>
+    <a href="https://github.com/msalah0e/palm">GitHub</a>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="group-title">Guides</div>
+    <a href="api-keys.html">API Key Management</a>
+    <a href="proxy.html">LLM Proxy</a>
+    <a href="offline-mode.html">Offline Mode</a>
+    <a href="local-llm.html" class="active">Local LLMs</a>
+    <a href="worktree.html">Git Worktrees</a>
+    <a href="ci-integration.html">CI/CD Integration</a>
+
+    <div class="group-title">Reference</div>
+    <a href="../getting-started/">Getting Started</a>
+    <a href="../commands/">Command Reference</a>
+  </aside>
+
+  <main class="content">
+    <h1><span class="palm">Local</span> LLMs</h1>
+    <p class="lead">
+      Run LLMs locally with GPU acceleration using <code>palm serve</code> and <code>palm gpu</code>.
+    </p>
+
+    <h2 id="gpu">GPU Detection</h2>
+    <p>palm detects your GPU and recommends models based on available VRAM:</p>
+    <div class="codeblock">
+<span class="prompt">$</span> palm gpu
+<span class="output">  GPU      Vendor  Model            VRAM    Compute</span>
+<span class="output">  GPU 0    Apple   M2 Pro           16 GB   Metal</span>
+<span class="output"></span>
+<span class="output">  Recommended models for 16 GB VRAM:</span>
+<span class="output">    llama3.3, codellama, mistral, phi3:mini</span>
+    </div>
+
+    <h3>Supported GPUs</h3>
+    <table class="doc-table">
+      <tr><th>Platform</th><th>GPU</th><th>Detection Method</th></tr>
+      <tr><td>macOS</td><td>Apple Silicon (Metal)</td><td>system_profiler</td></tr>
+      <tr><td>Linux</td><td>NVIDIA (CUDA)</td><td>nvidia-smi</td></tr>
+      <tr><td>Linux</td><td>AMD (ROCm)</td><td>rocm-smi</td></tr>
+      <tr><td>Windows</td><td>NVIDIA (CUDA)</td><td>nvidia-smi</td></tr>
+    </table>
+
+    <h2 id="serve">Running a Local Server</h2>
+    <p>palm orchestrates existing LLM runtimes. It auto-detects and uses the best available:</p>
+
+    <table class="doc-table">
+      <tr><th>Priority</th><th>Runtime</th><th>Best For</th></tr>
+      <tr><td>1</td><td>ollama</td><td>Best UX, automatic GPU support</td></tr>
+      <tr><td>2</td><td>llama.cpp server</td><td>Lightweight, direct GGUF support</td></tr>
+      <tr><td>3</td><td>vllm</td><td>Production GPU serving</td></tr>
+    </table>
+
+    <div class="codeblock">
+<span class="comment"># Start local server (auto-detects runtime + GPU)</span>
+<span class="prompt">$</span> palm serve start
+<span class="output">  Detected GPU: Apple M2 Pro (Metal)</span>
+<span class="output">  Using runtime: ollama</span>
+<span class="success">  ✓ Server running on :11434</span>
+
+<span class="comment"># Start with a specific model</span>
+<span class="prompt">$</span> palm serve start --model llama3.3
+
+<span class="comment"># Force GPU usage</span>
+<span class="prompt">$</span> palm serve start --gpu
+    </div>
+
+    <h2 id="models">Managing Models</h2>
+    <div class="codeblock">
+<span class="comment"># List available models</span>
+<span class="prompt">$</span> palm serve models
+<span class="output">  Model              Parameters  Quant  Size</span>
+<span class="output">  llama3.3           70B         Q4_K   40GB</span>
+<span class="output">  codellama          34B         Q4_K   20GB</span>
+<span class="output">  mistral            7B          Q4_K   4.4GB</span>
+<span class="output">  phi3:mini          3.8B        Q4_K   2.2GB</span>
+
+<span class="comment"># Pull a model</span>
+<span class="prompt">$</span> palm serve pull llama3.3
+
+<span class="comment"># Check server status</span>
+<span class="prompt">$</span> palm serve status
+    </div>
+
+    <h2 id="workflow">Typical Workflow</h2>
+    <div class="codeblock">
+<span class="comment"># 1. Check your GPU</span>
+<span class="prompt">$</span> palm gpu
+
+<span class="comment"># 2. Install ollama if needed</span>
+<span class="prompt">$</span> palm install ollama
+
+<span class="comment"># 3. Start serving</span>
+<span class="prompt">$</span> palm serve start
+
+<span class="comment"># 4. Pull a model</span>
+<span class="prompt">$</span> palm serve pull llama3.3
+
+<span class="comment"># 5. Use it with any tool</span>
+<span class="prompt">$</span> palm run aider --model ollama/llama3.3
+    </div>
+
+    <div class="page-nav">
+      <a href="offline-mode.html">&larr; Offline Mode</a>
+      <a href="worktree.html">Git Worktrees &rarr;</a>
+    </div>
+  </main>
+</div>
+
+<script src="../shared/nav.js"></script>
+</body>
+</html>
