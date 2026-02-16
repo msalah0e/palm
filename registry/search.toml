@@ -1,0 +1,93 @@
+[[tools]]
+name = "perplexica"
+display_name = "Perplexica"
+description = "Open-source AI search engine — self-hosted Perplexity alternative"
+category = "search"
+tags = ["ai", "search", "self-hosted", "rag"]
+homepage = "https://github.com/ItzCrazyKns/Perplexica"
+repo = "https://github.com/ItzCrazyKns/Perplexica"
+
+[tools.install]
+npm = "perplexica"
+
+[tools.install.verify]
+command = "perplexica --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "khoj"
+display_name = "Khoj"
+description = "AI personal assistant with search, chat, and agents"
+category = "search"
+tags = ["ai", "search", "assistant", "self-hosted"]
+homepage = "https://khoj.dev"
+repo = "https://github.com/khoj-ai/khoj"
+
+[tools.install]
+pip = "khoj"
+
+[tools.install.verify]
+command = "khoj --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "anything-llm"
+display_name = "AnythingLLM"
+description = "All-in-one AI desktop app — RAG, agents, multi-provider"
+category = "search"
+tags = ["ai", "search", "rag", "desktop"]
+homepage = "https://anythingllm.com"
+repo = "https://github.com/Mintplex-Labs/anything-llm"
+
+[tools.install]
+brew = "anythingllm"
+
+[tools.install.verify]
+command = "anythingllm --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "memgpt"
+display_name = "MemGPT"
+description = "LLMs with long-term memory and self-editing capabilities"
+category = "search"
+tags = ["ai", "search", "memory", "agents"]
+homepage = "https://memgpt.ai"
+repo = "https://github.com/cpacker/MemGPT"
+
+[tools.install]
+pip = "pymemgpt"
+
+[tools.install.verify]
+command = "memgpt --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "ragflow"
+display_name = "RAGFlow"
+description = "Deep document understanding RAG engine"
+category = "search"
+tags = ["ai", "search", "rag", "document"]
+homepage = "https://ragflow.io"
+repo = "https://github.com/infiniflow/ragflow"
+
+[tools.install]
+pip = "ragflow"
+
+[tools.install.verify]
+command = "python3 -c 'import ragflow; print(\"ok\")'"
+
+[tools.keys]
+required = []

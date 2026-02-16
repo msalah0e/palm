@@ -1,0 +1,112 @@
+[[tools]]
+name = "langfuse"
+display_name = "Langfuse"
+description = "Open-source LLM observability — traces, evals, prompt management"
+category = "observability"
+tags = ["ai", "observability", "tracing", "llmops"]
+homepage = "https://langfuse.com"
+repo = "https://github.com/langfuse/langfuse"
+
+[tools.install]
+pip = "langfuse"
+
+[tools.install.verify]
+command = "python3 -c 'import langfuse; print(langfuse.__version__)'"
+
+[tools.keys]
+required = []
+optional = ["LANGFUSE_PUBLIC_KEY", "LANGFUSE_SECRET_KEY"]
+
+[[tools]]
+name = "phoenix"
+display_name = "Arize Phoenix"
+description = "AI observability and evaluation — traces, evals, datasets"
+category = "observability"
+tags = ["ai", "observability", "tracing", "arize"]
+homepage = "https://phoenix.arize.com"
+repo = "https://github.com/Arize-ai/phoenix"
+
+[tools.install]
+pip = "arize-phoenix"
+
+[tools.install.verify]
+command = "phoenix --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "helicone"
+display_name = "Helicone"
+description = "Open-source LLM observability — logging, caching, rate limiting"
+category = "observability"
+tags = ["ai", "observability", "logging", "caching"]
+homepage = "https://helicone.ai"
+repo = "https://github.com/Helicone/helicone"
+
+[tools.install]
+pip = "helicone"
+
+[tools.install.verify]
+command = "python3 -c 'import helicone; print(\"ok\")'"
+
+[tools.keys]
+required = ["HELICONE_API_KEY"]
+env_prefix = "HELICONE"
+
+[[tools]]
+name = "lunary"
+display_name = "Lunary"
+description = "Production monitoring for AI chatbots and agents"
+category = "observability"
+tags = ["ai", "observability", "monitoring", "agents"]
+homepage = "https://lunary.ai"
+repo = "https://github.com/lunary-ai/lunary"
+
+[tools.install]
+pip = "lunary"
+
+[tools.install.verify]
+command = "python3 -c 'import lunary; print(\"ok\")'"
+
+[tools.keys]
+required = ["LUNARY_APP_ID"]
+env_prefix = "LUNARY"
+
+[[tools]]
+name = "promptlayer"
+display_name = "PromptLayer"
+description = "Prompt engineering platform with version control and analytics"
+category = "observability"
+tags = ["ai", "observability", "prompts", "analytics"]
+homepage = "https://promptlayer.com"
+repo = "https://github.com/MagnivOrg/prompt-layer-library"
+
+[tools.install]
+pip = "promptlayer"
+
+[tools.install.verify]
+command = "python3 -c 'import promptlayer; print(\"ok\")'"
+
+[tools.keys]
+required = ["PROMPTLAYER_API_KEY"]
+env_prefix = "PROMPTLAYER"
+
+[[tools]]
+name = "logfire"
+display_name = "Logfire"
+description = "Pydantic's observability platform for Python and LLM apps"
+category = "observability"
+tags = ["ai", "observability", "pydantic", "tracing"]
+homepage = "https://pydantic.dev/logfire"
+repo = "https://github.com/pydantic/logfire"
+
+[tools.install]
+pip = "logfire"
+
+[tools.install.verify]
+command = "logfire --version"
+
+[tools.keys]
+required = ["LOGFIRE_TOKEN"]
+env_prefix = "LOGFIRE"

@@ -65,7 +65,7 @@ homepage = "https://cline.bot"
 repo = "https://github.com/cline/cline"
 
 [tools.install]
-npm = "@anthropic-ai/claude-code"
+npm = "cline"
 
 [tools.install.verify]
 command = "cline --version"
@@ -179,7 +179,7 @@ homepage = "https://github.com/google-gemini/gemini-cli"
 repo = "https://github.com/google-gemini/gemini-cli"
 
 [tools.install]
-npm = "@anthropic-ai/claude-code"
+npm = "@anthropic-ai/gemini-cli"
 
 [tools.install.verify]
 command = "gemini --version"

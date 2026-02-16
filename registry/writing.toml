@@ -1,0 +1,91 @@
+[[tools]]
+name = "marker"
+display_name = "Marker"
+description = "Convert PDF/EPUB/MOBI to markdown with high accuracy"
+category = "writing"
+tags = ["ai", "writing", "pdf", "markdown", "ocr"]
+homepage = "https://github.com/VikParuchuri/marker"
+repo = "https://github.com/VikParuchuri/marker"
+
+[tools.install]
+pip = "marker-pdf"
+
+[tools.install.verify]
+command = "marker --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "docling"
+display_name = "Docling"
+description = "IBM's document parser — PDF, DOCX, HTML to structured data"
+category = "writing"
+tags = ["ai", "writing", "document", "parsing", "ibm"]
+homepage = "https://ds4sd.github.io/docling"
+repo = "https://github.com/DS4SD/docling"
+
+[tools.install]
+pip = "docling"
+
+[tools.install.verify]
+command = "docling --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "instructor"
+display_name = "Instructor"
+description = "Structured outputs from LLMs with Pydantic validation"
+category = "writing"
+tags = ["ai", "writing", "structured", "pydantic"]
+homepage = "https://python.useinstructor.com"
+repo = "https://github.com/jxnl/instructor"
+
+[tools.install]
+pip = "instructor"
+
+[tools.install.verify]
+command = "python3 -c 'import instructor; print(instructor.__version__)'"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "outlines"
+display_name = "Outlines"
+description = "Structured text generation with guaranteed JSON/regex output"
+category = "writing"
+tags = ["ai", "writing", "structured", "json", "generation"]
+homepage = "https://outlines-dev.github.io/outlines"
+repo = "https://github.com/outlines-dev/outlines"
+
+[tools.install]
+pip = "outlines"
+
+[tools.install.verify]
+command = "python3 -c 'import outlines; print(outlines.__version__)'"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "gptpdf"
+display_name = "GPTPDF"
+description = "Parse PDF to markdown using vision LLMs"
+category = "writing"
+tags = ["ai", "writing", "pdf", "vision", "markdown"]
+homepage = "https://github.com/CosmosShadow/gptpdf"
+repo = "https://github.com/CosmosShadow/gptpdf"
+
+[tools.install]
+pip = "gptpdf"
+
+[tools.install.verify]
+command = "python3 -c 'import gptpdf; print(\"ok\")'"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"

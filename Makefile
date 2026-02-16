@@ -1,6 +1,6 @@
 BINARY = tamr
 INSTALL_DIR = $(HOME)/.local/bin
-VERSION = 0.3.0
+VERSION = 0.4.0
 
 .PHONY: build install clean test completions
 

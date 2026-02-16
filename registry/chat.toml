@@ -1,0 +1,94 @@
+[[tools]]
+name = "aichat"
+display_name = "aichat"
+description = "All-in-one AI CLI: shell assistant, chat REPL, RAG, 20+ providers"
+category = "chat"
+tags = ["ai", "chat", "cli", "multi-provider", "rag"]
+homepage = "https://github.com/sigoden/aichat"
+repo = "https://github.com/sigoden/aichat"
+
+[tools.install]
+cargo = "aichat"
+brew = "aichat"
+
+[tools.install.verify]
+command = "aichat --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "chatgpt-cli"
+display_name = "ChatGPT CLI"
+description = "Multi-provider CLI with streaming, image I/O, and MCP tool calls"
+category = "chat"
+tags = ["ai", "chat", "cli", "openai"]
+homepage = "https://github.com/kardolus/chatgpt-cli"
+repo = "https://github.com/kardolus/chatgpt-cli"
+
+[tools.install]
+brew = "kardolus/chatgpt-cli/chatgpt-cli"
+
+[tools.install.verify]
+command = "chatgpt --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "elia"
+display_name = "Elia"
+description = "TUI ChatGPT client built with Textual — keyboard-centric, SQLite storage"
+category = "chat"
+tags = ["ai", "chat", "tui", "sqlite"]
+homepage = "https://github.com/darrenburns/elia"
+repo = "https://github.com/darrenburns/elia"
+
+[tools.install]
+pip = "elia-chat"
+
+[tools.install.verify]
+command = "elia --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "oterm"
+display_name = "oterm"
+description = "TUI client for Ollama — multiple sessions, MCP tools, image display"
+category = "chat"
+tags = ["ai", "chat", "tui", "ollama", "local"]
+homepage = "https://github.com/ggozad/oterm"
+repo = "https://github.com/ggozad/oterm"
+
+[tools.install]
+pip = "oterm"
+
+[tools.install.verify]
+command = "oterm --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "yai"
+display_name = "yai"
+description = "AI-powered terminal assistant — describe tasks in everyday language"
+category = "chat"
+tags = ["ai", "chat", "cli", "assistant"]
+homepage = "https://github.com/ekkinox/yai"
+repo = "https://github.com/ekkinox/yai"
+
+[tools.install]
+brew = "ekkinox/tap/yai"
+
+[tools.install.verify]
+command = "yai --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"

@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/msalah0e/tamr/internal/hooks"
 	"github.com/msalah0e/tamr/internal/installer"
 	"github.com/msalah0e/tamr/internal/registry"
+	"github.com/msalah0e/tamr/internal/state"
 	"github.com/msalah0e/tamr/internal/ui"
 	"github.com/spf13/cobra"
 )
@@ -50,10 +52,19 @@ func updateOne(reg *registry.Registry, name string) {
 
 	fmt.Printf("  %s\n\n", ui.Brand.Sprint(tool.DisplayName))
 
+	_ = hooks.Run("pre_update", tool.Name, tool.Category)
+
 	if err := installer.Update(*tool); err != nil {
 		ui.Bad.Printf("\n  Update failed: %v\n", err)
 		os.Exit(1)
 	}
+
+	// Update state
+	backend, pkg := tool.InstallMethod()
+	dt := registry.DetectOne(*tool)
+	_ = state.Record(tool.Name, dt.Version, backend, pkg, dt.Path)
+
+	_ = hooks.Run("post_update", tool.Name, tool.Category)
 
 	fmt.Println()
 	ui.Good.Printf("  %s %s updated\n", ui.StatusIcon(true), tool.DisplayName)
@@ -75,12 +86,21 @@ func updateAll(reg *registry.Registry) {
 	for _, dt := range detected {
 		fmt.Printf("  Updating %s... ", ui.Brand.Sprint(dt.Tool.DisplayName))
 
+		_ = hooks.Run("pre_update", dt.Tool.Name, dt.Tool.Category)
+
 		if err := installer.Update(dt.Tool); err != nil {
 			ui.Bad.Printf("failed: %v\n", err)
 			failed++
 		} else {
 			ui.Good.Println("done")
 			success++
+
+			// Update state
+			backend, pkg := dt.Tool.InstallMethod()
+			newDt := registry.DetectOne(dt.Tool)
+			_ = state.Record(dt.Tool.Name, newDt.Version, backend, pkg, newDt.Path)
+
+			_ = hooks.Run("post_update", dt.Tool.Name, dt.Tool.Category)
 		}
 	}
 

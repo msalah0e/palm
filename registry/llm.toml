@@ -159,3 +159,57 @@ command = "lms version"
 
 [tools.keys]
 required = []
+
+[[tools]]
+name = "exo"
+display_name = "Exo"
+description = "Run LLMs on a cluster of everyday devices (phones, laptops)"
+category = "llm"
+tags = ["ai", "llm", "distributed", "local", "cluster"]
+homepage = "https://github.com/exo-explore/exo"
+repo = "https://github.com/exo-explore/exo"
+
+[tools.install]
+pip = "exo"
+
+[tools.install.verify]
+command = "exo --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "koboldcpp"
+display_name = "KoboldCpp"
+description = "Easy-to-use GGUF model runner with API and web UI"
+category = "llm"
+tags = ["ai", "llm", "local", "gguf"]
+homepage = "https://github.com/LostRuins/koboldcpp"
+repo = "https://github.com/LostRuins/koboldcpp"
+
+[tools.install]
+brew = "koboldcpp"
+
+[tools.install.verify]
+command = "koboldcpp --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "text-generation-webui"
+display_name = "Text Generation WebUI"
+description = "Gradio web UI for running LLMs locally"
+category = "llm"
+tags = ["ai", "llm", "local", "webui", "gradio"]
+homepage = "https://github.com/oobabooga/text-generation-webui"
+repo = "https://github.com/oobabooga/text-generation-webui"
+
+[tools.install]
+pip = "text-generation-webui"
+
+[tools.install.verify]
+command = "python3 -c 'print(\"ok\")'"
+
+[tools.keys]
+required = []

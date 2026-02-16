@@ -208,3 +208,60 @@ command = "openhands --version"
 [tools.keys]
 required = []
 optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "claude-squad"
+display_name = "Claude Squad"
+description = "Orchestrate multiple Claude Code instances in parallel"
+category = "agents"
+tags = ["ai", "agents", "orchestration", "claude"]
+homepage = "https://github.com/smtg-ai/claude-squad"
+repo = "https://github.com/smtg-ai/claude-squad"
+
+[tools.install]
+go = "github.com/smtg-ai/claude-squad@latest"
+
+[tools.install.verify]
+command = "claude-squad --version"
+
+[tools.keys]
+required = ["ANTHROPIC_API_KEY"]
+env_prefix = "ANTHROPIC"
+
+[[tools]]
+name = "superagent"
+display_name = "Superagent"
+description = "Open-source framework for building AI assistants"
+category = "agents"
+tags = ["ai", "agents", "framework", "assistants"]
+homepage = "https://www.superagent.sh"
+repo = "https://github.com/superagent-ai/superagent"
+
+[tools.install]
+pip = "superagent-py"
+
+[tools.install.verify]
+command = "python3 -c 'import superagent; print(\"ok\")'"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "phidata"
+display_name = "Phidata"
+description = "Build multi-modal AI agents with memory and tools"
+category = "agents"
+tags = ["ai", "agents", "framework", "multi-modal"]
+homepage = "https://phidata.com"
+repo = "https://github.com/phidatahq/phidata"
+
+[tools.install]
+pip = "phidata"
+
+[tools.install.verify]
+command = "phi --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]

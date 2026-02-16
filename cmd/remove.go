@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/msalah0e/tamr/internal/installer"
+	"github.com/msalah0e/tamr/internal/state"
 	"github.com/msalah0e/tamr/internal/ui"
 	"github.com/spf13/cobra"
 )
@@ -31,6 +32,8 @@ func removeCmd() *cobra.Command {
 				ui.Bad.Printf("\n  Remove failed: %v\n", err)
 				os.Exit(1)
 			}
+
+			_ = state.Remove(name)
 
 			fmt.Println()
 			ui.Good.Printf("  %s %s removed\n", ui.StatusIcon(true), tool.DisplayName)

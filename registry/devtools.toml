@@ -1,0 +1,146 @@
+[[tools]]
+name = "sourcery"
+display_name = "Sourcery"
+description = "AI-powered code review and refactoring"
+category = "devtools"
+tags = ["ai", "devtools", "code-review", "refactoring"]
+homepage = "https://sourcery.ai"
+repo = "https://github.com/sourcery-ai/sourcery"
+
+[tools.install]
+pip = "sourcery"
+
+[tools.install.verify]
+command = "sourcery --version"
+
+[tools.keys]
+required = ["SOURCERY_TOKEN"]
+env_prefix = "SOURCERY"
+
+[[tools]]
+name = "cursor"
+display_name = "Cursor"
+description = "AI-first code editor built on VS Code"
+category = "devtools"
+tags = ["ai", "devtools", "editor", "ide"]
+homepage = "https://cursor.com"
+
+[tools.install]
+brew = "cursor"
+
+[tools.install.verify]
+command = "cursor --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "windsurf"
+display_name = "Windsurf"
+description = "Codeium's agentic IDE with Cascade AI flows"
+category = "devtools"
+tags = ["ai", "devtools", "editor", "ide", "codeium"]
+homepage = "https://codeium.com/windsurf"
+
+[tools.install]
+brew = "windsurf"
+
+[tools.install.verify]
+command = "windsurf --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "amazon-q"
+display_name = "Amazon Q"
+description = "AWS AI assistant for development and operations"
+category = "devtools"
+tags = ["ai", "devtools", "aws", "assistant"]
+homepage = "https://aws.amazon.com/q/developer/"
+
+[tools.install]
+brew = "amazon-q"
+
+[tools.install.verify]
+command = "q --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "tabby"
+display_name = "Tabby"
+description = "Self-hosted AI coding assistant — open source"
+category = "devtools"
+tags = ["ai", "devtools", "self-hosted", "coding"]
+homepage = "https://tabby.tabbyml.com"
+repo = "https://github.com/TabbyML/tabby"
+
+[tools.install]
+brew = "tabbyml/tabby/tabby"
+cargo = "tabby"
+
+[tools.install.verify]
+command = "tabby --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "aicodebot"
+display_name = "AICodeBot"
+description = "AI-powered code review, commit messages, and docs"
+category = "devtools"
+tags = ["ai", "devtools", "code-review", "commits"]
+homepage = "https://github.com/TechNickAI/AICodeBot"
+repo = "https://github.com/TechNickAI/AICodeBot"
+
+[tools.install]
+pip = "aicodebot"
+
+[tools.install.verify]
+command = "aicodebot --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "pr-agent"
+display_name = "PR-Agent"
+description = "CodiumAI's AI-powered pull request analysis and review"
+category = "devtools"
+tags = ["ai", "devtools", "code-review", "pull-request"]
+homepage = "https://www.codium.ai"
+repo = "https://github.com/Codium-ai/pr-agent"
+
+[tools.install]
+pip = "pr-agent"
+
+[tools.install.verify]
+command = "python3 -c 'import pr_agent; print(\"ok\")'"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+optional = ["GITHUB_TOKEN"]
+env_prefix = "OPENAI"
+
+[[tools]]
+name = "mentat"
+display_name = "Mentat"
+description = "AI coding assistant that works with your codebase"
+category = "devtools"
+tags = ["ai", "devtools", "coding", "codebase"]
+homepage = "https://mentat.ai"
+repo = "https://github.com/AbanteAI/mentat"
+
+[tools.install]
+pip = "mentat"
+
+[tools.install.verify]
+command = "mentat --version"
+
+[tools.keys]
+required = ["OPENAI_API_KEY"]
+env_prefix = "OPENAI"

@@ -5,14 +5,16 @@ import (
 
 	"github.com/msalah0e/tamr/internal/registry"
 	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/tamr/internal/update"
 	"github.com/spf13/cobra"
 )
 
-var version = "0.3.0"
+var version = "0.4.0"
 
 var (
-	reg        *registry.Registry
-	registryFS embed.FS
+	reg         *registry.Registry
+	registryFS  embed.FS
+	offlineMode bool
 )
 
 // SetRegistryFS sets the embedded filesystem containing TOML registry files.
@@ -24,7 +26,7 @@ func loadRegistry() *registry.Registry {
 	if reg != nil {
 		return reg
 	}
-	r, err := registry.LoadFromFS(registryFS, "registry")
+	r, err := registry.LoadAll(registryFS, "registry")
 	if err != nil {
 		ui.Bad.Printf("tamr: failed to load registry: %v\n", err)
 		return registry.New(nil)
@@ -39,10 +41,16 @@ var rootCmd = &cobra.Command{
 	Long: ui.Brand.Sprint(ui.Palm+" tamr") + " — manage your AI tools from one place\n" +
 		ui.Subtle.Sprint("Install, configure, and run AI CLI tools with one command"),
 	Version: version + " " + ui.Palm,
+	PersistentPostRun: func(cmd *cobra.Command, args []string) {
+		if !offlineMode {
+			update.CheckForUpdate(version)
+		}
+	},
 }
 
 func init() {
 	rootCmd.SetVersionTemplate("tamr {{ .Version }}\n")
+	rootCmd.PersistentFlags().BoolVar(&offlineMode, "offline", false, "Run without network access")
 
 	rootCmd.AddCommand(
 		installCmd(),
@@ -56,6 +64,7 @@ func init() {
 		keysCmd(),
 		discoverCmd(),
 		statsCmd(),
+		selfUpdateCmd(),
 	)
 }
 

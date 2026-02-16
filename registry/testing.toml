@@ -1,0 +1,130 @@
+[[tools]]
+name = "promptfoo"
+display_name = "Promptfoo"
+description = "Test and evaluate LLM prompts, models, and RAG pipelines"
+category = "testing"
+tags = ["ai", "testing", "evaluation", "prompts"]
+homepage = "https://promptfoo.dev"
+repo = "https://github.com/promptfoo/promptfoo"
+
+[tools.install]
+npm = "promptfoo"
+
+[tools.install.verify]
+command = "promptfoo --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]
+
+[[tools]]
+name = "deepeval"
+display_name = "DeepEval"
+description = "Unit testing framework for LLM applications"
+category = "testing"
+tags = ["ai", "testing", "evaluation", "unit-tests"]
+homepage = "https://docs.confident-ai.com"
+repo = "https://github.com/confident-ai/deepeval"
+
+[tools.install]
+pip = "deepeval"
+
+[tools.install.verify]
+command = "deepeval --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "ragas"
+display_name = "Ragas"
+description = "Evaluation framework for RAG pipelines"
+category = "testing"
+tags = ["ai", "testing", "evaluation", "rag"]
+homepage = "https://ragas.io"
+repo = "https://github.com/explodinggradients/ragas"
+
+[tools.install]
+pip = "ragas"
+
+[tools.install.verify]
+command = "python3 -c 'import ragas; print(ragas.__version__)'"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "giskard"
+display_name = "Giskard"
+description = "Testing and evaluation for ML models and LLMs"
+category = "testing"
+tags = ["ai", "testing", "evaluation", "ml"]
+homepage = "https://giskard.ai"
+repo = "https://github.com/Giskard-AI/giskard"
+
+[tools.install]
+pip = "giskard"
+
+[tools.install.verify]
+command = "giskard --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "evidently"
+display_name = "Evidently"
+description = "ML model monitoring and data quality testing"
+category = "testing"
+tags = ["ai", "testing", "monitoring", "data-quality"]
+homepage = "https://www.evidentlyai.com"
+repo = "https://github.com/evidentlyai/evidently"
+
+[tools.install]
+pip = "evidently"
+
+[tools.install.verify]
+command = "evidently --version"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "trulens"
+display_name = "TruLens"
+description = "Evaluation and tracking for LLM experiments"
+category = "testing"
+tags = ["ai", "testing", "evaluation", "tracking"]
+homepage = "https://www.trulens.org"
+repo = "https://github.com/truera/trulens"
+
+[tools.install]
+pip = "trulens"
+
+[tools.install.verify]
+command = "python3 -c 'import trulens; print(trulens.__version__)'"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "inspect-ai"
+display_name = "Inspect AI"
+description = "UK AISI's framework for evaluating LLM capabilities"
+category = "testing"
+tags = ["ai", "testing", "evaluation", "safety"]
+homepage = "https://inspect.ai-safety-institute.org.uk"
+repo = "https://github.com/UKGovernmentBEIS/inspect_ai"
+
+[tools.install]
+pip = "inspect-ai"
+
+[tools.install.verify]
+command = "inspect --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY", "ANTHROPIC_API_KEY"]

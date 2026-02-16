@@ -1,0 +1,112 @@
+[[tools]]
+name = "garak"
+display_name = "Garak"
+description = "LLM vulnerability scanner — probes for prompt injection, data leaks"
+category = "security"
+tags = ["ai", "security", "vulnerability", "red-team"]
+homepage = "https://garak.ai"
+repo = "https://github.com/NVIDIA/garak"
+
+[tools.install]
+pip = "garak"
+
+[tools.install.verify]
+command = "garak --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "llm-guard"
+display_name = "LLM Guard"
+description = "Input/output guardrails for LLM applications"
+category = "security"
+tags = ["ai", "security", "guardrails", "moderation"]
+homepage = "https://llm-guard.com"
+repo = "https://github.com/protectai/llm-guard"
+
+[tools.install]
+pip = "llm-guard"
+
+[tools.install.verify]
+command = "python3 -c 'import llm_guard; print(llm_guard.__version__)'"
+
+[tools.keys]
+required = []
+
+[[tools]]
+name = "guardrails-ai"
+display_name = "Guardrails AI"
+description = "Add structure and validation to LLM outputs"
+category = "security"
+tags = ["ai", "security", "validation", "guardrails"]
+homepage = "https://www.guardrailsai.com"
+repo = "https://github.com/guardrails-ai/guardrails"
+
+[tools.install]
+pip = "guardrails-ai"
+
+[tools.install.verify]
+command = "guardrails --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "rebuff"
+display_name = "Rebuff"
+description = "Prompt injection detection and protection"
+category = "security"
+tags = ["ai", "security", "prompt-injection", "detection"]
+homepage = "https://www.rebuff.ai"
+repo = "https://github.com/protectai/rebuff"
+
+[tools.install]
+pip = "rebuff"
+
+[tools.install.verify]
+command = "python3 -c 'import rebuff; print(\"ok\")'"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "nemo-guardrails"
+display_name = "NeMo Guardrails"
+description = "NVIDIA's toolkit for adding safety rails to LLM apps"
+category = "security"
+tags = ["ai", "security", "guardrails", "nvidia"]
+homepage = "https://github.com/NVIDIA/NeMo-Guardrails"
+repo = "https://github.com/NVIDIA/NeMo-Guardrails"
+
+[tools.install]
+pip = "nemoguardrails"
+
+[tools.install.verify]
+command = "nemoguardrails --version"
+
+[tools.keys]
+required = []
+optional = ["OPENAI_API_KEY"]
+
+[[tools]]
+name = "pyrit"
+display_name = "PyRIT"
+description = "Microsoft's red teaming toolkit for generative AI"
+category = "security"
+tags = ["ai", "security", "red-team", "microsoft"]
+homepage = "https://github.com/Azure/PyRIT"
+repo = "https://github.com/Azure/PyRIT"
+
+[tools.install]
+pip = "pyrit"
+
+[tools.install.verify]
+command = "python3 -c 'import pyrit; print(pyrit.__version__)'"
+
+[tools.keys]
+required = []
+optional = ["AZURE_OPENAI_API_KEY"]

@@ -20,7 +20,7 @@ type DetectedTool struct {
 func Detect(reg *Registry) []DetectedTool {
 	var results []DetectedTool
 	for _, tool := range reg.All() {
-		dt := detectOne(tool)
+		dt := DetectOne(tool)
 		results = append(results, dt)
 	}
 	return results
@@ -30,7 +30,7 @@ func Detect(reg *Registry) []DetectedTool {
 func DetectInstalled(reg *Registry) []DetectedTool {
 	var results []DetectedTool
 	for _, tool := range reg.All() {
-		dt := detectOne(tool)
+		dt := DetectOne(tool)
 		if dt.Installed {
 			results = append(results, dt)
 		}
@@ -38,7 +38,8 @@ func DetectInstalled(reg *Registry) []DetectedTool {
 	return results
 }
 
-func detectOne(tool Tool) DetectedTool {
+// DetectOne checks if a single tool is installed and returns detection info.
+func DetectOne(tool Tool) DetectedTool {
 	dt := DetectedTool{Tool: tool}
 
 	if tool.Install.Verify.Command == "" {

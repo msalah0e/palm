@@ -9,11 +9,13 @@ import (
 
 // Config holds tamr configuration.
 type Config struct {
-	UI      UIConfig      `toml:"ui"`
-	Stats   StatsConfig   `toml:"stats"`
-	Install InstallConfig `toml:"install"`
-	Keys    KeysConfig    `toml:"keys"`
-	Vault   VaultConfig   `toml:"vault"`
+	UI       UIConfig       `toml:"ui"`
+	Stats    StatsConfig    `toml:"stats"`
+	Install  InstallConfig  `toml:"install"`
+	Keys     KeysConfig     `toml:"keys"`
+	Vault    VaultConfig    `toml:"vault"`
+	Parallel ParallelConfig `toml:"parallel"`
+	Hooks    HooksConfig    `toml:"hooks"`
 }
 
 // UIConfig controls display options.
@@ -43,24 +45,46 @@ type VaultConfig struct {
 	Backend string `toml:"backend"` // "auto", "keychain", "file"
 }
 
+// ParallelConfig controls concurrent execution.
+type ParallelConfig struct {
+	Enabled     bool `toml:"enabled"`
+	Concurrency int  `toml:"concurrency"`
+}
+
+// HooksConfig defines lifecycle hook scripts.
+type HooksConfig struct {
+	PreInstall  string `toml:"pre_install"`
+	PostInstall string `toml:"post_install"`
+	PreRun      string `toml:"pre_run"`
+	PostRun     string `toml:"post_run"`
+	PreUpdate   string `toml:"pre_update"`
+	PostUpdate  string `toml:"post_update"`
+}
+
 // Default returns the default configuration.
 func Default() *Config {
 	return &Config{
-		UI:      UIConfig{Emoji: true, Color: true},
-		Stats:   StatsConfig{Enabled: false},
-		Install: InstallConfig{PreferUV: true, CleanupAfter: false},
-		Keys:    KeysConfig{AutoExport: false},
-		Vault:   VaultConfig{Backend: "auto"},
+		UI:       UIConfig{Emoji: true, Color: true},
+		Stats:    StatsConfig{Enabled: false},
+		Install:  InstallConfig{PreferUV: true, CleanupAfter: false},
+		Keys:     KeysConfig{AutoExport: false},
+		Vault:    VaultConfig{Backend: "auto"},
+		Parallel: ParallelConfig{Enabled: true, Concurrency: 4},
 	}
 }
 
-func configPath() string {
+// ConfigDir returns the tamr config directory path.
+func ConfigDir() string {
 	dir := os.Getenv("XDG_CONFIG_HOME")
 	if dir == "" {
 		home, _ := os.UserHomeDir()
 		dir = filepath.Join(home, ".config")
 	}
-	return filepath.Join(dir, "tamr", "config.toml")
+	return filepath.Join(dir, "tamr")
+}
+
+func configPath() string {
+	return filepath.Join(ConfigDir(), "config.toml")
 }
 
 // Load reads the config file, creating defaults if it doesn't exist.

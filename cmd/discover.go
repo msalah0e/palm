@@ -17,15 +17,22 @@ func discoverCmd() *cobra.Command {
 			ui.Banner("discover AI tools")
 
 			categoryLabels := map[string]string{
-				"coding": "\U0001F4BB Coding",
-				"llm":    "\U0001F9E0 LLM & Inference",
-				"agents": "\U0001F916 Agents & Automation",
-				"media":  "\U0001F3A8 Creative & Media",
-				"infra":  "\u2699\ufe0f  Infrastructure",
-				"data":   "\U0001F4CA Data & Vector DBs",
+				"coding":        "\U0001F4BB Coding",
+				"llm":           "\U0001F9E0 LLM & Inference",
+				"agents":        "\U0001F916 Agents & Automation",
+				"chat":          "\U0001F4AC Chat & Assistants",
+				"devtools":      "\U0001F6E0\ufe0f  Dev Tools",
+				"media":         "\U0001F3A8 Creative & Media",
+				"infra":         "\u2699\ufe0f  Infrastructure",
+				"data":          "\U0001F4CA Data & Vector DBs",
+				"testing":       "\U0001F9EA Testing & Evaluation",
+				"security":      "\U0001F6E1\ufe0f  Security & Safety",
+				"observability": "\U0001F4E1 Observability",
+				"search":       "\U0001F50D Search & RAG",
+				"writing":       "\u270D\ufe0f  Writing & Documents",
 			}
 
-			categoryOrder := []string{"coding", "llm", "agents", "media", "infra", "data"}
+			categoryOrder := []string{"coding", "llm", "agents", "chat", "devtools", "media", "infra", "data", "testing", "security", "observability", "search", "writing"}
 
 			for _, cat := range categoryOrder {
 				tools := reg.ByCategory(cat)
