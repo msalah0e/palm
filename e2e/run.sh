@@ -82,6 +82,7 @@ assert_contains "$OUTPUT" "cache" "palm --help shows cache command"
 assert_contains "$OUTPUT" "worktree" "palm --help shows worktree command"
 assert_contains "$OUTPUT" "serve" "palm --help shows serve command"
 assert_contains "$OUTPUT" "gpu" "palm --help shows gpu command"
+assert_contains "$OUTPUT" "graph" "palm --help shows graph command"
 
 # ────────────────────────────────────────
 echo ""
@@ -528,6 +529,25 @@ echo ""
 
 OUTPUT=$(palm --help 2>&1)
 assert_contains "$OUTPUT" "eval" "palm --help shows eval command"
+
+# ────────────────────────────────────────
+echo ""
+echo "📋 Graph (Knowledge Graph) Tests"
+echo ""
+
+assert_exit_0 "palm graph" "graph overview"
+assert_exit_0 "palm graph add TestNode --type test" "graph add"
+assert_exit_0 "palm graph observe TestNode 'a fact'" "graph observe"
+assert_exit_0 "palm graph add OtherNode --type test" "graph add other"
+assert_exit_0 "palm graph relate TestNode links_to OtherNode" "graph relate"
+OUT=$(palm graph show TestNode 2>&1)
+assert_contains "$OUT" "TestNode" "graph show"
+OUT=$(palm graph search test 2>&1)
+assert_contains "$OUT" "TestNode" "graph search"
+assert_exit_0 "palm graph list" "graph list"
+assert_exit_0 "palm graph export --format dot" "graph export dot"
+assert_exit_0 "palm graph show TestNode --json" "graph show json"
+assert_exit_0 "palm graph remove OtherNode" "graph remove"
 
 # ────────────────────────────────────────
 echo ""

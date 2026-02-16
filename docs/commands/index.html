@@ -58,6 +58,10 @@
     <div class="group-title">Git</div>
     <a href="#worktree">Worktrees</a>
 
+    <div class="group-title">Knowledge Graph</div>
+    <a href="#graph">Graph Commands</a>
+    <a href="#graph-view">Graph Visualization</a>
+
     <div class="group-title">More</div>
     <a href="#cache">Offline Cache</a>
     <a href="#matrix">Dashboard</a>
@@ -471,6 +475,82 @@ depends_on = ["read-code"]
 
     <div class="info-box">
       <strong>Key feature:</strong> <code>palm worktree run</code> launches any AI tool inside the worktree directory with vault keys injected. Your current branch stays untouched.
+    </div>
+
+    <!-- ────────────────── KNOWLEDGE GRAPH ────────────────── -->
+
+    <h2 id="graph">Knowledge Graph</h2>
+
+    <p>Encrypted knowledge graph for AI tool memory. Stored as <code>graph.enc</code> using AES-256-GCM &mdash; same encryption pattern as the key vault. Designed for AI tools (Claude Code, aider, etc.) to use as persistent memory via CLI.</p>
+
+    <div class="codeblock">
+<span class="comment"># Create entities</span>
+<span class="prompt">$</span> palm graph add "Mohamed Salah" --type person
+<span class="prompt">$</span> palm graph add palm --type project
+
+<span class="comment"># Add observations (facts)</span>
+<span class="prompt">$</span> palm graph observe "Mohamed Salah" "GitHub: msalah0e"
+<span class="prompt">$</span> palm graph observe palm "AI tool manager written in Go"
+
+<span class="comment"># Create directed relations</span>
+<span class="prompt">$</span> palm graph relate "Mohamed Salah" created palm
+
+<span class="comment"># Show entity with connections (visual tree)</span>
+<span class="prompt">$</span> palm graph show "Mohamed Salah"
+<span class="output">  ● Mohamed Salah</span>
+<span class="output">  │  person</span>
+<span class="output">  │  "GitHub: msalah0e"</span>
+<span class="output">  │</span>
+<span class="output">  └── created ── palm</span>
+<span class="output">              project</span>
+
+<span class="comment"># JSON output for AI tools</span>
+<span class="prompt">$</span> palm graph show "Mohamed Salah" --json
+
+<span class="comment"># Search across names, types, and observations</span>
+<span class="prompt">$</span> palm graph search project
+<span class="prompt">$</span> palm graph search project --json
+
+<span class="comment"># List all entities (with optional type filter)</span>
+<span class="prompt">$</span> palm graph list
+<span class="prompt">$</span> palm graph list --type person
+    </div>
+
+    <h3>Aliases</h3>
+    <p><code>palm kg</code> and <code>palm memory</code> are aliases for <code>palm graph</code>.</p>
+
+    <table class="doc-table">
+      <tr><th>Command</th><th>Description</th></tr>
+      <tr><td>graph add &lt;name&gt;</td><td>Create entity (<code>--type</code> flag)</td></tr>
+      <tr><td>graph observe &lt;name&gt; "fact"</td><td>Add observation (aliases: <code>obs</code>, <code>note</code>)</td></tr>
+      <tr><td>graph relate &lt;from&gt; &lt;rel&gt; &lt;to&gt;</td><td>Create directed relation</td></tr>
+      <tr><td>graph show &lt;name&gt;</td><td>Show entity + connections (<code>--json</code>)</td></tr>
+      <tr><td>graph search &lt;query&gt;</td><td>Search by name/type/observation (<code>--json</code>)</td></tr>
+      <tr><td>graph list</td><td>List all entities (<code>--type</code>, <code>--json</code>)</td></tr>
+      <tr><td>graph remove &lt;name&gt;</td><td>Remove entity + its relations (aliases: <code>rm</code>, <code>delete</code>)</td></tr>
+      <tr><td>graph export</td><td>Export full graph (<code>--format json|dot|html</code>)</td></tr>
+      <tr><td>graph import &lt;file&gt;</td><td>Import/merge from JSON file</td></tr>
+      <tr><td>graph view</td><td>Open interactive visualization in browser</td></tr>
+    </table>
+
+    <h2 id="graph-view">Graph Visualization</h2>
+
+    <p>Open an interactive, Obsidian-like force-directed graph view in your browser. Nodes are colored by type, sized by observation count, with directed edge arrows and labels.</p>
+
+    <div class="codeblock">
+<span class="comment"># Open in browser</span>
+<span class="prompt">$</span> palm graph view
+<span class="success">  ✓ Opened graph visualization (12 entities, 8 relations)</span>
+
+<span class="comment"># Export as standalone HTML file</span>
+<span class="prompt">$</span> palm graph export --format html > my-graph.html
+
+<span class="comment"># Export as Graphviz DOT (for custom rendering)</span>
+<span class="prompt">$</span> palm graph export --format dot | dot -Tpng -o graph.png
+    </div>
+
+    <div class="info-box">
+      <strong>Features:</strong> Drag nodes to rearrange, scroll to zoom, search to highlight, hover for details. All data is embedded in a single HTML file &mdash; no external dependencies.
     </div>
 
     <!-- ────────────────── MORE ────────────────── -->

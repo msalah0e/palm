@@ -81,6 +81,7 @@ func init() {
 		serveCmd(),
 		gpuCmd(),
 		tuiCmd(),
+		graphCmd(),
 	)
 }
 
