@@ -1,0 +1,11 @@
+[[presets]]
+name = "test-preset"
+display_name = "Test Preset"
+description = "A test preset for unit tests"
+tools = ["test-tool-a", "test-tool-b"]
+
+[[presets]]
+name = "test-preset-2"
+display_name = "Test Preset 2"
+description = "Another test preset"
+tools = ["test-tool-c"]

@@ -19,6 +19,8 @@ func Install(tool registry.Tool) error {
 	fmt.Printf("  Installing %s via %s (%s)...\n", ui.Brand.Sprint(tool.DisplayName), backend, pkg)
 
 	switch backend {
+	case "linux":
+		return linuxInstall(pkg)
 	case "brew":
 		return brewInstall(pkg)
 	case "pip":
@@ -45,6 +47,8 @@ func Update(tool registry.Tool) error {
 	backend, pkg := tool.InstallMethod()
 
 	switch backend {
+	case "linux":
+		return linuxUpdate(pkg)
 	case "brew":
 		return runCmd("brew", "upgrade", pkg)
 	case "pip":
@@ -71,6 +75,8 @@ func Uninstall(tool registry.Tool) error {
 	fmt.Printf("  Removing %s via %s...\n", ui.Brand.Sprint(tool.DisplayName), backend)
 
 	switch backend {
+	case "linux":
+		return linuxUninstall(pkg)
 	case "brew":
 		return runCmd("brew", "uninstall", pkg)
 	case "pip":
@@ -160,6 +166,67 @@ func scriptInstall(url string) error {
 		return fmt.Errorf("curl not found")
 	}
 	return runCmd("sh", "-c", fmt.Sprintf("curl -fsSL %s | sh", url))
+}
+
+func detectLinuxPM() (string, error) {
+	if hasCommand("apt-get") {
+		return "apt-get", nil
+	}
+	if hasCommand("dnf") {
+		return "dnf", nil
+	}
+	if hasCommand("pacman") {
+		return "pacman", nil
+	}
+	return "", fmt.Errorf("no supported package manager found (need apt-get, dnf, or pacman)")
+}
+
+func linuxInstall(pkg string) error {
+	pm, err := detectLinuxPM()
+	if err != nil {
+		return err
+	}
+	switch pm {
+	case "apt-get":
+		return runCmd("sudo", "apt-get", "install", "-y", pkg)
+	case "dnf":
+		return runCmd("sudo", "dnf", "install", "-y", pkg)
+	case "pacman":
+		return runCmd("sudo", "pacman", "-S", "--noconfirm", pkg)
+	}
+	return fmt.Errorf("unsupported package manager: %s", pm)
+}
+
+func linuxUpdate(pkg string) error {
+	pm, err := detectLinuxPM()
+	if err != nil {
+		return err
+	}
+	switch pm {
+	case "apt-get":
+		return runCmd("sudo", "apt-get", "upgrade", "-y", pkg)
+	case "dnf":
+		return runCmd("sudo", "dnf", "upgrade", "-y", pkg)
+	case "pacman":
+		return runCmd("sudo", "pacman", "-Syu", "--noconfirm")
+	}
+	return fmt.Errorf("unsupported package manager: %s", pm)
+}
+
+func linuxUninstall(pkg string) error {
+	pm, err := detectLinuxPM()
+	if err != nil {
+		return err
+	}
+	switch pm {
+	case "apt-get":
+		return runCmd("sudo", "apt-get", "remove", "-y", pkg)
+	case "dnf":
+		return runCmd("sudo", "dnf", "remove", "-y", pkg)
+	case "pacman":
+		return runCmd("sudo", "pacman", "-R", "--noconfirm", pkg)
+	}
+	return fmt.Errorf("unsupported package manager: %s", pm)
 }
 
 func hasCommand(name string) bool {

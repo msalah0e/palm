@@ -16,6 +16,13 @@ type Config struct {
 	Vault    VaultConfig    `toml:"vault"`
 	Parallel ParallelConfig `toml:"parallel"`
 	Hooks    HooksConfig    `toml:"hooks"`
+	Setup    SetupConfig    `toml:"setup"`
+}
+
+// SetupConfig tracks setup wizard state.
+type SetupConfig struct {
+	Complete bool   `toml:"complete"`
+	Preset   string `toml:"preset"`
 }
 
 // UIConfig controls display options.

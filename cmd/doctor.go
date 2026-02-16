@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	"github.com/msalah0e/palm/internal/registry"
@@ -61,6 +62,16 @@ func doctorCmd() *cobra.Command {
 			checkRuntime("Go", "go", "version")
 			checkRuntime("Cargo", "cargo", "--version")
 			checkRuntime("Docker", "docker", "--version")
+
+			if runtime.GOOS == "linux" {
+				for _, pm := range []struct{ name, bin string }{
+					{"apt-get", "apt-get"},
+					{"dnf", "dnf"},
+					{"pacman", "pacman"},
+				} {
+					checkRuntime(pm.name, pm.bin, "--version")
+				}
+			}
 
 			if len(detected) > 0 {
 				fmt.Printf("\n  %d/%d tools healthy", healthy, len(detected))

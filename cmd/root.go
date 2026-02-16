@@ -2,14 +2,17 @@ package cmd
 
 import (
 	"embed"
+	"fmt"
+	"os"
 
+	"github.com/msalah0e/palm/internal/config"
 	"github.com/msalah0e/palm/internal/registry"
 	"github.com/msalah0e/palm/internal/ui"
 	"github.com/msalah0e/palm/internal/update"
 	"github.com/spf13/cobra"
 )
 
-var version = "1.3.0"
+var version = "1.4.0"
 
 var (
 	reg         *registry.Registry
@@ -41,6 +44,15 @@ var rootCmd = &cobra.Command{
 	Long: ui.Brand.Sprint(ui.Palm+" palm") + " — manage your AI tools from one place\n" +
 		ui.Subtle.Sprint("Install, configure, and run AI CLI tools with one command"),
 	Version: version + " " + ui.Palm,
+	PersistentPreRun: func(cmd *cobra.Command, args []string) {
+		if _, err := os.Stat(config.ConfigDir()); os.IsNotExist(err) {
+			cfg := config.Load()
+			if !cfg.Setup.Complete {
+				fmt.Println(ui.Subtle.Sprint("  Tip: Run `palm setup` to get started with curated tool presets"))
+				fmt.Println()
+			}
+		}
+	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
 		if !offlineMode {
 			update.CheckForUpdate(version)
@@ -96,6 +108,7 @@ func init() {
 		actlogCmd(),
 		healthCmd(),
 		pirateCmd(),
+		setupCmd(),
 	)
 }
 

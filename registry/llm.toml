@@ -9,6 +9,7 @@ repo = "https://github.com/ollama/ollama"
 
 [tools.install]
 brew = "ollama"
+linux = "ollama"
 
 [tools.install.verify]
 command = "ollama --version"

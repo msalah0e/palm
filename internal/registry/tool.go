@@ -1,5 +1,7 @@
 package registry
 
+import "runtime"
+
 // Tool represents an AI CLI tool in the registry.
 type Tool struct {
 	Name        string   `toml:"name"`
@@ -23,6 +25,7 @@ type Install struct {
 	Docker string `toml:"docker"`
 	Binary string `toml:"binary"`
 	Script string `toml:"script"`
+	Linux  string `toml:"linux"`
 	Verify Verify `toml:"verify"`
 }
 
@@ -38,9 +41,19 @@ type Keys struct {
 	EnvPrefix string   `toml:"env_prefix"`
 }
 
+// Preset defines a curated tool bundle for quick setup.
+type Preset struct {
+	Name        string   `toml:"name"`
+	DisplayName string   `toml:"display_name"`
+	Description string   `toml:"description"`
+	Tools       []string `toml:"tools"`
+}
+
 // InstallMethod returns the preferred install backend and package identifier.
 func (t Tool) InstallMethod() (backend, pkg string) {
 	switch {
+	case t.Install.Linux != "" && runtime.GOOS == "linux":
+		return "linux", t.Install.Linux
 	case t.Install.Brew != "":
 		return "brew", t.Install.Brew
 	case t.Install.Script != "":

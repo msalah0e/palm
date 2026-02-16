@@ -1,6 +1,7 @@
 package registry
 
 import (
+	"runtime"
 	"testing"
 )
 
@@ -181,6 +182,34 @@ func TestInstallMethod(t *testing.T) {
 			expectedBackend: "manual",
 			expectedPkg:     "https://example.com",
 		},
+	}
+
+	// Add linux test case conditionally based on platform
+	if runtime.GOOS == "linux" {
+		tests = append(tests, struct {
+			name            string
+			tool            Tool
+			expectedBackend string
+			expectedPkg     string
+		}{
+			name:            "linux priority on linux",
+			tool:            Tool{Install: Install{Linux: "ollama", Brew: "ollama"}},
+			expectedBackend: "linux",
+			expectedPkg:     "ollama",
+		})
+	} else {
+		// On non-linux, linux field should be ignored and brew takes priority
+		tests = append(tests, struct {
+			name            string
+			tool            Tool
+			expectedBackend string
+			expectedPkg     string
+		}{
+			name:            "linux ignored on non-linux",
+			tool:            Tool{Install: Install{Linux: "ollama", Brew: "ollama"}},
+			expectedBackend: "brew",
+			expectedPkg:     "ollama",
+		})
 	}
 
 	for _, tt := range tests {

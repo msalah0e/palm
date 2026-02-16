@@ -1205,7 +1205,7 @@
 <section id="roadmap">
   <div class="section-header">
     <h2>Road<span class="palm">map</span></h2>
-    <p>From tool manager to AI control plane. All milestones complete.</p>
+    <p>From tool manager to AI control plane.</p>
   </div>
 
   <div class="roadmap-timeline">
@@ -1271,16 +1271,16 @@
     </div>
 
     <div class="rm-item">
-      <div class="rm-ver">v1.3.0 <span class="done-badge">SHIPPED</span></div>
-      <div class="rm-title">AI Control Plane</div>
+      <div class="rm-ver">v1.1.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">Cross-Platform &amp; Local AI</div>
       <ul class="rm-list">
-        <li>palm mcp &mdash; MCP server registry (20 servers), install, sync across tools</li>
-        <li>palm tokens &mdash; token counting and context budget across 20+ models</li>
-        <li>palm rules &mdash; universal AI rules sync to 8 tools from one source</li>
-        <li>palm pirate &mdash; auto-switch AI providers when quota is hit</li>
-        <li>palm prompt &mdash; reusable prompt library with variable substitution</li>
-        <li>palm audit, shield, migrate, team, sync, cost, log, health, benchmark</li>
-        <li>palm doctor --deep &mdash; extended health checks</li>
+        <li>Windows support &mdash; CI builds, PowerShell installer + completions</li>
+        <li>palm serve &mdash; local LLM orchestration (ollama/llama.cpp/vllm)</li>
+        <li>palm gpu &mdash; cross-platform GPU detection and model recommendations</li>
+        <li>palm worktree &mdash; git worktrees with AI tool integration</li>
+        <li>palm ui &mdash; interactive TUI project navigator</li>
+        <li>Command simplification &mdash; merged discover/benchmark/env/fetch/sessions</li>
+        <li>Multi-page documentation site</li>
       </ul>
     </div>
 
@@ -1296,16 +1296,26 @@
     </div>
 
     <div class="rm-item">
-      <div class="rm-ver">v1.1.0 <span class="done-badge">SHIPPED</span></div>
-      <div class="rm-title">Cross-Platform &amp; Local AI</div>
+      <div class="rm-ver">v1.3.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">AI Control Plane</div>
       <ul class="rm-list">
-        <li>Windows support &mdash; CI builds, PowerShell installer + completions</li>
-        <li>palm serve &mdash; local LLM orchestration (ollama/llama.cpp/vllm)</li>
-        <li>palm gpu &mdash; cross-platform GPU detection and model recommendations</li>
-        <li>palm worktree &mdash; git worktrees with AI tool integration</li>
-        <li>palm ui &mdash; interactive TUI project navigator</li>
-        <li>Command simplification &mdash; merged discover/benchmark/env/fetch/sessions</li>
-        <li>Multi-page documentation site</li>
+        <li>palm mcp &mdash; MCP server registry (20 servers), install, sync across tools</li>
+        <li>palm tokens &mdash; token counting and context budget across 20+ models</li>
+        <li>palm rules &mdash; universal AI rules sync to 8 tools from one source</li>
+        <li>palm pirate &mdash; auto-switch AI providers when quota is hit</li>
+        <li>palm prompt &mdash; reusable prompt library with variable substitution</li>
+        <li>palm audit, shield, migrate, team, sync, cost, log, health, benchmark</li>
+        <li>palm doctor --deep &mdash; extended health checks</li>
+      </ul>
+    </div>
+
+    <div class="rm-item">
+      <div class="rm-ver">v1.4.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">Linux &amp; Setup</div>
+      <ul class="rm-list">
+        <li>Linux package backend &mdash; auto-detect apt/dnf/pacman</li>
+        <li>palm setup &mdash; interactive wizard with curated tool presets</li>
+        <li>First-run onboarding flow with preset selection</li>
       </ul>
     </div>
 
@@ -1313,10 +1323,9 @@
       <div class="rm-ver" style="color: var(--text-muted);">Next</div>
       <div class="rm-title" style="color: var(--text-dim);">What's Next</div>
       <ul class="rm-list">
-        <li>MCP server integration</li>
-        <li>Team features &amp; shared workspaces</li>
-        <li>Remote sync for vault keys</li>
-        <li>Plugin ecosystem</li>
+        <li>Tool dependency resolution and conflict detection</li>
+        <li>Custom registries and private tool feeds</li>
+        <li>AI tool usage analytics dashboard</li>
       </ul>
     </div>
   </div>

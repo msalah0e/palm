@@ -90,6 +90,34 @@ func TestEnsureExists(t *testing.T) {
 	}
 }
 
+func TestSetupConfig(t *testing.T) {
+	tmpDir := t.TempDir()
+	t.Setenv("XDG_CONFIG_HOME", tmpDir)
+
+	cfg := Default()
+	if cfg.Setup.Complete {
+		t.Error("default setup.complete should be false")
+	}
+	if cfg.Setup.Preset != "" {
+		t.Error("default setup.preset should be empty")
+	}
+
+	cfg.Setup.Complete = true
+	cfg.Setup.Preset = "essentials"
+
+	if err := Save(cfg); err != nil {
+		t.Fatalf("Save failed: %v", err)
+	}
+
+	loaded := Load()
+	if !loaded.Setup.Complete {
+		t.Error("expected setup.complete true after load")
+	}
+	if loaded.Setup.Preset != "essentials" {
+		t.Errorf("expected setup.preset 'essentials', got %q", loaded.Setup.Preset)
+	}
+}
+
 func TestFindProjectConfig(t *testing.T) {
 	tmpDir := t.TempDir()
 	subDir := filepath.Join(tmpDir, "a", "b", "c")

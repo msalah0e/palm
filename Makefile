@@ -1,6 +1,6 @@
 BINARY = palm
 INSTALL_DIR = $(HOME)/.local/bin
-VERSION = 1.3.0
+VERSION = 1.4.0
 
 .PHONY: build install clean test completions build-all
 

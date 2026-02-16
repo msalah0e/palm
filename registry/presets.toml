@@ -1,0 +1,35 @@
+[[presets]]
+name = "essentials"
+display_name = "Essentials"
+description = "Must-have AI tools for any developer"
+tools = ["claude-code", "aider", "ollama", "fabric"]
+
+[[presets]]
+name = "coding"
+display_name = "Coding & Development"
+description = "AI-powered coding assistants and dev tools"
+tools = ["claude-code", "aider", "copilot-cli", "cody", "codex"]
+
+[[presets]]
+name = "local-ai"
+display_name = "Local AI Stack"
+description = "Run AI models locally without cloud APIs"
+tools = ["ollama", "llamafile", "localai", "jan"]
+
+[[presets]]
+name = "agents"
+display_name = "AI Agents"
+description = "Autonomous AI agents and orchestration tools"
+tools = ["fabric", "open-interpreter", "crewai", "goose", "mods"]
+
+[[presets]]
+name = "data"
+display_name = "Data & Research"
+description = "AI tools for data analysis and research"
+tools = ["aider", "fabric", "llm", "datasette"]
+
+[[presets]]
+name = "security"
+display_name = "Security & Safety"
+description = "AI-powered security and safety tools"
+tools = ["sourcery", "pr-agent", "aicodebot"]
