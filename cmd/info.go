@@ -12,9 +12,10 @@ import (
 
 func infoCmd() *cobra.Command {
 	return &cobra.Command{
-		Use:   "info <tool>",
-		Short: "Show detailed info about a tool",
-		Args:  cobra.ExactArgs(1),
+		Use:               "info <tool>",
+		Short:             "Show detailed info about a tool",
+		Args:              cobra.ExactArgs(1),
+		ValidArgsFunction: toolCompletionFunc,
 		Run: func(cmd *cobra.Command, args []string) {
 			reg := loadRegistry()
 			name := args[0]

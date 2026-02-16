@@ -18,10 +18,11 @@ func installCmd() *cobra.Command {
 	var sequential bool
 
 	cmd := &cobra.Command{
-		Use:     "install <tool> [tool2...]",
-		Aliases: []string{"i", "add"},
-		Short:   "Install AI tool(s)",
-		Args:    cobra.MinimumNArgs(1),
+		Use:               "install <tool> [tool2...]",
+		Aliases:           []string{"i", "add"},
+		Short:             "Install AI tool(s)",
+		Args:              cobra.MinimumNArgs(1),
+		ValidArgsFunction: toolCompletionFunc,
 		Run: func(cmd *cobra.Command, args []string) {
 			reg := loadRegistry()
 

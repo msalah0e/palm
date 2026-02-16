@@ -1,0 +1,55 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.24'
+          cache: true
+
+      - name: Run tests
+        run: go test ./... -count=1 -race
+
+      - name: Build binaries
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          VERSION="${TAG#v}"
+          LDFLAGS="-s -w -X github.com/msalah0e/palm/cmd.version=${VERSION}"
+
+          for GOOS in darwin linux; do
+            for GOARCH in amd64 arm64; do
+              echo "Building palm-${GOOS}-${GOARCH}..."
+              GOOS=$GOOS GOARCH=$GOARCH go build -ldflags "$LDFLAGS" -o "palm-${GOOS}-${GOARCH}" .
+              tar czf "palm-${GOOS}-${GOARCH}.tar.gz" "palm-${GOOS}-${GOARCH}"
+            done
+          done
+
+      - name: Generate checksums
+        run: sha256sum palm-*.tar.gz > checksums.txt
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+            --title "palm $TAG" \
+            --generate-notes \
+            palm-*.tar.gz \
+            checksums.txt

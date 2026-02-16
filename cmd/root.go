@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "0.5.0"
+var version = "1.0.0"
 
 var (
 	reg         *registry.Registry
@@ -67,6 +67,17 @@ func init() {
 		selfUpdateCmd(),
 		fetchCmd(),
 		bundleCmd(),
+		envCmd(),
+		workspaceCmd(),
+		contextCmd(),
+		sessionsCmd(),
+		modelsCmd(),
+		budgetCmd(),
+		proxyCmd(),
+		benchmarkCmd(),
+		matrixCmd(),
+		completionCmd(),
+		pipeCmd(),
 	)
 }
 

@@ -3,420 +3,558 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>palm - The AI Tool Manager</title>
-<meta name="description" content="Install, configure, and run 100+ AI CLI tools from one place. API key vault, parallel execution, offline mode, Docker support.">
-<meta property="og:title" content="palm - The AI Tool Manager">
-<meta property="og:description" content="Install, configure, and run 100+ AI CLI tools from one place.">
+<title>palm - The AI Tool Manager & Control Plane</title>
+<meta name="description" content="Discover, install, configure, run, budget, and benchmark 100+ AI CLI tools from one place. API key vault. LLM proxy. Model management. Spending controls. Tool pipelines.">
+<meta property="og:title" content="palm - The AI Tool Manager & Control Plane">
+<meta property="og:description" content="Discover, install, configure, run, budget, and benchmark 100+ AI CLI tools from one place.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
 <style>
   :root {
     --palm: #2DB682;
     --palm-dim: #1a8a5e;
-    --palm-glow: rgba(45, 182, 130, 0.3);
-    --bg: #0a0f1a;
-    --bg2: #0f1525;
-    --surface: #141c2e;
-    --surface2: #1a2340;
-    --border: rgba(45, 182, 130, 0.15);
-    --text: #e2e8f0;
-    --text-dim: #8892a8;
-    --text-muted: #5a6478;
+    --palm-light: #3dd99a;
+    --palm-glow: rgba(45, 182, 130, 0.25);
+    --palm-glow-strong: rgba(45, 182, 130, 0.4);
+    --bg: #0a0e17;
+    --bg2: #0d1320;
+    --surface: #111827;
+    --surface2: #1a2332;
+    --surface3: #1f2b3d;
+    --border: rgba(45, 182, 130, 0.12);
+    --border-hover: rgba(45, 182, 130, 0.3);
+    --text: #e8edf5;
+    --text-dim: #94a3b8;
+    --text-muted: #64748b;
     --red: #ef4444;
     --orange: #f59e0b;
     --cyan: #22d3ee;
     --purple: #a78bfa;
+    --blue: #3b82f6;
+    --pink: #f472b6;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
   body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
     background: var(--bg);
     color: var(--text);
-    line-height: 1.65;
+    line-height: 1.7;
     overflow-x: hidden;
   }
 
-  /* NAV */
+  /* ── NAV ── */
   nav {
     position: fixed; top: 0; width: 100%; z-index: 100;
-    background: rgba(10, 15, 26, 0.85);
-    backdrop-filter: blur(20px);
+    background: rgba(10, 14, 23, 0.8);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
     border-bottom: 1px solid var(--border);
     padding: 0 2rem;
-    height: 56px;
+    height: 60px;
     display: flex; align-items: center; justify-content: space-between;
   }
-  nav .logo { font-size: 1.3rem; font-weight: 700; color: var(--palm); text-decoration: none; }
-  nav .logo span { margin-right: 6px; }
-  nav .links { display: flex; gap: 1.5rem; align-items: center; }
-  nav .links a {
-    color: var(--text-dim); text-decoration: none; font-size: 0.9rem; font-weight: 500;
-    transition: color 0.2s;
+  nav .logo {
+    font-size: 1.35rem; font-weight: 800; color: var(--palm);
+    text-decoration: none; display: flex; align-items: center; gap: 8px;
+    letter-spacing: -0.02em;
   }
-  nav .links a:hover { color: var(--palm); }
+  nav .links { display: flex; gap: 2rem; align-items: center; }
+  nav .links a {
+    color: var(--text-dim); text-decoration: none; font-size: 0.88rem; font-weight: 500;
+    transition: color 0.2s; letter-spacing: 0.01em;
+  }
+  nav .links a:hover { color: var(--text); }
   nav .gh-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: var(--palm); color: #000; padding: 6px 14px; border-radius: 6px;
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--surface2); color: var(--text); padding: 7px 16px; border-radius: 8px;
     font-weight: 600; font-size: 0.85rem; text-decoration: none;
+    border: 1px solid var(--border);
     transition: all 0.2s;
   }
-  nav .gh-btn:hover { background: #35d495; transform: translateY(-1px); }
+  nav .gh-btn:hover { border-color: var(--palm); background: var(--surface3); }
   nav .gh-btn svg { width: 16px; height: 16px; }
+  nav .v-badge {
+    background: rgba(45, 182, 130, 0.12); color: var(--palm);
+    padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700;
+    margin-left: 8px;
+  }
 
-  /* HERO */
+  /* ── HERO ── */
   .hero {
     min-height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center;
-    padding: 6rem 2rem 4rem;
+    padding: 7rem 2rem 4rem;
     position: relative;
     overflow: hidden;
   }
   .hero::before {
     content: '';
-    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-    width: 800px; height: 800px;
-    background: radial-gradient(circle, var(--palm-glow) 0%, transparent 70%);
-    opacity: 0.3;
+    position: absolute; top: -200px; left: 50%; transform: translateX(-50%);
+    width: 1000px; height: 1000px;
+    background: radial-gradient(ellipse, var(--palm-glow) 0%, transparent 60%);
+    opacity: 0.4;
     pointer-events: none;
   }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(45, 182, 130, 0.1);
-    border: 1px solid var(--border);
-    padding: 6px 16px; border-radius: 20px;
-    font-size: 0.85rem; color: var(--palm);
-    margin-bottom: 2rem;
+  .hero::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 50px,
+      rgba(45, 182, 130, 0.015) 50px,
+      rgba(45, 182, 130, 0.015) 51px
+    );
+    pointer-events: none;
   }
+  .hero-announce {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 8px 20px; border-radius: 24px;
+    font-size: 0.88rem; color: var(--text-dim);
+    margin-bottom: 2.5rem;
+    position: relative; z-index: 1;
+    animation: fadeIn 0.6s ease;
+  }
+  .hero-announce .tag {
+    background: var(--palm); color: #000; padding: 2px 10px;
+    border-radius: 12px; font-weight: 700; font-size: 0.75rem;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .hero h1 {
-    font-size: clamp(3rem, 7vw, 5.5rem);
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
+    font-size: clamp(3.2rem, 8vw, 6rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
     margin-bottom: 1.5rem;
+    position: relative; z-index: 1;
+    animation: fadeIn 0.6s ease 0.1s both;
   }
   .hero h1 .palm { color: var(--palm); }
+  .hero h1 .thin { font-weight: 300; color: var(--text-dim); }
   .hero .subtitle {
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+    font-size: clamp(1.1rem, 2.5vw, 1.35rem);
     color: var(--text-dim);
-    max-width: 600px;
+    max-width: 640px;
     margin-bottom: 3rem;
-    line-height: 1.6;
+    line-height: 1.65;
+    position: relative; z-index: 1;
+    animation: fadeIn 0.6s ease 0.2s both;
   }
   .hero .cta-group {
     display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
     margin-bottom: 4rem;
+    position: relative; z-index: 1;
+    animation: fadeIn 0.6s ease 0.3s both;
   }
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 12px 28px; border-radius: 8px;
-    font-weight: 600; font-size: 1rem;
+    padding: 13px 30px; border-radius: 10px;
+    font-weight: 600; font-size: 0.95rem;
     text-decoration: none;
-    transition: all 0.2s;
+    transition: all 0.25s;
     border: none; cursor: pointer;
   }
   .btn-primary {
     background: var(--palm); color: #000;
+    box-shadow: 0 4px 20px var(--palm-glow);
   }
-  .btn-primary:hover { background: #35d495; transform: translateY(-2px); box-shadow: 0 8px 32px var(--palm-glow); }
+  .btn-primary:hover { background: var(--palm-light); transform: translateY(-2px); box-shadow: 0 8px 40px var(--palm-glow-strong); }
   .btn-secondary {
     background: var(--surface2); color: var(--text);
     border: 1px solid var(--border);
   }
   .btn-secondary:hover { border-color: var(--palm); transform: translateY(-2px); }
 
-  /* TERMINAL */
+  /* ── TERMINAL ── */
   .terminal {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
-    max-width: 700px; width: 100%;
+    border-radius: 14px;
+    max-width: 740px; width: 100%;
     text-align: left;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 0 60px rgba(45, 182, 130, 0.05);
     position: relative;
     z-index: 1;
+    animation: fadeIn 0.6s ease 0.4s both;
   }
   .terminal-bar {
     display: flex; align-items: center; gap: 8px;
-    padding: 12px 16px;
+    padding: 14px 18px;
     background: rgba(0,0,0,0.3);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
   }
   .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
-  .terminal-dot.red { background: #ff5f57; }
-  .terminal-dot.yellow { background: #febc2e; }
-  .terminal-dot.green { background: #28c840; }
-  .terminal-title { color: var(--text-muted); font-size: 0.8rem; margin-left: 8px; }
+  .terminal-dot.r { background: #ff5f57; }
+  .terminal-dot.y { background: #febc2e; }
+  .terminal-dot.g { background: #28c840; }
+  .terminal-title { color: var(--text-muted); font-size: 0.8rem; margin-left: auto; }
   .terminal-body {
-    padding: 1.5rem;
-    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace;
-    font-size: 0.9rem;
-    line-height: 1.8;
+    padding: 1.5rem 1.75rem;
+    font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', 'Cascadia Code', monospace;
+    font-size: 0.88rem;
+    line-height: 1.85;
   }
-  .terminal-body .prompt { color: var(--palm); }
-  .terminal-body .cmd { color: var(--text); }
-  .terminal-body .comment { color: var(--text-muted); }
-  .terminal-body .output { color: var(--text-dim); }
-  .terminal-body .success { color: #28c840; }
-  .terminal-body .key { color: var(--cyan); }
-  .terminal-body .dim { color: var(--text-muted); font-size: 0.8rem; }
+  .t-p { color: var(--palm); }
+  .t-c { color: var(--text); }
+  .t-m { color: var(--text-muted); font-style: italic; }
+  .t-o { color: var(--text-dim); }
+  .t-s { color: #34d399; }
+  .t-k { color: var(--cyan); }
+  .t-d { color: var(--text-muted); font-size: 0.78rem; }
 
-  /* STATS */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1.5rem;
+  /* ── STATS ── */
+  .stats-bar {
+    display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
     max-width: 900px; width: 100%;
     margin: 4rem auto 0;
     position: relative; z-index: 1;
+    animation: fadeIn 0.6s ease 0.5s both;
   }
-  .stat {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.5rem;
-    text-align: center;
-  }
-  .stat .number {
-    font-size: 2.5rem; font-weight: 800;
-    background: linear-gradient(135deg, var(--palm), var(--cyan));
+  .stat-item { text-align: center; }
+  .stat-item .num {
+    font-size: 2.8rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--palm) 0%, var(--cyan) 100%);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
   }
-  .stat .label { color: var(--text-dim); font-size: 0.85rem; margin-top: 4px; }
+  .stat-item .lbl { color: var(--text-muted); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; }
 
-  /* SECTIONS */
+  /* ── SECTIONS ── */
   section {
-    max-width: 1100px;
+    max-width: 1140px;
     margin: 0 auto;
-    padding: 5rem 2rem;
+    padding: 6rem 2rem;
   }
-  section h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 1rem;
+  .section-header {
+    text-align: center;
+    margin-bottom: 4rem;
   }
-  section h2 .palm { color: var(--palm); }
-  section .section-sub {
+  .section-header h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.75rem;
+  }
+  .section-header h2 .palm { color: var(--palm); }
+  .section-header p {
     color: var(--text-dim);
-    font-size: 1.15rem;
-    margin-bottom: 3rem;
-    max-width: 700px;
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
   }
 
-  /* FEATURES GRID */
-  .features {
+  /* ── FEATURE CARDS ── */
+  .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
   }
-  .feature {
+  .f-card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 14px;
     padding: 2rem;
     transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
   }
-  .feature:hover {
-    border-color: var(--palm);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(45, 182, 130, 0.1);
+  .f-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--palm), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
   }
-  .feature-icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+  .f-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
   }
-  .feature h3 {
-    font-size: 1.15rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-  .feature p { color: var(--text-dim); font-size: 0.9rem; }
-  .feature code {
+  .f-card:hover::before { opacity: 1; }
+  .f-icon { font-size: 1.8rem; margin-bottom: 1rem; }
+  .f-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .f-card p { color: var(--text-dim); font-size: 0.88rem; line-height: 1.6; }
+  .f-card code {
     display: inline-block;
-    background: rgba(45, 182, 130, 0.1);
+    background: rgba(45, 182, 130, 0.08);
     color: var(--palm);
-    padding: 2px 8px; border-radius: 4px;
+    padding: 3px 10px; border-radius: 6px;
     font-family: 'SF Mono', monospace;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     margin-top: 0.75rem;
+    border: 1px solid rgba(45, 182, 130, 0.1);
+  }
+  .f-card.wide { grid-column: span 2; }
+
+  /* ── PROVIDERS ── */
+  .providers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  .provider {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem;
+    transition: all 0.3s;
+  }
+  .provider:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+  .provider-head { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  .provider-head .icon { font-size: 1.5rem; }
+  .provider-head h4 { font-size: 1rem; font-weight: 700; }
+  .provider-models {
+    display: flex; flex-wrap: wrap; gap: 6px;
+  }
+  .model-tag {
+    background: var(--surface2);
+    color: var(--text-dim);
+    padding: 3px 10px; border-radius: 6px;
+    font-size: 0.75rem; font-weight: 500;
+    font-family: 'SF Mono', monospace;
+  }
+  .provider-key {
+    margin-top: 0.75rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-family: 'SF Mono', monospace;
   }
 
-  /* CATEGORIES */
-  .categories {
+  /* ── CATEGORIES ── */
+  .cats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 1rem;
   }
-  .category {
+  .cat {
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 10px;
-    padding: 1.25rem;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
     display: flex; align-items: center; gap: 1rem;
     transition: all 0.2s;
   }
-  .category:hover { border-color: var(--border); }
-  .cat-icon { font-size: 1.5rem; }
-  .cat-info h4 { font-size: 0.95rem; font-weight: 600; }
-  .cat-info .count { color: var(--palm); font-size: 0.8rem; font-weight: 600; }
+  .cat:hover { border-color: var(--border); }
+  .cat-i { font-size: 1.5rem; }
+  .cat h4 { font-size: 0.92rem; font-weight: 600; }
+  .cat .cnt { color: var(--palm); font-size: 0.78rem; font-weight: 700; }
 
-  /* BACKENDS */
-  .backends {
+  /* ── BACKENDS ── */
+  .backends-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(7, 1fr);
     gap: 1rem;
     margin-top: 2rem;
   }
-  .backend {
+  .bk {
     background: var(--surface);
     border: 1px solid rgba(255,255,255,0.04);
-    border-radius: 10px;
-    padding: 1.25rem;
+    border-radius: 12px;
+    padding: 1.5rem 1rem;
     text-align: center;
     transition: all 0.2s;
   }
-  .backend:hover { border-color: var(--border); }
-  .backend-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
-  .backend h4 { font-size: 0.9rem; font-weight: 600; }
-  .backend p { color: var(--text-muted); font-size: 0.75rem; margin-top: 2px; }
+  .bk:hover { border-color: var(--border); }
+  .bk-i { font-size: 2rem; margin-bottom: 0.5rem; }
+  .bk h4 { font-size: 0.85rem; font-weight: 600; }
+  .bk p { color: var(--text-muted); font-size: 0.72rem; margin-top: 2px; }
 
-  /* COMMANDS TABLE */
+  /* ── EXAMPLES ── */
+  .examples-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+  .example-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .example-card .ex-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .example-card .ex-header .ex-icon { font-size: 1.2rem; }
+  .example-card .ex-header h4 { font-size: 0.95rem; font-weight: 700; }
+  .example-card .ex-header p { color: var(--text-muted); font-size: 0.78rem; margin-left: auto; }
+  .example-card .ex-body {
+    padding: 1.25rem 1.5rem;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.82rem;
+    line-height: 1.8;
+    color: var(--text-dim);
+  }
+  .example-card .ex-body .prompt { color: var(--palm); }
+  .example-card .ex-body .comment { color: var(--text-muted); font-style: italic; }
+  .example-card .ex-body .output { color: var(--text-dim); }
+  .example-card .ex-body .success { color: #34d399; }
+  .example-card .ex-body .key { color: var(--cyan); }
+  .example-card .ex-body .warn { color: var(--orange); }
+
+  /* ── COMMANDS TABLE ── */
+  .commands-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .commands-wrap .cmd-group-title {
+    padding: 1rem 1.5rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--palm);
+  }
   .cmd-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: 'SF Mono', monospace;
     font-size: 0.85rem;
   }
-  .cmd-table tr {
-    border-bottom: 1px solid rgba(255,255,255,0.04);
-  }
-  .cmd-table td {
-    padding: 10px 16px;
-    vertical-align: top;
-  }
+  .cmd-table tr { border-bottom: 1px solid rgba(255,255,255,0.03); }
+  .cmd-table tr:last-child { border-bottom: none; }
+  .cmd-table td { padding: 10px 1.5rem; vertical-align: top; }
   .cmd-table td:first-child {
-    color: var(--palm);
-    white-space: nowrap;
-    font-weight: 600;
-    width: 300px;
+    color: var(--palm); white-space: nowrap; font-weight: 600; width: 340px;
+    font-family: 'SF Mono', monospace;
   }
-  .cmd-table td:last-child {
-    color: var(--text-dim);
-    font-family: -apple-system, system-ui, sans-serif;
+  .cmd-table td:last-child { color: var(--text-dim); }
+
+  /* ── ROADMAP ── */
+  .roadmap-timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+  .roadmap-timeline::before {
+    content: '';
+    position: absolute; left: 6px; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, var(--palm), var(--palm) 80%, var(--border) 80%);
+    border-radius: 2px;
+  }
+  .rm-item {
+    position: relative;
+    padding-left: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+  .rm-item:last-child { padding-bottom: 0; }
+  .rm-item::before {
+    content: '';
+    position: absolute; left: -2rem; top: 6px;
+    width: 14px; height: 14px;
+    background: var(--palm);
+    border-radius: 50%;
+    border: 3px solid var(--bg);
+    z-index: 1;
+  }
+  .rm-item.future::before { background: var(--surface3); border-color: var(--border); }
+  .rm-ver {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-weight: 800; font-size: 1.1rem; color: var(--palm);
+    margin-bottom: 0.5rem;
+  }
+  .rm-ver .done-badge {
+    background: rgba(52, 211, 153, 0.1);
+    color: #34d399;
+    padding: 2px 10px; border-radius: 10px;
+    font-size: 0.7rem; font-weight: 700;
+  }
+  .rm-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .rm-list { list-style: none; padding: 0; }
+  .rm-list li {
+    color: var(--text-dim); font-size: 0.88rem;
+    padding: 3px 0 3px 1.25rem;
+    position: relative;
+  }
+  .rm-list li::before {
+    content: ''; position: absolute; left: 0; top: 11px;
+    width: 5px; height: 5px;
+    background: var(--palm); border-radius: 50%;
+    opacity: 0.6;
   }
 
-  /* INSTALL SECTION */
+  /* ── INSTALL ── */
   .install-section {
     text-align: center;
-    padding: 6rem 2rem;
+    padding: 7rem 2rem;
     position: relative;
+    overflow: hidden;
   }
   .install-section::before {
     content: '';
-    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-    width: 600px; height: 400px;
-    background: radial-gradient(circle, var(--palm-glow) 0%, transparent 70%);
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 800px; height: 500px;
+    background: radial-gradient(ellipse, var(--palm-glow) 0%, transparent 60%);
     opacity: 0.2; pointer-events: none;
-  }
-  .install-methods {
-    display: flex; flex-direction: column; align-items: center; gap: 1rem;
-    margin-top: 2rem;
-    position: relative; z-index: 1;
   }
   .install-box {
     display: inline-flex; align-items: center; gap: 12px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px 24px;
+    border-radius: 12px;
+    padding: 18px 28px;
     font-family: 'SF Mono', monospace;
     font-size: 1.05rem;
     cursor: pointer;
+    transition: all 0.25s;
+    position: relative; z-index: 1;
+  }
+  .install-box:hover { border-color: var(--palm); box-shadow: 0 8px 40px rgba(45, 182, 130, 0.1); }
+  .install-box .dollar { color: var(--palm); font-weight: 700; }
+  .install-box .copy {
+    color: var(--text-muted); font-size: 0.78rem;
+    padding: 4px 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
+    margin-left: 8px;
     transition: all 0.2s;
   }
-  .install-box:hover { border-color: var(--palm); }
-  .install-box .dollar { color: var(--palm); }
-  .install-box .copy {
-    color: var(--text-muted); font-size: 0.8rem;
-    margin-left: 12px;
-    padding: 4px 8px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
-  }
-  .install-alt {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-  }
+  .install-box:hover .copy { background: rgba(45, 182, 130, 0.15); color: var(--palm); }
+  .install-methods { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 2.5rem; }
+  .install-alt { color: var(--text-muted); font-size: 0.9rem; }
   .install-alt code {
-    background: var(--surface);
-    padding: 2px 8px;
-    border-radius: 4px;
-    color: var(--text-dim);
-    font-size: 0.85rem;
+    background: var(--surface); padding: 3px 10px; border-radius: 6px;
+    color: var(--text-dim); font-size: 0.85rem;
   }
 
-  /* ROADMAP */
-  .roadmap {
-    display: flex; flex-direction: column; gap: 2rem;
-  }
-  .roadmap-item {
-    display: flex; gap: 2rem; align-items: flex-start;
-  }
-  .roadmap-version {
-    min-width: 80px;
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--palm);
-    padding-top: 2px;
-  }
-  .roadmap-content {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.5rem;
-    flex: 1;
-  }
-  .roadmap-content.done { border-color: rgba(45, 182, 130, 0.3); }
-  .roadmap-content h4 { font-weight: 700; margin-bottom: 0.75rem; }
-  .roadmap-content ul {
-    list-style: none; padding: 0;
-  }
-  .roadmap-content li {
-    color: var(--text-dim);
-    font-size: 0.9rem;
-    padding: 4px 0;
-    padding-left: 1.5rem;
-    position: relative;
-  }
-  .roadmap-content li::before {
-    content: '';
-    position: absolute; left: 0; top: 12px;
-    width: 6px; height: 6px;
-    background: var(--palm);
-    border-radius: 50%;
-  }
-  .roadmap-content.done li::before { background: #28c840; }
-
-  /* FOOTER */
+  /* ── FOOTER ── */
   footer {
     text-align: center;
     padding: 3rem 2rem;
     border-top: 1px solid var(--border);
-    color: var(--text-muted);
-    font-size: 0.85rem;
   }
-  footer a { color: var(--palm); text-decoration: none; }
+  footer p { color: var(--text-muted); font-size: 0.85rem; }
+  footer a { color: var(--palm); text-decoration: none; font-weight: 500; }
+  footer a:hover { text-decoration: underline; }
+  footer .footer-links {
+    display: flex; justify-content: center; gap: 2rem;
+    margin-bottom: 1rem;
+  }
+  footer .footer-links a { color: var(--text-dim); font-size: 0.85rem; }
+  footer .footer-links a:hover { color: var(--palm); }
 
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .features-grid { grid-template-columns: repeat(2, 1fr); }
+    .f-card.wide { grid-column: span 1; }
+    .providers-grid { grid-template-columns: repeat(2, 1fr); }
+    .backends-grid { grid-template-columns: repeat(4, 1fr); }
+  }
   @media (max-width: 768px) {
-    .stats { grid-template-columns: repeat(2, 1fr); }
-    .features { grid-template-columns: 1fr; }
-    .categories { grid-template-columns: repeat(2, 1fr); }
-    .backends { grid-template-columns: repeat(3, 1fr); }
-    .roadmap-item { flex-direction: column; gap: 0.5rem; }
+    .features-grid { grid-template-columns: 1fr; }
+    .providers-grid { grid-template-columns: 1fr; }
+    .examples-grid { grid-template-columns: 1fr; }
+    .cats-grid { grid-template-columns: repeat(2, 1fr); }
+    .backends-grid { grid-template-columns: repeat(3, 1fr); }
+    .stats-bar { gap: 2rem; }
     nav .links { display: none; }
     .cmd-table td:first-child { width: auto; }
   }
@@ -425,12 +563,15 @@
 <body>
 
 <nav>
-  <a class="logo" href="/palm/"><span>🌴</span> palm</a>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.0</span></a>
   <div class="links">
     <a href="#features">Features</a>
+    <a href="#providers">Providers</a>
     <a href="#tools">Tools</a>
+    <a href="#examples">Examples</a>
     <a href="#commands">Commands</a>
     <a href="#roadmap">Roadmap</a>
+    <a href="docs.html">Docs</a>
     <a class="gh-btn" href="https://github.com/msalah0e/palm">
       <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       GitHub
@@ -438,423 +579,608 @@
   </div>
 </nav>
 
-<!-- HERO -->
+<!-- ██ HERO ██ -->
 <div class="hero">
-  <div class="hero-badge">v0.5.0 &middot; Docker + Parallel + Offline</div>
+  <div class="hero-announce">
+    <span class="tag">v1.0</span>
+    LLM Proxy &middot; Budget Controls &middot; Model Management &middot; Tool Pipelines
+  </div>
   <h1>
-    <span class="palm">palm</span><br>
-    The AI Tool Manager
+    <span class="palm">palm</span> <span class="thin">is the</span><br>
+    AI Control Plane
   </h1>
   <p class="subtitle">
-    Install, configure, and run 100+ AI CLI tools from one place.
-    API key vault. Parallel install. Offline mode. Docker support.
+    Discover, install, configure, run, budget, and benchmark 100+ AI CLI tools from one place.
+    API key vault. LLM proxy. Model management. Spending controls.
   </p>
   <div class="cta-group">
     <a href="#install" class="btn btn-primary">Get Started</a>
-    <a href="https://github.com/msalah0e/palm" class="btn btn-secondary">View on GitHub</a>
+    <a href="#examples" class="btn btn-secondary">See Examples</a>
+    <a href="docs.html" class="btn btn-secondary">Documentation</a>
   </div>
 
   <div class="terminal">
     <div class="terminal-bar">
-      <div class="terminal-dot red"></div>
-      <div class="terminal-dot yellow"></div>
-      <div class="terminal-dot green"></div>
-      <span class="terminal-title">Terminal</span>
+      <div class="terminal-dot r"></div>
+      <div class="terminal-dot y"></div>
+      <div class="terminal-dot g"></div>
+      <span class="terminal-title">~</span>
     </div>
     <div class="terminal-body">
-      <div><span class="prompt">$</span> <span class="cmd">palm install claude-code aider ollama</span></div>
-      <div><span class="comment">  # parallel install &mdash; 3 tools at once</span></div>
-      <div><span class="output">  ⟳ Claude Code...</span></div>
-      <div><span class="output">  ⟳ Aider...</span></div>
-      <div><span class="output">  ⟳ Ollama...</span></div>
-      <div><span class="success">  ✓</span> <span class="output">Claude Code</span> <span class="dim">3.2s</span></div>
-      <div><span class="success">  ✓</span> <span class="output">Aider</span> <span class="dim">8.1s</span></div>
-      <div><span class="success">  ✓</span> <span class="output">Ollama</span> <span class="dim">5.4s</span></div>
+      <div><span class="t-p">$</span> <span class="t-c">palm install claude-code aider ollama</span></div>
+      <div><span class="t-s">  ✓</span> <span class="t-o">Claude Code</span> <span class="t-d">via npm</span></div>
+      <div><span class="t-s">  ✓</span> <span class="t-o">Aider</span> <span class="t-d">via uv</span></div>
+      <div><span class="t-s">  ✓</span> <span class="t-o">Ollama</span> <span class="t-d">via brew</span></div>
       <div>&nbsp;</div>
-      <div><span class="output">  3 installed</span></div>
+      <div><span class="t-p">$</span> <span class="t-c">palm keys add ANTHROPIC_API_KEY</span></div>
+      <div><span class="t-k">  🔐</span> <span class="t-o">Stored in vault</span></div>
       <div>&nbsp;</div>
-      <div><span class="prompt">$</span> <span class="cmd">palm keys add ANTHROPIC_API_KEY</span></div>
-      <div><span class="key">  🔐</span> <span class="output">Stored in vault</span></div>
+      <div><span class="t-p">$</span> <span class="t-c">palm run aider</span></div>
+      <div><span class="t-o">  Injected 1 key from vault</span></div>
       <div>&nbsp;</div>
-      <div><span class="prompt">$</span> <span class="cmd">palm run aider</span></div>
-      <div><span class="output">  palm: injected 1 key(s) from vault</span></div>
+      <div><span class="t-p">$</span> <span class="t-c">palm pipe "cat bug.py" "|" "aider --message 'fix this'"</span></div>
+      <div><span class="t-s">  ✓</span> <span class="t-o">Pipeline complete</span> <span class="t-d">2 stages, 4.2s</span></div>
     </div>
   </div>
 
-  <div class="stats">
-    <div class="stat">
-      <div class="number">102</div>
-      <div class="label">AI Tools</div>
+  <div class="stats-bar">
+    <div class="stat-item">
+      <div class="num">102</div>
+      <div class="lbl">AI Tools</div>
     </div>
-    <div class="stat">
-      <div class="number">13</div>
-      <div class="label">Categories</div>
+    <div class="stat-item">
+      <div class="num">30+</div>
+      <div class="lbl">LLM Models</div>
     </div>
-    <div class="stat">
-      <div class="number">7</div>
-      <div class="label">Install Backends</div>
+    <div class="stat-item">
+      <div class="num">6</div>
+      <div class="lbl">Providers</div>
     </div>
-    <div class="stat">
-      <div class="number">0</div>
-      <div class="label">Competitors</div>
+    <div class="stat-item">
+      <div class="num">25</div>
+      <div class="lbl">Commands</div>
+    </div>
+    <div class="stat-item">
+      <div class="num">0</div>
+      <div class="lbl">Competitors</div>
     </div>
   </div>
 </div>
 
-<!-- FEATURES -->
+<!-- ██ FEATURES ██ -->
 <section id="features">
-  <h2>Why <span class="palm">palm</span></h2>
-  <p class="section-sub">
-    Every AI tool has its own installer, its own config format, its own key management.
-    palm unifies all of it into one CLI.
-  </p>
+  <div class="section-header">
+    <h2>What <span class="palm">palm</span> Does</h2>
+    <p>Every AI tool has its own installer, config format, and key management. palm unifies all of it into one CLI.</p>
+  </div>
 
-  <div class="features">
-    <div class="feature">
-      <div class="feature-icon">📦</div>
+  <div class="features-grid">
+    <div class="f-card">
+      <div class="f-icon">📦</div>
       <h3>Universal Installer</h3>
-      <p>Install any AI tool with one command. palm detects the right backend &mdash; pip/uv, npm, cargo, go, docker, or script.</p>
-      <code>palm install claude-code</code>
+      <p>Install any AI tool with one command. Auto-detects the right backend &mdash; pip/uv, npm, cargo, go, docker, brew, or script.</p>
+      <code>palm install claude-code aider ollama</code>
     </div>
-    <div class="feature">
-      <div class="feature-icon">⚡</div>
-      <h3>Parallel Install</h3>
-      <p>Install multiple tools concurrently with configurable concurrency. Parallel by default, use --seq to disable.</p>
-      <code>palm install aider ollama vllm</code>
-    </div>
-    <div class="feature">
-      <div class="feature-icon">🔐</div>
+    <div class="f-card">
+      <div class="f-icon">🔐</div>
       <h3>API Key Vault</h3>
-      <p>Store API keys securely in macOS Keychain or encrypted file vault. Auto-inject when running tools.</p>
+      <p>Store API keys in macOS Keychain or encrypted file vault. Auto-inject when running tools. No more .env files.</p>
       <code>palm keys add ANTHROPIC_API_KEY</code>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🚀</div>
+    <div class="f-card">
+      <div class="f-icon">🚀</div>
       <h3>Run with Key Injection</h3>
-      <p>Launch any tool with vault keys automatically set as environment variables. No more .env files.</p>
+      <p>Launch any tool with vault keys automatically set as environment variables. Zero config.</p>
       <code>palm run aider</code>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🐳</div>
-      <h3>Docker Backend</h3>
-      <p>Pull and manage containerized AI tools. Vector databases, inference servers, and more via Docker.</p>
-      <code>palm install vllm</code>
+    <div class="f-card">
+      <div class="f-icon">🔗</div>
+      <h3>Tool Pipelines</h3>
+      <p>Chain AI tools together. Pipe output from one tool to another with vault keys injected across the entire pipeline.</p>
+      <code>palm pipe "cat code.py" "|" "aider --fix"</code>
     </div>
-    <div class="feature">
-      <div class="feature-icon">✈️</div>
+    <div class="f-card">
+      <div class="f-icon">🌐</div>
+      <h3>LLM Proxy</h3>
+      <p>Local API proxy that routes requests to any provider. Auto-injects keys, logs usage, enables budget enforcement.</p>
+      <code>palm proxy start</code>
+    </div>
+    <div class="f-card">
+      <div class="f-icon">🧠</div>
+      <h3>Model Management</h3>
+      <p>Browse 30+ models across 6 providers. Compare pricing, context windows, and capabilities. Pull Ollama models.</p>
+      <code>palm models list</code>
+    </div>
+    <div class="f-card">
+      <div class="f-icon">💰</div>
+      <h3>Budget Controls</h3>
+      <p>Set monthly and daily spending limits. Track costs by tool and provider. Never get a surprise bill again.</p>
+      <code>palm budget set --monthly 50</code>
+    </div>
+    <div class="f-card">
+      <div class="f-icon">📊</div>
+      <h3>Terminal Dashboard</h3>
+      <p>See everything at a glance: installed tools, runtimes, vault keys, LLM providers, budget, sessions, and proxy status.</p>
+      <code>palm matrix</code>
+    </div>
+    <div class="f-card">
+      <div class="f-icon">🏁</div>
+      <h3>Benchmark</h3>
+      <p>Run the same prompt through multiple AI tools. Compare response time, quality, and cost side by side.</p>
+      <code>palm benchmark "explain quicksort"</code>
+    </div>
+    <div class="f-card">
+      <div class="f-icon">📁</div>
+      <h3>Workspace Pinning</h3>
+      <p>Pin tools to your project with .palm.toml. Team members run palm workspace install and get the same setup.</p>
+      <code>palm workspace init</code>
+    </div>
+    <div class="f-card">
+      <div class="f-icon">📝</div>
+      <h3>Context Sync</h3>
+      <p>Generate AI context files from one source. Syncs to CLAUDE.md, .cursorrules, AGENTS.md, and more.</p>
+      <code>palm context init</code>
+    </div>
+    <div class="f-card">
+      <div class="f-icon">✈️</div>
       <h3>Offline Mode</h3>
-      <p>Pre-fetch packages for air-gapped environments. Create portable bundles with palm bundle.</p>
+      <p>Pre-download packages for air-gapped environments. Create portable bundles. Install from local cache.</p>
       <code>palm fetch --all</code>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🔍</div>
-      <h3>Smart Discovery</h3>
-      <p>Search 102 tools by name, category, or tags. Get detailed info, install methods, and key requirements.</p>
-      <code>palm search "local llm"</code>
+  </div>
+</section>
+
+<!-- ██ PROVIDERS ██ -->
+<section id="providers">
+  <div class="section-header">
+    <h2>LLM <span class="palm">Providers</span></h2>
+    <p>30+ models across 6 providers. palm knows their pricing, context windows, and capabilities.</p>
+  </div>
+
+  <div class="providers-grid">
+    <div class="provider">
+      <div class="provider-head">
+        <span class="icon">🟢</span>
+        <h4>OpenAI</h4>
+      </div>
+      <div class="provider-models">
+        <span class="model-tag">gpt-4o</span>
+        <span class="model-tag">gpt-4.1</span>
+        <span class="model-tag">o3</span>
+        <span class="model-tag">o4-mini</span>
+        <span class="model-tag">gpt-4o-mini</span>
+      </div>
+      <div class="provider-key">OPENAI_API_KEY</div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🩺</div>
-      <h3>Health Check</h3>
-      <p>Diagnose your AI toolchain: installed tools, missing runtimes, key validity, outdated versions.</p>
-      <code>palm doctor</code>
+    <div class="provider">
+      <div class="provider-head">
+        <span class="icon">🟠</span>
+        <h4>Anthropic</h4>
+      </div>
+      <div class="provider-models">
+        <span class="model-tag">claude-opus-4.6</span>
+        <span class="model-tag">claude-sonnet-4.5</span>
+        <span class="model-tag">claude-haiku-4.5</span>
+      </div>
+      <div class="provider-key">ANTHROPIC_API_KEY</div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🪝</div>
-      <h3>Lifecycle Hooks</h3>
-      <p>Run custom scripts before/after install, update, or run. Integrate with your workflow.</p>
-      <code>pre_install = "notify.sh"</code>
+    <div class="provider">
+      <div class="provider-head">
+        <span class="icon">🔵</span>
+        <h4>Google</h4>
+      </div>
+      <div class="provider-models">
+        <span class="model-tag">gemini-2.5-pro</span>
+        <span class="model-tag">gemini-2.5-flash</span>
+        <span class="model-tag">gemini-2.0-flash</span>
+      </div>
+      <div class="provider-key">GOOGLE_API_KEY</div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">📁</div>
-      <h3>Config Hierarchy</h3>
-      <p>Global config in ~/.config/palm/ plus project-level .palm.toml that overrides per-directory.</p>
-      <code>.palm.toml</code>
+    <div class="provider">
+      <div class="provider-head">
+        <span class="icon">🦙</span>
+        <h4>Ollama</h4>
+      </div>
+      <div class="provider-models">
+        <span class="model-tag">llama-3.3</span>
+        <span class="model-tag">qwen-3</span>
+        <span class="model-tag">deepseek-r1</span>
+        <span class="model-tag">mistral</span>
+      </div>
+      <div class="provider-key">Local &mdash; no API key</div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">🔌</div>
-      <h3>Plugin Registry</h3>
-      <p>Add custom tools via external TOML files in ~/.config/palm/plugins/. Extend the registry without forking.</p>
-      <code>~/.config/palm/plugins/</code>
+    <div class="provider">
+      <div class="provider-head">
+        <span class="icon">⚡</span>
+        <h4>Groq</h4>
+      </div>
+      <div class="provider-models">
+        <span class="model-tag">llama-3.3-70b</span>
+        <span class="model-tag">deepseek-r1-70b</span>
+      </div>
+      <div class="provider-key">GROQ_API_KEY</div>
     </div>
-    <div class="feature">
-      <div class="feature-icon">📊</div>
-      <h3>State Tracking</h3>
-      <p>Track installed tools with version, backend, path, and timestamps. Query your AI stack programmatically.</p>
-      <code>~/.config/palm/state.toml</code>
+    <div class="provider">
+      <div class="provider-head">
+        <span class="icon">🌊</span>
+        <h4>Mistral</h4>
+      </div>
+      <div class="provider-models">
+        <span class="model-tag">mistral-large</span>
+        <span class="model-tag">codestral</span>
+      </div>
+      <div class="provider-key">MISTRAL_API_KEY</div>
     </div>
   </div>
 </section>
 
-<!-- BACKENDS -->
-<section id="backends">
-  <h2>Install <span class="palm">Backends</span></h2>
-  <p class="section-sub">
-    palm auto-detects the best install method for each tool. Seven backends, zero configuration.
-  </p>
-
-  <div class="backends">
-    <div class="backend">
-      <div class="backend-icon">🐍</div>
-      <h4>pip / uv</h4>
-      <p>Python tools</p>
-    </div>
-    <div class="backend">
-      <div class="backend-icon">📦</div>
-      <h4>npm</h4>
-      <p>Node.js tools</p>
-    </div>
-    <div class="backend">
-      <div class="backend-icon">🦀</div>
-      <h4>cargo</h4>
-      <p>Rust tools</p>
-    </div>
-    <div class="backend">
-      <div class="backend-icon">🔵</div>
-      <h4>go install</h4>
-      <p>Go tools</p>
-    </div>
-    <div class="backend">
-      <div class="backend-icon">🐳</div>
-      <h4>docker</h4>
-      <p>Containers</p>
-    </div>
-    <div class="backend">
-      <div class="backend-icon">🍺</div>
-      <h4>brew</h4>
-      <p>macOS packages</p>
-    </div>
-    <div class="backend">
-      <div class="backend-icon">📜</div>
-      <h4>script</h4>
-      <p>curl | sh</p>
-    </div>
-  </div>
-</section>
-
-<!-- TOOLS -->
+<!-- ██ TOOLS ██ -->
 <section id="tools">
-  <h2>102 <span class="palm">AI Tools</span></h2>
-  <p class="section-sub">
-    The most comprehensive registry of AI CLI tools, from coding agents to vector databases.
-  </p>
+  <div class="section-header">
+    <h2>102 <span class="palm">AI Tools</span></h2>
+    <p>The most comprehensive registry of AI CLI tools, from coding agents to vector databases.</p>
+  </div>
 
-  <div class="categories">
-    <div class="category">
-      <div class="cat-icon">💻</div>
-      <div class="cat-info">
-        <h4>Coding</h4>
-        <div class="count">14 tools</div>
+  <div class="cats-grid">
+    <div class="cat"><div class="cat-i">💻</div><div><h4>Coding</h4><div class="cnt">14 tools</div></div></div>
+    <div class="cat"><div class="cat-i">🧠</div><div><h4>LLM &amp; Inference</h4><div class="cnt">12 tools</div></div></div>
+    <div class="cat"><div class="cat-i">🤖</div><div><h4>Agents</h4><div class="cnt">14 tools</div></div></div>
+    <div class="cat"><div class="cat-i">💬</div><div><h4>Chat</h4><div class="cnt">5 tools</div></div></div>
+    <div class="cat"><div class="cat-i">🛠️</div><div><h4>Dev Tools</h4><div class="cnt">8 tools</div></div></div>
+    <div class="cat"><div class="cat-i">🎨</div><div><h4>Media</h4><div class="cnt">6 tools</div></div></div>
+    <div class="cat"><div class="cat-i">⚙️</div><div><h4>Infrastructure</h4><div class="cnt">7 tools</div></div></div>
+    <div class="cat"><div class="cat-i">📊</div><div><h4>Data &amp; Vector DBs</h4><div class="cnt">7 tools</div></div></div>
+    <div class="cat"><div class="cat-i">🧪</div><div><h4>Testing</h4><div class="cnt">7 tools</div></div></div>
+    <div class="cat"><div class="cat-i">🛡️</div><div><h4>Security</h4><div class="cnt">6 tools</div></div></div>
+    <div class="cat"><div class="cat-i">📡</div><div><h4>Observability</h4><div class="cnt">6 tools</div></div></div>
+    <div class="cat"><div class="cat-i">🔍</div><div><h4>Search &amp; RAG</h4><div class="cnt">5 tools</div></div></div>
+    <div class="cat"><div class="cat-i">✍️</div><div><h4>Writing</h4><div class="cnt">5 tools</div></div></div>
+  </div>
+
+  <div class="section-header" style="margin-top: 4rem;">
+    <h2>Install <span class="palm">Backends</span></h2>
+    <p>palm auto-detects the best install method for each tool. Seven backends, zero configuration.</p>
+  </div>
+
+  <div class="backends-grid">
+    <div class="bk"><div class="bk-i">🐍</div><h4>pip / uv</h4><p>Python tools</p></div>
+    <div class="bk"><div class="bk-i">📦</div><h4>npm</h4><p>Node.js tools</p></div>
+    <div class="bk"><div class="bk-i">🦀</div><h4>cargo</h4><p>Rust tools</p></div>
+    <div class="bk"><div class="bk-i">🔵</div><h4>go install</h4><p>Go tools</p></div>
+    <div class="bk"><div class="bk-i">🐳</div><h4>docker</h4><p>Containers</p></div>
+    <div class="bk"><div class="bk-i">🍺</div><h4>brew</h4><p>macOS pkgs</p></div>
+    <div class="bk"><div class="bk-i">📜</div><h4>script</h4><p>curl | sh</p></div>
+  </div>
+</section>
+
+<!-- ██ EXAMPLES ██ -->
+<section id="examples">
+  <div class="section-header">
+    <h2>Real <span class="palm">Examples</span></h2>
+    <p>Common workflows you'll use every day.</p>
+  </div>
+
+  <div class="examples-grid">
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-icon">🚀</span>
+        <h4>Quick Start</h4>
+        <p>Get up and running in 30 seconds</p>
+      </div>
+      <div class="ex-body">
+        <div><span class="comment"># Install palm</span></div>
+        <div><span class="prompt">$</span> curl -fsSL https://msalah0e.github.io/palm/install.sh | sh</div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Install your favorite AI tools</span></div>
+        <div><span class="prompt">$</span> palm install claude-code aider ollama</div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Store your API key</span></div>
+        <div><span class="prompt">$</span> palm keys add ANTHROPIC_API_KEY</div>
+        <div><span class="key">  Enter value: </span>sk-ant-api03-...</div>
+        <div><span class="success">  ✓ Stored</span></div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Run a tool with key auto-injected</span></div>
+        <div><span class="prompt">$</span> palm run aider</div>
       </div>
     </div>
-    <div class="category">
-      <div class="cat-icon">🧠</div>
-      <div class="cat-info">
-        <h4>LLM &amp; Inference</h4>
-        <div class="count">12 tools</div>
+
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-icon">📁</span>
+        <h4>Project Setup</h4>
+        <p>Pin tools to your project</p>
+      </div>
+      <div class="ex-body">
+        <div><span class="comment"># Create a project config</span></div>
+        <div><span class="prompt">$</span> palm workspace init</div>
+        <div><span class="success">  Created .palm.toml</span></div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Pin tools your team needs</span></div>
+        <div><span class="prompt">$</span> palm workspace add aider claude-code promptfoo</div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Teammates just run:</span></div>
+        <div><span class="prompt">$</span> palm workspace install</div>
+        <div><span class="success">  ✓</span> <span class="output">3 tools installed</span></div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Generate AI context files</span></div>
+        <div><span class="prompt">$</span> palm context init</div>
+        <div><span class="output">  Synced to CLAUDE.md, .cursorrules, AGENTS.md</span></div>
       </div>
     </div>
-    <div class="category">
-      <div class="cat-icon">🤖</div>
-      <div class="cat-info">
-        <h4>Agents</h4>
-        <div class="count">14 tools</div>
+
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-icon">🔗</span>
+        <h4>Tool Pipelines</h4>
+        <p>Chain AI tools together</p>
+      </div>
+      <div class="ex-body">
+        <div><span class="comment"># Pipe code through an AI tool</span></div>
+        <div><span class="prompt">$</span> palm pipe "cat main.py" "|" "ollama run llama3.3 'review this'"</div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Chain multiple tools</span></div>
+        <div><span class="prompt">$</span> palm pipe "echo 'write a haiku'" "|" "ollama run llama3.3"</div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Verbose mode shows each step</span></div>
+        <div><span class="prompt">$</span> palm pipe -v "cat README.md" "|" "aider --message 'improve'"</div>
+        <div><span class="output">  [1/2]</span> cat: 2.1KB</div>
+        <div><span class="output">  [2/2]</span> aider: processing...</div>
+        <div><span class="success">  ✓ Pipeline complete</span> <span class="output">12.3s</span></div>
       </div>
     </div>
-    <div class="category">
-      <div class="cat-icon">💬</div>
-      <div class="cat-info">
-        <h4>Chat</h4>
-        <div class="count">5 tools</div>
+
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-icon">💰</span>
+        <h4>Cost Control</h4>
+        <p>Never get a surprise bill</p>
+      </div>
+      <div class="ex-body">
+        <div><span class="comment"># Set spending limits</span></div>
+        <div><span class="prompt">$</span> palm budget set --monthly 50 --daily 10</div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Check current spend</span></div>
+        <div><span class="prompt">$</span> palm budget status</div>
+        <div><span class="output">  Monthly: $12.40 / $50.00</span> <span class="success">██████░░░░░░░░</span></div>
+        <div><span class="output">  Daily:   $3.20  / $10.00</span> <span class="success">████░░░░░░░░░░</span></div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># View session costs</span></div>
+        <div><span class="prompt">$</span> palm sessions --cost</div>
+        <div><span class="output">  aider    $8.20   12 sessions</span></div>
+        <div><span class="output">  claude   $4.20    5 sessions</span></div>
       </div>
     </div>
-    <div class="category">
-      <div class="cat-icon">🛠️</div>
-      <div class="cat-info">
-        <h4>Dev Tools</h4>
-        <div class="count">8 tools</div>
+
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-icon">🌐</span>
+        <h4>LLM Proxy</h4>
+        <p>Route all API calls through palm</p>
+      </div>
+      <div class="ex-body">
+        <div><span class="comment"># Start the proxy</span></div>
+        <div><span class="prompt">$</span> palm proxy start --bg</div>
+        <div><span class="success">  ✓ Proxy running on :4778</span></div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Point tools at the proxy</span></div>
+        <div><span class="prompt">$</span> export OPENAI_BASE_URL=http://localhost:4778/openai/v1</div>
+        <div><span class="prompt">$</span> export ANTHROPIC_BASE_URL=http://localhost:4778/anthropic/v1</div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># All requests are logged and budgeted</span></div>
+        <div><span class="prompt">$</span> palm proxy logs</div>
+        <div><span class="output">  14:32 POST /openai/v1/chat 200 1.2s</span></div>
       </div>
     </div>
-    <div class="category">
-      <div class="cat-icon">🎨</div>
-      <div class="cat-info">
-        <h4>Media</h4>
-        <div class="count">6 tools</div>
+
+    <div class="example-card">
+      <div class="ex-header">
+        <span class="ex-icon">🏁</span>
+        <h4>Benchmark</h4>
+        <p>Compare AI tools side by side</p>
       </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">⚙️</div>
-      <div class="cat-info">
-        <h4>Infrastructure</h4>
-        <div class="count">7 tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">📊</div>
-      <div class="cat-info">
-        <h4>Data &amp; Vector DBs</h4>
-        <div class="count">7 tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">🧪</div>
-      <div class="cat-info">
-        <h4>Testing</h4>
-        <div class="count">7 tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">🛡️</div>
-      <div class="cat-info">
-        <h4>Security</h4>
-        <div class="count">6 tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">📡</div>
-      <div class="cat-info">
-        <h4>Observability</h4>
-        <div class="count">6 tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">🔍</div>
-      <div class="cat-info">
-        <h4>Search &amp; RAG</h4>
-        <div class="count">5 tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">✍️</div>
-      <div class="cat-info">
-        <h4>Writing</h4>
-        <div class="count">5 tools</div>
+      <div class="ex-body">
+        <div><span class="comment"># Compare tools on the same prompt</span></div>
+        <div><span class="prompt">$</span> palm benchmark "explain quicksort" --tools ollama,aider</div>
+        <div>&nbsp;</div>
+        <div><span class="output">  Tool        Duration  Exit  Output</span></div>
+        <div><span class="output">  ollama      1.2s      0     842B</span></div>
+        <div><span class="output">  aider       3.4s      0     1.2KB</span></div>
+        <div>&nbsp;</div>
+        <div><span class="comment"># Show outputs for comparison</span></div>
+        <div><span class="prompt">$</span> palm benchmark "write a haiku" --tools ollama,aider --output</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- COMMANDS -->
+<!-- ██ COMMANDS ██ -->
 <section id="commands">
-  <h2>All <span class="palm">Commands</span></h2>
-  <p class="section-sub">
-    Everything you need to manage your AI tools.
-  </p>
+  <div class="section-header">
+    <h2>All <span class="palm">Commands</span></h2>
+    <p>25 commands to manage your entire AI stack.</p>
+  </div>
 
-  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; overflow-x: auto;">
+  <div class="commands-wrap">
+    <div class="cmd-group-title">Tool Management</div>
     <table class="cmd-table">
       <tr><td>palm install &lt;tool...&gt;</td><td>Install AI tool(s) &mdash; parallel by default</td></tr>
       <tr><td>palm remove &lt;tool&gt;</td><td>Remove an AI tool</td></tr>
       <tr><td>palm update [tool|--all]</td><td>Update AI tool(s)</td></tr>
       <tr><td>palm list</td><td>List installed AI tools with status</td></tr>
-      <tr><td>palm search &lt;query&gt;</td><td>Search the registry by name or tag</td></tr>
+      <tr><td>palm search &lt;query&gt;</td><td>Search the registry by name, category, or tag</td></tr>
       <tr><td>palm info &lt;tool&gt;</td><td>Detailed tool info</td></tr>
-      <tr><td>palm run &lt;tool&gt; [args...]</td><td>Run tool with vault keys injected</td></tr>
-      <tr><td>palm doctor</td><td>Health check &mdash; tools, keys, runtimes</td></tr>
-      <tr><td>palm keys [add|rm|list|export]</td><td>Manage API keys in the vault</td></tr>
       <tr><td>palm discover</td><td>Browse curated catalog by category</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Run & Pipe</div>
+    <table class="cmd-table">
+      <tr><td>palm run &lt;tool&gt; [args...]</td><td>Run tool with vault keys auto-injected</td></tr>
+      <tr><td>palm pipe &lt;cmd&gt; | &lt;cmd&gt;</td><td>Chain AI tools together in a pipeline</td></tr>
+    </table>
+
+    <div class="cmd-group-title">API Key Vault</div>
+    <table class="cmd-table">
+      <tr><td>palm keys add &lt;KEY&gt;</td><td>Store API key in vault (Keychain or encrypted file)</td></tr>
+      <tr><td>palm keys rm &lt;KEY&gt;</td><td>Remove a stored key</td></tr>
+      <tr><td>palm keys list</td><td>Show stored keys (masked)</td></tr>
+      <tr><td>palm keys export</td><td>Print export statements</td></tr>
+      <tr><td>palm env</td><td>Shell integration: <code style="background:rgba(45,182,130,0.1);color:var(--palm);padding:1px 6px;border-radius:4px;font-size:0.8rem;">eval $(palm env)</code></td></tr>
+    </table>
+
+    <div class="cmd-group-title">Workspace & Context</div>
+    <table class="cmd-table">
+      <tr><td>palm workspace init</td><td>Create .palm.toml in project</td></tr>
+      <tr><td>palm workspace add &lt;tool&gt;</td><td>Pin tools to project</td></tr>
+      <tr><td>palm workspace install</td><td>Install all pinned tools</td></tr>
+      <tr><td>palm context init</td><td>Generate AI context files for all tools</td></tr>
+      <tr><td>palm context sync</td><td>Sync .palm-context.md to tool-specific files</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Models & Providers</div>
+    <table class="cmd-table">
+      <tr><td>palm models list</td><td>List 30+ models across 6 providers</td></tr>
+      <tr><td>palm models info &lt;model&gt;</td><td>Model details, pricing, context window</td></tr>
+      <tr><td>palm models pull &lt;model&gt;</td><td>Pull local models via Ollama</td></tr>
+      <tr><td>palm models providers</td><td>Show provider status and key availability</td></tr>
+    </table>
+
+    <div class="cmd-group-title">Budget & Cost Tracking</div>
+    <table class="cmd-table">
+      <tr><td>palm budget set --monthly 50</td><td>Set spending limits</td></tr>
+      <tr><td>palm budget status</td><td>Current spend vs limits</td></tr>
+      <tr><td>palm sessions</td><td>View session history and costs</td></tr>
+    </table>
+
+    <div class="cmd-group-title">LLM Proxy</div>
+    <table class="cmd-table">
+      <tr><td>palm proxy start [--bg]</td><td>Start local API proxy on :4778</td></tr>
+      <tr><td>palm proxy status</td><td>Check if proxy is running</td></tr>
+      <tr><td>palm proxy logs</td><td>View recent request logs</td></tr>
+      <tr><td>palm proxy stop</td><td>Stop the proxy</td></tr>
+    </table>
+
+    <div class="cmd-group-title">More</div>
+    <table class="cmd-table">
+      <tr><td>palm benchmark &lt;prompt&gt;</td><td>Compare AI tools on the same prompt</td></tr>
+      <tr><td>palm matrix</td><td>Terminal dashboard &mdash; everything at a glance</td></tr>
+      <tr><td>palm doctor</td><td>Health check for tools, keys, runtimes</td></tr>
       <tr><td>palm fetch [tool...|--all]</td><td>Pre-download for offline use</td></tr>
       <tr><td>palm bundle &lt;output.tar.gz&gt;</td><td>Create portable tool bundle</td></tr>
-      <tr><td>palm self-update</td><td>Update palm itself</td></tr>
       <tr><td>palm stats</td><td>Local usage statistics</td></tr>
+      <tr><td>palm self-update</td><td>Update palm itself</td></tr>
       <tr><td>palm completion &lt;shell&gt;</td><td>Shell completions (zsh/bash/fish)</td></tr>
     </table>
   </div>
 </section>
 
-<!-- ROADMAP -->
+<!-- ██ ROADMAP ██ -->
 <section id="roadmap">
-  <h2>Road<span class="palm">map</span></h2>
-  <p class="section-sub">
-    From tool manager to AI control plane.
-  </p>
+  <div class="section-header">
+    <h2>Road<span class="palm">map</span></h2>
+    <p>From tool manager to AI control plane. All milestones complete.</p>
+  </div>
 
-  <div class="roadmap">
-    <div class="roadmap-item">
-      <div class="roadmap-version">v0.3.0</div>
-      <div class="roadmap-content done">
-        <h4>The AI Tool Manager ✅</h4>
-        <ul>
-          <li>Top-level commands (install, remove, update, search, info, doctor)</li>
-          <li>API key vault with macOS Keychain + encrypted file vault</li>
-          <li>palm run with vault key injection</li>
-          <li>60 tools across 6 categories</li>
-        </ul>
-      </div>
+  <div class="roadmap-timeline">
+    <div class="rm-item">
+      <div class="rm-ver">v0.3.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">The AI Tool Manager</div>
+      <ul class="rm-list">
+        <li>Top-level commands (install, remove, update, search, info, doctor)</li>
+        <li>API key vault with macOS Keychain + encrypted file vault</li>
+        <li>palm run with vault key injection</li>
+        <li>60 tools across 6 categories</li>
+      </ul>
     </div>
-    <div class="roadmap-item">
-      <div class="roadmap-version">v0.4.0</div>
-      <div class="roadmap-content done">
-        <h4>State &amp; Hooks ✅</h4>
-        <ul>
-          <li>State tracking for installed tools</li>
-          <li>External plugin registry (~/.config/palm/plugins/)</li>
-          <li>Lifecycle hooks (pre/post install/run/update)</li>
-          <li>Self-update with GitHub releases version check</li>
-          <li>Multi-tool install, --offline flag, shell installer</li>
-          <li>102 tools across 13 categories</li>
-        </ul>
-      </div>
+
+    <div class="rm-item">
+      <div class="rm-ver">v0.4.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">State &amp; Hooks</div>
+      <ul class="rm-list">
+        <li>State tracking for installed tools</li>
+        <li>External plugin registry (~/.config/palm/plugins/)</li>
+        <li>Lifecycle hooks (pre/post install/run/update)</li>
+        <li>Self-update with GitHub releases version check</li>
+        <li>102 tools across 13 categories</li>
+      </ul>
     </div>
-    <div class="roadmap-item">
-      <div class="roadmap-version">v0.5.0</div>
-      <div class="roadmap-content done">
-        <h4>Docker + Parallel + Offline ✅</h4>
-        <ul>
-          <li>Docker install backend (pull/save/rmi)</li>
-          <li>Parallel multi-tool install with errgroup</li>
-          <li>Offline mode: palm fetch + palm bundle</li>
-          <li>Config hierarchy with project-level .palm.toml</li>
-          <li>Improved pip backend: uv tool &gt; pipx &gt; pip3</li>
-        </ul>
-      </div>
+
+    <div class="rm-item">
+      <div class="rm-ver">v0.5.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">Docker + Parallel + Offline</div>
+      <ul class="rm-list">
+        <li>Docker install backend (pull/save/rmi)</li>
+        <li>Parallel multi-tool install with errgroup</li>
+        <li>Offline mode: palm fetch + palm bundle</li>
+        <li>Config hierarchy with project-level .palm.toml</li>
+      </ul>
     </div>
-    <div class="roadmap-item">
-      <div class="roadmap-version">v0.6.0</div>
-      <div class="roadmap-content">
-        <h4>Workspace &amp; Context</h4>
-        <ul>
-          <li>palm workspace for project-level tool pinning</li>
-          <li>palm context for unified AI tool instructions</li>
-          <li>Shell integration (eval $(palm env))</li>
-          <li>Session history with cost tracking</li>
-        </ul>
-      </div>
+
+    <div class="rm-item">
+      <div class="rm-ver">v0.6.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">Workspace &amp; Context</div>
+      <ul class="rm-list">
+        <li>palm workspace for project-level tool pinning</li>
+        <li>palm context for unified AI tool instructions</li>
+        <li>Shell integration (eval $(palm env))</li>
+        <li>Session history with cost tracking</li>
+      </ul>
     </div>
-    <div class="roadmap-item">
-      <div class="roadmap-version">v1.0.0</div>
-      <div class="roadmap-content">
-        <h4>The Control Plane</h4>
-        <ul>
-          <li>palm proxy &mdash; local LLM API interceptor</li>
-          <li>palm matrix &mdash; terminal dashboard</li>
-          <li>palm budget &mdash; spending controls</li>
-          <li>palm benchmark &mdash; tool comparison</li>
-          <li>palm models &mdash; unified model management</li>
-        </ul>
-      </div>
+
+    <div class="rm-item">
+      <div class="rm-ver">v1.0.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">The Control Plane</div>
+      <ul class="rm-list">
+        <li>palm proxy &mdash; local LLM API interceptor</li>
+        <li>palm matrix &mdash; terminal dashboard</li>
+        <li>palm budget &mdash; spending controls</li>
+        <li>palm benchmark &mdash; tool comparison</li>
+        <li>palm models &mdash; unified model management</li>
+        <li>palm pipe &mdash; chain AI tools together</li>
+      </ul>
+    </div>
+
+    <div class="rm-item future">
+      <div class="rm-ver" style="color: var(--text-muted);">Next</div>
+      <div class="rm-title" style="color: var(--text-dim);">What's Next</div>
+      <ul class="rm-list">
+        <li>MCP server integration</li>
+        <li>Team features &amp; shared workspaces</li>
+        <li>Remote sync for vault keys</li>
+        <li>Windows support</li>
+        <li>Plugin ecosystem</li>
+      </ul>
     </div>
   </div>
 </section>
 
-<!-- INSTALL -->
+<!-- ██ INSTALL ██ -->
 <div class="install-section" id="install">
-  <h2>Get <span class="palm">Started</span></h2>
-  <p class="section-sub" style="max-width: 500px; margin: 1rem auto 0;">
-    One command to install palm, then start managing your AI tools.
-  </p>
+  <div class="section-header">
+    <h2>Get <span class="palm">Started</span></h2>
+    <p>One command to install palm, then start managing your AI tools.</p>
+  </div>
   <div class="install-methods">
-    <div class="install-box" onclick="navigator.clipboard.writeText('curl -fsSL https://msalah0e.github.io/palm/install.sh | sh')">
+    <div class="install-box" onclick="navigator.clipboard.writeText('curl -fsSL https://msalah0e.github.io/palm/install.sh | sh').then(()=>{this.querySelector('.copy').textContent='copied!'})">
       <span class="dollar">$</span> curl -fsSL https://msalah0e.github.io/palm/install.sh | sh
       <span class="copy">copy</span>
     </div>
     <div class="install-alt">
       or <code>go install github.com/msalah0e/palm@latest</code>
     </div>
+    <div style="margin-top: 1.5rem;">
+      <a href="docs.html" class="btn btn-secondary" style="padding: 10px 24px; font-size: 0.9rem;">Read the Documentation</a>
+    </div>
   </div>
 </div>
 
 <footer>
-  <p>Built with 🌴 by <a href="https://github.com/msalah0e">msalah0e</a> &middot; <a href="https://github.com/msalah0e/palm">GitHub</a></p>
+  <div class="footer-links">
+    <a href="https://github.com/msalah0e/palm">GitHub</a>
+    <a href="docs.html">Documentation</a>
+    <a href="https://github.com/msalah0e/palm/issues">Issues</a>
+    <a href="https://github.com/msalah0e/palm/releases">Releases</a>
+  </div>
+  <p>Built with 🌴 by <a href="https://github.com/msalah0e">msalah0e</a> &middot; MIT License</p>
 </footer>
 
 </body>

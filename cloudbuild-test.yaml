@@ -5,7 +5,7 @@ steps:
       - '-c'
       - |
         apt-get update && apt-get install -y --no-install-recommends python3 python3-pip python3-venv pipx nodejs npm
-        go build -ldflags "-X github.com/msalah0e/palm/cmd.version=0.5.0-test" -o /usr/local/bin/palm .
+        go build -ldflags "-X github.com/msalah0e/palm/cmd.version=1.0.0-test" -o /usr/local/bin/palm .
         chmod +x /workspace/e2e/run.sh
         sh /workspace/e2e/run.sh
 timeout: '600s'

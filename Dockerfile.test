@@ -10,7 +10,7 @@ WORKDIR /workspace
 COPY . .
 
 # Build palm
-RUN go build -ldflags "-X github.com/msalah0e/palm/cmd.version=0.5.0-test" -o /usr/local/bin/palm .
+RUN go build -ldflags "-X github.com/msalah0e/palm/cmd.version=1.0.0-test" -o /usr/local/bin/palm .
 
 # Run tests
 CMD ["sh", "/workspace/e2e/run.sh"]
