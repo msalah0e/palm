@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>tamr - The AI Tool Manager</title>
-<meta name="description" content="Install, configure, and run 100+ AI CLI tools from one place. API key vault, parallel execution, offline mode.">
+<meta name="description" content="Install, configure, and run 100+ AI CLI tools from one place. API key vault, parallel execution, offline mode, Docker support.">
 <meta property="og:title" content="tamr - The AI Tool Manager">
 <meta property="og:description" content="Install, configure, and run 100+ AI CLI tools from one place.">
 <meta property="og:type" content="website">
@@ -162,6 +162,7 @@
   .terminal-body .output { color: var(--text-dim); }
   .terminal-body .success { color: #28c840; }
   .terminal-body .key { color: var(--cyan); }
+  .terminal-body .dim { color: var(--text-muted); font-size: 0.8rem; }
 
   /* STATS */
   .stats {
@@ -263,6 +264,51 @@
   .cat-info h4 { font-size: 0.95rem; font-weight: 600; }
   .cat-info .count { color: var(--palm); font-size: 0.8rem; font-weight: 600; }
 
+  /* BACKENDS */
+  .backends {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+  .backend {
+    background: var(--surface);
+    border: 1px solid rgba(255,255,255,0.04);
+    border-radius: 10px;
+    padding: 1.25rem;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .backend:hover { border-color: var(--border); }
+  .backend-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .backend h4 { font-size: 0.9rem; font-weight: 600; }
+  .backend p { color: var(--text-muted); font-size: 0.75rem; margin-top: 2px; }
+
+  /* COMMANDS TABLE */
+  .cmd-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'SF Mono', monospace;
+    font-size: 0.85rem;
+  }
+  .cmd-table tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .cmd-table td {
+    padding: 10px 16px;
+    vertical-align: top;
+  }
+  .cmd-table td:first-child {
+    color: var(--palm);
+    white-space: nowrap;
+    font-weight: 600;
+    width: 300px;
+  }
+  .cmd-table td:last-child {
+    color: var(--text-dim);
+    font-family: -apple-system, system-ui, sans-serif;
+  }
+
   /* INSTALL SECTION */
   .install-section {
     text-align: center;
@@ -276,6 +322,11 @@
     background: radial-gradient(circle, var(--palm-glow) 0%, transparent 70%);
     opacity: 0.2; pointer-events: none;
   }
+  .install-methods {
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    margin-top: 2rem;
+    position: relative; z-index: 1;
+  }
   .install-box {
     display: inline-flex; align-items: center; gap: 12px;
     background: var(--surface);
@@ -283,11 +334,9 @@
     border-radius: 10px;
     padding: 16px 24px;
     font-family: 'SF Mono', monospace;
-    font-size: 1.1rem;
-    margin-top: 2rem;
+    font-size: 1.05rem;
     cursor: pointer;
     transition: all 0.2s;
-    position: relative; z-index: 1;
   }
   .install-box:hover { border-color: var(--palm); }
   .install-box .dollar { color: var(--palm); }
@@ -297,6 +346,17 @@
     padding: 4px 8px;
     background: rgba(255,255,255,0.05);
     border-radius: 4px;
+  }
+  .install-alt {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+  .install-alt code {
+    background: var(--surface);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
   }
 
   /* ROADMAP */
@@ -320,6 +380,7 @@
     padding: 1.5rem;
     flex: 1;
   }
+  .roadmap-content.done { border-color: rgba(45, 182, 130, 0.3); }
   .roadmap-content h4 { font-weight: 700; margin-bottom: 0.75rem; }
   .roadmap-content ul {
     list-style: none; padding: 0;
@@ -338,6 +399,7 @@
     background: var(--palm);
     border-radius: 50%;
   }
+  .roadmap-content.done li::before { background: #28c840; }
 
   /* FOOTER */
   footer {
@@ -353,8 +415,10 @@
     .stats { grid-template-columns: repeat(2, 1fr); }
     .features { grid-template-columns: 1fr; }
     .categories { grid-template-columns: repeat(2, 1fr); }
+    .backends { grid-template-columns: repeat(3, 1fr); }
     .roadmap-item { flex-direction: column; gap: 0.5rem; }
     nav .links { display: none; }
+    .cmd-table td:first-child { width: auto; }
   }
 </style>
 </head>
@@ -365,8 +429,8 @@
   <div class="links">
     <a href="#features">Features</a>
     <a href="#tools">Tools</a>
+    <a href="#commands">Commands</a>
     <a href="#roadmap">Roadmap</a>
-    <a href="research.html">Research</a>
     <a class="gh-btn" href="https://github.com/msalah0e/tamr">
       <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       GitHub
@@ -376,18 +440,18 @@
 
 <!-- HERO -->
 <div class="hero">
-  <div class="hero-badge">v0.4.0 &middot; The Matrix Hub</div>
+  <div class="hero-badge">v0.5.0 &middot; Docker + Parallel + Offline</div>
   <h1>
     <span class="palm">tamr</span><br>
     The AI Tool Manager
   </h1>
   <p class="subtitle">
     Install, configure, and run 100+ AI CLI tools from one place.
-    API key vault. Parallel execution. Offline mode.
+    API key vault. Parallel install. Offline mode. Docker support.
   </p>
   <div class="cta-group">
-    <a href="https://github.com/msalah0e/tamr" class="btn btn-primary">Get Started</a>
-    <a href="research.html" class="btn btn-secondary">Read the Research</a>
+    <a href="#install" class="btn btn-primary">Get Started</a>
+    <a href="https://github.com/msalah0e/tamr" class="btn btn-secondary">View on GitHub</a>
   </div>
 
   <div class="terminal">
@@ -399,22 +463,27 @@
     </div>
     <div class="terminal-body">
       <div><span class="prompt">$</span> <span class="cmd">tamr install claude-code aider ollama</span></div>
-      <div><span class="success">  ✓</span> <span class="output">Claude Code installed (npm)</span></div>
-      <div><span class="success">  ✓</span> <span class="output">Aider installed (pip)</span></div>
-      <div><span class="success">  ✓</span> <span class="output">Ollama installed</span></div>
+      <div><span class="comment">  # parallel install &mdash; 3 tools at once</span></div>
+      <div><span class="output">  ⟳ Claude Code...</span></div>
+      <div><span class="output">  ⟳ Aider...</span></div>
+      <div><span class="output">  ⟳ Ollama...</span></div>
+      <div><span class="success">  ✓</span> <span class="output">Claude Code</span> <span class="dim">3.2s</span></div>
+      <div><span class="success">  ✓</span> <span class="output">Aider</span> <span class="dim">8.1s</span></div>
+      <div><span class="success">  ✓</span> <span class="output">Ollama</span> <span class="dim">5.4s</span></div>
+      <div>&nbsp;</div>
+      <div><span class="output">  3 installed</span></div>
       <div>&nbsp;</div>
       <div><span class="prompt">$</span> <span class="cmd">tamr keys add ANTHROPIC_API_KEY</span></div>
-      <div><span class="key">  🔐</span> <span class="output">Stored in vault (Keychain)</span></div>
+      <div><span class="key">  🔐</span> <span class="output">Stored in vault</span></div>
       <div>&nbsp;</div>
       <div><span class="prompt">$</span> <span class="cmd">tamr run aider</span></div>
-      <div><span class="comment">  # Keys auto-injected from vault</span></div>
-      <div><span class="success">  ✓</span> <span class="output">Launching aider with OPENAI_API_KEY...</span></div>
+      <div><span class="output">  tamr: injected 1 key(s) from vault</span></div>
     </div>
   </div>
 
   <div class="stats">
     <div class="stat">
-      <div class="number">100+</div>
+      <div class="number">102</div>
       <div class="label">AI Tools</div>
     </div>
     <div class="stat">
@@ -422,7 +491,7 @@
       <div class="label">Categories</div>
     </div>
     <div class="stat">
-      <div class="number">6</div>
+      <div class="number">7</div>
       <div class="label">Install Backends</div>
     </div>
     <div class="stat">
@@ -448,6 +517,12 @@
       <code>tamr install claude-code</code>
     </div>
     <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Parallel Install</h3>
+      <p>Install multiple tools concurrently with configurable concurrency. Parallel by default, use --seq to disable.</p>
+      <code>tamr install aider ollama vllm</code>
+    </div>
+    <div class="feature">
       <div class="feature-icon">🔐</div>
       <h3>API Key Vault</h3>
       <p>Store API keys securely in macOS Keychain or encrypted file vault. Auto-inject when running tools.</p>
@@ -460,15 +535,21 @@
       <code>tamr run aider</code>
     </div>
     <div class="feature">
-      <div class="feature-icon">⚡</div>
-      <h3>Parallel Execution</h3>
-      <p>Install and update multiple tools concurrently with backend-aware parallelism and live progress bars.</p>
-      <code>tamr install a b c --parallel</code>
+      <div class="feature-icon">🐳</div>
+      <h3>Docker Backend</h3>
+      <p>Pull and manage containerized AI tools. Vector databases, inference servers, and more via Docker.</p>
+      <code>tamr install vllm</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">✈️</div>
+      <h3>Offline Mode</h3>
+      <p>Pre-fetch packages for air-gapped environments. Create portable bundles with tamr bundle.</p>
+      <code>tamr fetch --all</code>
     </div>
     <div class="feature">
       <div class="feature-icon">🔍</div>
       <h3>Smart Discovery</h3>
-      <p>Search 100+ tools by name, category, or tags. Get detailed info, install methods, and key requirements.</p>
+      <p>Search 102 tools by name, category, or tags. Get detailed info, install methods, and key requirements.</p>
       <code>tamr search "local llm"</code>
     </div>
     <div class="feature">
@@ -478,120 +559,205 @@
       <code>tamr doctor</code>
     </div>
     <div class="feature">
-      <div class="feature-icon">✈️</div>
-      <h3>Offline Mode</h3>
-      <p>Pre-fetch packages for air-gapped environments. Export/import bundles with tools, models, and encrypted keys.</p>
-      <code>tamr fetch aider --offline</code>
+      <div class="feature-icon">🪝</div>
+      <h3>Lifecycle Hooks</h3>
+      <p>Run custom scripts before/after install, update, or run. Integrate with your workflow.</p>
+      <code>pre_install = "notify.sh"</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📁</div>
+      <h3>Config Hierarchy</h3>
+      <p>Global config in ~/.config/tamr/ plus project-level .tamr.toml that overrides per-directory.</p>
+      <code>.tamr.toml</code>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔌</div>
+      <h3>Plugin Registry</h3>
+      <p>Add custom tools via external TOML files in ~/.config/tamr/plugins/. Extend the registry without forking.</p>
+      <code>~/.config/tamr/plugins/</code>
     </div>
     <div class="feature">
       <div class="feature-icon">📊</div>
-      <h3>Matrix Dashboard</h3>
-      <p>Terminal UI showing installed tools, status, costs, and models. Like htop for your AI stack.</p>
-      <code>tamr matrix</code>
+      <h3>State Tracking</h3>
+      <p>Track installed tools with version, backend, path, and timestamps. Query your AI stack programmatically.</p>
+      <code>~/.config/tamr/state.toml</code>
+    </div>
+  </div>
+</section>
+
+<!-- BACKENDS -->
+<section id="backends">
+  <h2>Install <span class="palm">Backends</span></h2>
+  <p class="section-sub">
+    tamr auto-detects the best install method for each tool. Seven backends, zero configuration.
+  </p>
+
+  <div class="backends">
+    <div class="backend">
+      <div class="backend-icon">🐍</div>
+      <h4>pip / uv</h4>
+      <p>Python tools</p>
+    </div>
+    <div class="backend">
+      <div class="backend-icon">📦</div>
+      <h4>npm</h4>
+      <p>Node.js tools</p>
+    </div>
+    <div class="backend">
+      <div class="backend-icon">🦀</div>
+      <h4>cargo</h4>
+      <p>Rust tools</p>
+    </div>
+    <div class="backend">
+      <div class="backend-icon">🔵</div>
+      <h4>go install</h4>
+      <p>Go tools</p>
+    </div>
+    <div class="backend">
+      <div class="backend-icon">🐳</div>
+      <h4>docker</h4>
+      <p>Containers</p>
+    </div>
+    <div class="backend">
+      <div class="backend-icon">🍺</div>
+      <h4>brew</h4>
+      <p>macOS packages</p>
+    </div>
+    <div class="backend">
+      <div class="backend-icon">📜</div>
+      <h4>script</h4>
+      <p>curl | sh</p>
     </div>
   </div>
 </section>
 
 <!-- TOOLS -->
 <section id="tools">
-  <h2>100+ <span class="palm">AI Tools</span></h2>
+  <h2>102 <span class="palm">AI Tools</span></h2>
   <p class="section-sub">
-    The most comprehensive registry of AI CLI tools.
-    From coding agents to model management.
+    The most comprehensive registry of AI CLI tools, from coding agents to vector databases.
   </p>
 
   <div class="categories">
     <div class="category">
       <div class="cat-icon">💻</div>
       <div class="cat-info">
-        <h4>Coding Agents</h4>
-        <div class="count">20+ tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">💬</div>
-      <div class="cat-info">
-        <h4>Chat CLIs</h4>
-        <div class="count">12+ tools</div>
+        <h4>Coding</h4>
+        <div class="count">14 tools</div>
       </div>
     </div>
     <div class="category">
       <div class="cat-icon">🧠</div>
       <div class="cat-info">
-        <h4>Local LLM Runners</h4>
-        <div class="count">15+ tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">🔧</div>
-      <div class="cat-info">
-        <h4>AI DevOps/Infra</h4>
-        <div class="count">10+ tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">🗄️</div>
-      <div class="cat-info">
-        <h4>Data &amp; RAG</h4>
-        <div class="count">11+ tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">🎨</div>
-      <div class="cat-info">
-        <h4>AI Media</h4>
-        <div class="count">12+ tools</div>
+        <h4>LLM &amp; Inference</h4>
+        <div class="count">12 tools</div>
       </div>
     </div>
     <div class="category">
       <div class="cat-icon">🤖</div>
       <div class="cat-info">
-        <h4>Agent Frameworks</h4>
-        <div class="count">13+ tools</div>
+        <h4>Agents</h4>
+        <div class="count">14 tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">💬</div>
+      <div class="cat-info">
+        <h4>Chat</h4>
+        <div class="count">5 tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🛠️</div>
+      <div class="cat-info">
+        <h4>Dev Tools</h4>
+        <div class="count">8 tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">🎨</div>
+      <div class="cat-info">
+        <h4>Media</h4>
+        <div class="count">6 tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">⚙️</div>
+      <div class="cat-info">
+        <h4>Infrastructure</h4>
+        <div class="count">7 tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">📊</div>
+      <div class="cat-info">
+        <h4>Data &amp; Vector DBs</h4>
+        <div class="count">7 tools</div>
       </div>
     </div>
     <div class="category">
       <div class="cat-icon">🧪</div>
       <div class="cat-info">
-        <h4>Testing &amp; Quality</h4>
-        <div class="count">7+ tools</div>
+        <h4>Testing</h4>
+        <div class="count">7 tools</div>
       </div>
     </div>
     <div class="category">
       <div class="cat-icon">🛡️</div>
       <div class="cat-info">
-        <h4>AI Security</h4>
-        <div class="count">7+ tools</div>
+        <h4>Security</h4>
+        <div class="count">6 tools</div>
       </div>
     </div>
     <div class="category">
-      <div class="cat-icon">📝</div>
-      <div class="cat-info">
-        <h4>Writing &amp; Docs</h4>
-        <div class="count">5+ tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">📦</div>
-      <div class="cat-info">
-        <h4>Model Management</h4>
-        <div class="count">8+ tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">🌐</div>
-      <div class="cat-info">
-        <h4>API Gateways</h4>
-        <div class="count">5+ tools</div>
-      </div>
-    </div>
-    <div class="category">
-      <div class="cat-icon">📈</div>
+      <div class="cat-icon">📡</div>
       <div class="cat-info">
         <h4>Observability</h4>
-        <div class="count">4+ tools</div>
+        <div class="count">6 tools</div>
       </div>
     </div>
+    <div class="category">
+      <div class="cat-icon">🔍</div>
+      <div class="cat-info">
+        <h4>Search &amp; RAG</h4>
+        <div class="count">5 tools</div>
+      </div>
+    </div>
+    <div class="category">
+      <div class="cat-icon">✍️</div>
+      <div class="cat-info">
+        <h4>Writing</h4>
+        <div class="count">5 tools</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMMANDS -->
+<section id="commands">
+  <h2>All <span class="palm">Commands</span></h2>
+  <p class="section-sub">
+    Everything you need to manage your AI tools.
+  </p>
+
+  <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; overflow-x: auto;">
+    <table class="cmd-table">
+      <tr><td>tamr install &lt;tool...&gt;</td><td>Install AI tool(s) &mdash; parallel by default</td></tr>
+      <tr><td>tamr remove &lt;tool&gt;</td><td>Remove an AI tool</td></tr>
+      <tr><td>tamr update [tool|--all]</td><td>Update AI tool(s)</td></tr>
+      <tr><td>tamr list</td><td>List installed AI tools with status</td></tr>
+      <tr><td>tamr search &lt;query&gt;</td><td>Search the registry by name or tag</td></tr>
+      <tr><td>tamr info &lt;tool&gt;</td><td>Detailed tool info</td></tr>
+      <tr><td>tamr run &lt;tool&gt; [args...]</td><td>Run tool with vault keys injected</td></tr>
+      <tr><td>tamr doctor</td><td>Health check &mdash; tools, keys, runtimes</td></tr>
+      <tr><td>tamr keys [add|rm|list|export]</td><td>Manage API keys in the vault</td></tr>
+      <tr><td>tamr discover</td><td>Browse curated catalog by category</td></tr>
+      <tr><td>tamr fetch [tool...|--all]</td><td>Pre-download for offline use</td></tr>
+      <tr><td>tamr bundle &lt;output.tar.gz&gt;</td><td>Create portable tool bundle</td></tr>
+      <tr><td>tamr self-update</td><td>Update tamr itself</td></tr>
+      <tr><td>tamr stats</td><td>Local usage statistics</td></tr>
+      <tr><td>tamr completion &lt;shell&gt;</td><td>Shell completions (zsh/bash/fish)</td></tr>
+    </table>
   </div>
 </section>
 
@@ -605,40 +771,52 @@
   <div class="roadmap">
     <div class="roadmap-item">
       <div class="roadmap-version">v0.3.0</div>
-      <div class="roadmap-content">
+      <div class="roadmap-content done">
         <h4>The AI Tool Manager ✅</h4>
         <ul>
           <li>Top-level commands (install, remove, update, search, info, doctor)</li>
           <li>API key vault with macOS Keychain + encrypted file vault</li>
           <li>tamr run with vault key injection</li>
-          <li>102 tools across 13 categories</li>
+          <li>60 tools across 6 categories</li>
         </ul>
       </div>
     </div>
     <div class="roadmap-item">
       <div class="roadmap-version">v0.4.0</div>
-      <div class="roadmap-content">
-        <h4>The Matrix Hub</h4>
+      <div class="roadmap-content done">
+        <h4>State &amp; Hooks ✅</h4>
         <ul>
           <li>State tracking for installed tools</li>
-          <li>Config hierarchy with .tamr.toml project files</li>
-          <li>External plugin registry</li>
-          <li>Lifecycle hooks (pre/post install/run)</li>
-          <li>Parallel execution with progress bars</li>
-          <li>Offline mode with --offline flag and tamr fetch</li>
-          <li>100+ tools across 13 categories</li>
+          <li>External plugin registry (~/.config/tamr/plugins/)</li>
+          <li>Lifecycle hooks (pre/post install/run/update)</li>
+          <li>Self-update with GitHub releases version check</li>
+          <li>Multi-tool install, --offline flag, shell installer</li>
+          <li>102 tools across 13 categories</li>
         </ul>
       </div>
     </div>
     <div class="roadmap-item">
       <div class="roadmap-version">v0.5.0</div>
+      <div class="roadmap-content done">
+        <h4>Docker + Parallel + Offline ✅</h4>
+        <ul>
+          <li>Docker install backend (pull/save/rmi)</li>
+          <li>Parallel multi-tool install with errgroup</li>
+          <li>Offline mode: tamr fetch + tamr bundle</li>
+          <li>Config hierarchy with project-level .tamr.toml</li>
+          <li>Improved pip backend: uv tool &gt; pipx &gt; pip3</li>
+        </ul>
+      </div>
+    </div>
+    <div class="roadmap-item">
+      <div class="roadmap-version">v0.6.0</div>
       <div class="roadmap-content">
         <h4>Workspace &amp; Context</h4>
         <ul>
-          <li>tamr workspace for project-level tool config</li>
+          <li>tamr workspace for project-level tool pinning</li>
           <li>tamr context for unified AI tool instructions</li>
           <li>Shell integration (eval $(tamr env))</li>
-          <li>Enhanced session history with cost tracking</li>
+          <li>Session history with cost tracking</li>
         </ul>
       </div>
     </div>
@@ -659,19 +837,24 @@
 </section>
 
 <!-- INSTALL -->
-<div class="install-section">
+<div class="install-section" id="install">
   <h2>Get <span class="palm">Started</span></h2>
   <p class="section-sub" style="max-width: 500px; margin: 1rem auto 0;">
-    Install tamr with Go, then start managing your AI tools.
+    One command to install tamr, then start managing your AI tools.
   </p>
-  <div class="install-box" onclick="navigator.clipboard.writeText('go install github.com/msalah0e/tamr@latest')">
-    <span class="dollar">$</span> go install github.com/msalah0e/tamr@latest
-    <span class="copy">click to copy</span>
+  <div class="install-methods">
+    <div class="install-box" onclick="navigator.clipboard.writeText('curl -fsSL https://msalah0e.github.io/tamr/install.sh | sh')">
+      <span class="dollar">$</span> curl -fsSL https://msalah0e.github.io/tamr/install.sh | sh
+      <span class="copy">copy</span>
+    </div>
+    <div class="install-alt">
+      or <code>go install github.com/msalah0e/tamr@latest</code>
+    </div>
   </div>
 </div>
 
 <footer>
-  <p>Built with 🌴 by <a href="https://github.com/msalah0e">msalah0e</a> &middot; <a href="https://github.com/msalah0e/tamr">GitHub</a> &middot; <a href="research.html">Research Report</a></p>
+  <p>Built with 🌴 by <a href="https://github.com/msalah0e">msalah0e</a> &middot; <a href="https://github.com/msalah0e/tamr">GitHub</a></p>
 </footer>
 
 </body>
