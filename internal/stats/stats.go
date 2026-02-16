@@ -29,7 +29,7 @@ func historyPath() string {
 		home, _ := os.UserHomeDir()
 		dir = filepath.Join(home, ".config")
 	}
-	return filepath.Join(dir, "tamr", "history.jsonl")
+	return filepath.Join(dir, "palm", "history.jsonl")
 }
 
 // Record appends an entry to the history file.

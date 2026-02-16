@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/msalah0e/tamr/internal/registry"
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/registry"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ func infoCmd() *cobra.Command {
 
 			tool := reg.Get(name)
 			if tool == nil {
-				ui.Warn.Printf("tamr: unknown tool %q\n", name)
+				ui.Warn.Printf("palm: unknown tool %q\n", name)
 				os.Exit(1)
 			}
 
@@ -64,7 +64,7 @@ func infoCmd() *cobra.Command {
 				}
 			} else {
 				fmt.Printf("  Status:    not installed\n")
-				fmt.Printf("  Install:   tamr install %s\n", name)
+				fmt.Printf("  Install:   palm install %s\n", name)
 			}
 
 			if tool.NeedsAPIKey() {

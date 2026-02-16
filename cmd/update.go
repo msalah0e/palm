@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/msalah0e/tamr/internal/hooks"
-	"github.com/msalah0e/tamr/internal/installer"
-	"github.com/msalah0e/tamr/internal/registry"
-	"github.com/msalah0e/tamr/internal/state"
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/hooks"
+	"github.com/msalah0e/palm/internal/installer"
+	"github.com/msalah0e/palm/internal/registry"
+	"github.com/msalah0e/palm/internal/state"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -44,7 +44,7 @@ func updateCmd() *cobra.Command {
 func updateOne(reg *registry.Registry, name string) {
 	tool := reg.Get(name)
 	if tool == nil {
-		ui.Warn.Printf("tamr: unknown tool %q\n", name)
+		ui.Warn.Printf("palm: unknown tool %q\n", name)
 		os.Exit(1)
 	}
 

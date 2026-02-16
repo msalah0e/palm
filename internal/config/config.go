@@ -7,7 +7,7 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-// Config holds tamr configuration.
+// Config holds palm configuration.
 type Config struct {
 	UI       UIConfig       `toml:"ui"`
 	Stats    StatsConfig    `toml:"stats"`
@@ -73,21 +73,21 @@ func Default() *Config {
 	}
 }
 
-// ConfigDir returns the tamr config directory path.
+// ConfigDir returns the palm config directory path.
 func ConfigDir() string {
 	dir := os.Getenv("XDG_CONFIG_HOME")
 	if dir == "" {
 		home, _ := os.UserHomeDir()
 		dir = filepath.Join(home, ".config")
 	}
-	return filepath.Join(dir, "tamr")
+	return filepath.Join(dir, "palm")
 }
 
 func configPath() string {
 	return filepath.Join(ConfigDir(), "config.toml")
 }
 
-// Load reads the global config, then overlays any project-level .tamr.toml found
+// Load reads the global config, then overlays any project-level .palm.toml found
 // by walking up from the current directory.
 func Load() *Config {
 	cfg := Default()
@@ -97,7 +97,7 @@ func Load() *Config {
 		_ = toml.Unmarshal(data, cfg)
 	}
 
-	// Layer 2: Project-level .tamr.toml (walk up to find it)
+	// Layer 2: Project-level .palm.toml (walk up to find it)
 	if projectPath := findProjectConfig(); projectPath != "" {
 		_ = toml.Unmarshal(mustRead(projectPath), cfg)
 	}
@@ -105,14 +105,14 @@ func Load() *Config {
 	return cfg
 }
 
-// findProjectConfig walks up from cwd looking for .tamr.toml.
+// findProjectConfig walks up from cwd looking for .palm.toml.
 func findProjectConfig() string {
 	dir, err := os.Getwd()
 	if err != nil {
 		return ""
 	}
 	for {
-		candidate := filepath.Join(dir, ".tamr.toml")
+		candidate := filepath.Join(dir, ".palm.toml")
 		if _, err := os.Stat(candidate); err == nil {
 			return candidate
 		}

@@ -7,10 +7,10 @@ import (
 	"strings"
 
 	"github.com/BurntSushi/toml"
-	"github.com/msalah0e/tamr/internal/config"
+	"github.com/msalah0e/palm/internal/config"
 )
 
-// LoadAll merges the embedded registry with external plugin files from ~/.config/tamr/plugins/.
+// LoadAll merges the embedded registry with external plugin files from ~/.config/palm/plugins/.
 func LoadAll(fs embed.FS, dir string) (*Registry, error) {
 	// Load embedded (built-in) tools
 	reg, err := LoadFromFS(fs, dir)

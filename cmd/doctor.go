@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/msalah0e/tamr/internal/registry"
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/registry"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 

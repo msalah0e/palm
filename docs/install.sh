@@ -1,12 +1,12 @@
 #!/bin/sh
-# tamr installer — https://msalah0e.github.io/tamr/
-# Usage: curl -fsSL https://msalah0e.github.io/tamr/install.sh | sh
+# palm installer — https://msalah0e.github.io/palm/
+# Usage: curl -fsSL https://msalah0e.github.io/palm/install.sh | sh
 
 set -e
 
-REPO="msalah0e/tamr"
-INSTALL_DIR="${TAMR_INSTALL_DIR:-$HOME/.local/bin}"
-BINARY="tamr"
+REPO="msalah0e/palm"
+INSTALL_DIR="${PALM_INSTALL_DIR:-$HOME/.local/bin}"
+BINARY="palm"
 
 # Colors
 RED='\033[0;31m'
@@ -63,7 +63,7 @@ get_latest_version() {
 install_binary() {
     DOWNLOAD_URL="https://github.com/${REPO}/releases/download/${VERSION}/${BINARY}_${PLATFORM}.tar.gz"
 
-    info "Downloading tamr ${VERSION} for ${PLATFORM}..."
+    info "Downloading palm ${VERSION} for ${PLATFORM}..."
 
     TMPDIR=$(mktemp -d)
     trap 'rm -rf "$TMPDIR"' EXIT
@@ -86,18 +86,18 @@ install_binary() {
     mv "${TMPDIR}/${BINARY}" "${INSTALL_DIR}/${BINARY}"
     chmod +x "${INSTALL_DIR}/${BINARY}"
 
-    ok "tamr ${VERSION} installed to ${INSTALL_DIR}/${BINARY}"
+    ok "palm ${VERSION} installed to ${INSTALL_DIR}/${BINARY}"
 }
 
 # Fallback: install from source using Go
 install_from_source() {
     if ! command -v go >/dev/null 2>&1; then
-        error "Go is required to install tamr from source. Install Go first: https://go.dev/dl/"
+        error "Go is required to install palm from source. Install Go first: https://go.dev/dl/"
     fi
 
-    info "Installing tamr from source via go install..."
+    info "Installing palm from source via go install..."
     go install "github.com/${REPO}@latest"
-    ok "tamr installed via go install"
+    ok "palm installed via go install"
 
     # Find where go installed it
     GOBIN=$(go env GOBIN)
@@ -128,7 +128,7 @@ check_path() {
 }
 
 main() {
-    printf "\n${BOLD}🌴 tamr installer${NC}\n\n"
+    printf "\n${BOLD}🌴 palm installer${NC}\n\n"
 
     detect_platform
     info "Platform: ${PLATFORM}"
@@ -140,7 +140,7 @@ main() {
     check_path
 
     echo ""
-    printf "${GREEN}${BOLD}Done!${NC} Run ${CYAN}tamr --help${NC} to get started.\n\n"
+    printf "${GREEN}${BOLD}Done!${NC} Run ${CYAN}palm --help${NC} to get started.\n\n"
 }
 
 main "$@"

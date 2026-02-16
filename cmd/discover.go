@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -56,7 +56,7 @@ func discoverCmd() *cobra.Command {
 				fmt.Println()
 			}
 
-			fmt.Println("  `tamr info <tool>` for details · `tamr install <tool>` to install")
+			fmt.Println("  `palm info <tool>` for details · `palm install <tool>` to install")
 		},
 	}
 }

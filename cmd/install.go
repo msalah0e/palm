@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/msalah0e/tamr/internal/config"
-	"github.com/msalah0e/tamr/internal/hooks"
-	"github.com/msalah0e/tamr/internal/installer"
-	"github.com/msalah0e/tamr/internal/parallel"
-	"github.com/msalah0e/tamr/internal/registry"
-	"github.com/msalah0e/tamr/internal/state"
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/config"
+	"github.com/msalah0e/palm/internal/hooks"
+	"github.com/msalah0e/palm/internal/installer"
+	"github.com/msalah0e/palm/internal/parallel"
+	"github.com/msalah0e/palm/internal/registry"
+	"github.com/msalah0e/palm/internal/state"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -70,8 +70,8 @@ func installCmd() *cobra.Command {
 func installOne(reg *registry.Registry, name string) {
 	tool := reg.Get(name)
 	if tool == nil {
-		ui.Warn.Printf("tamr: unknown tool %q\n", name)
-		fmt.Println("  Run `tamr search` to find tools")
+		ui.Warn.Printf("palm: unknown tool %q\n", name)
+		fmt.Println("  Run `palm search` to find tools")
 		os.Exit(1)
 	}
 
@@ -91,7 +91,7 @@ func installOne(reg *registry.Registry, name string) {
 
 	if tool.NeedsAPIKey() {
 		fmt.Printf("\n  %s Requires: %s\n", ui.WarnIcon(), tool.Keys.Required)
-		fmt.Println("  Run `tamr keys add <KEY>` to store API keys")
+		fmt.Println("  Run `palm keys add <KEY>` to store API keys")
 	}
 }
 

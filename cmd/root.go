@@ -3,9 +3,9 @@ package cmd
 import (
 	"embed"
 
-	"github.com/msalah0e/tamr/internal/registry"
-	"github.com/msalah0e/tamr/internal/ui"
-	"github.com/msalah0e/tamr/internal/update"
+	"github.com/msalah0e/palm/internal/registry"
+	"github.com/msalah0e/palm/internal/ui"
+	"github.com/msalah0e/palm/internal/update"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +28,7 @@ func loadRegistry() *registry.Registry {
 	}
 	r, err := registry.LoadAll(registryFS, "registry")
 	if err != nil {
-		ui.Bad.Printf("tamr: failed to load registry: %v\n", err)
+		ui.Bad.Printf("palm: failed to load registry: %v\n", err)
 		return registry.New(nil)
 	}
 	reg = r
@@ -36,9 +36,9 @@ func loadRegistry() *registry.Registry {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "tamr",
-	Short: "tamr — the AI tool manager",
-	Long: ui.Brand.Sprint(ui.Palm+" tamr") + " — manage your AI tools from one place\n" +
+	Use:   "palm",
+	Short: "palm — the AI tool manager",
+	Long: ui.Brand.Sprint(ui.Palm+" palm") + " — manage your AI tools from one place\n" +
 		ui.Subtle.Sprint("Install, configure, and run AI CLI tools with one command"),
 	Version: version + " " + ui.Palm,
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
@@ -49,7 +49,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.SetVersionTemplate("tamr {{ .Version }}\n")
+	rootCmd.SetVersionTemplate("palm {{ .Version }}\n")
 	rootCmd.PersistentFlags().BoolVar(&offlineMode, "offline", false, "Run without network access")
 
 	rootCmd.AddCommand(

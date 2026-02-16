@@ -18,7 +18,7 @@ type InstalledTool struct {
 	Path        string    `toml:"path"`
 }
 
-// State tracks all tamr-managed installations.
+// State tracks all palm-managed installations.
 type State struct {
 	Installed map[string]InstalledTool `toml:"installed"`
 }
@@ -29,7 +29,7 @@ func statePath() string {
 		home, _ := os.UserHomeDir()
 		dir = filepath.Join(home, ".config")
 	}
-	return filepath.Join(dir, "tamr", "state.toml")
+	return filepath.Join(dir, "palm", "state.toml")
 }
 
 // Load reads the state file, returning empty state if it doesn't exist.

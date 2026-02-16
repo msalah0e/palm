@@ -1,24 +1,24 @@
-# tamr 🌴
+# palm 🌴
 
 **The AI tool manager.** Discover, install, configure, and run 100+ AI CLI tools from one place.
 
 ## Install
 
 ```bash
-curl -fsSL https://msalah0e.github.io/tamr/install.sh | sh
+curl -fsSL https://msalah0e.github.io/palm/install.sh | sh
 ```
 
 Or with Go:
 
 ```bash
-go install github.com/msalah0e/tamr@latest
+go install github.com/msalah0e/palm@latest
 ```
 
 Or build from source:
 
 ```bash
-git clone https://github.com/msalah0e/tamr.git
-cd tamr
+git clone https://github.com/msalah0e/palm.git
+cd palm
 make install  # builds and copies to ~/.local/bin/
 ```
 
@@ -26,26 +26,26 @@ make install  # builds and copies to ~/.local/bin/
 
 ```bash
 # Browse the full catalog
-tamr discover
+palm discover
 
 # Search for tools
-tamr search agent
+palm search agent
 
 # Install tools (auto-detects backend: pip/uv, npm, cargo, go, docker)
-tamr install ollama
-tamr install aider claude-code    # parallel install by default
+palm install ollama
+palm install aider claude-code    # parallel install by default
 
 # See what's installed
-tamr list
+palm list
 
 # Run a tool with API keys auto-injected from vault
-tamr run aider
+palm run aider
 
 # Update tools
-tamr update --all
+palm update --all
 
 # Health check — tools, API keys, runtimes
-tamr doctor
+palm doctor
 ```
 
 ## API Key Management
@@ -53,13 +53,13 @@ tamr doctor
 Store API keys securely (macOS Keychain or encrypted file vault):
 
 ```bash
-tamr keys add ANTHROPIC_API_KEY
-tamr keys add OPENAI_API_KEY
-tamr keys list              # shows masked values
-tamr keys rm OPENAI_API_KEY
+palm keys add ANTHROPIC_API_KEY
+palm keys add OPENAI_API_KEY
+palm keys list              # shows masked values
+palm keys rm OPENAI_API_KEY
 
 # Export to shell
-eval $(tamr keys export)
+eval $(palm keys export)
 ```
 
 ## Offline Mode
@@ -67,10 +67,10 @@ eval $(tamr keys export)
 Pre-download tools for airgapped environments:
 
 ```bash
-tamr fetch aider ollama       # cache specific tools
-tamr fetch --all              # cache everything
-tamr bundle tools.tar.gz      # create portable archive
-tamr install aider --offline  # install from cache
+palm fetch aider ollama       # cache specific tools
+palm fetch --all              # cache everything
+palm bundle tools.tar.gz      # create portable archive
+palm install aider --offline  # install from cache
 ```
 
 ## Registry
@@ -98,26 +98,26 @@ Tools are defined as TOML files in [`registry/`](registry/) and embedded at comp
 ## Commands
 
 ```
-tamr install <tool...>       Install AI tool(s) — parallel by default
-tamr remove <tool>           Remove an AI tool
-tamr update [tool|--all]     Update AI tool(s)
-tamr list                    List installed AI tools
-tamr search <query>          Search the registry
-tamr info <tool>             Detailed tool info
-tamr run <tool> [args...]    Run tool with vault keys injected
-tamr doctor                  Health check (tools + keys + runtimes)
-tamr keys [add|rm|list|export]  Manage API keys
-tamr discover                Browse curated catalog
-tamr fetch [tool...|--all]   Pre-download for offline use
-tamr bundle <output.tar.gz>  Create portable tool bundle
-tamr stats                   Usage statistics
-tamr self-update             Update tamr itself
-tamr completion <shell>      Shell completions (zsh/bash/fish)
+palm install <tool...>       Install AI tool(s) — parallel by default
+palm remove <tool>           Remove an AI tool
+palm update [tool|--all]     Update AI tool(s)
+palm list                    List installed AI tools
+palm search <query>          Search the registry
+palm info <tool>             Detailed tool info
+palm run <tool> [args...]    Run tool with vault keys injected
+palm doctor                  Health check (tools + keys + runtimes)
+palm keys [add|rm|list|export]  Manage API keys
+palm discover                Browse curated catalog
+palm fetch [tool...|--all]   Pre-download for offline use
+palm bundle <output.tar.gz>  Create portable tool bundle
+palm stats                   Usage statistics
+palm self-update             Update palm itself
+palm completion <shell>      Shell completions (zsh/bash/fish)
 ```
 
 ## Install Backends
 
-tamr auto-detects the best install method for each tool:
+palm auto-detects the best install method for each tool:
 
 | Backend | Tools | Examples |
 |---------|-------|---------|
@@ -131,7 +131,7 @@ tamr auto-detects the best install method for each tool:
 
 ## Configuration
 
-### Global config: `~/.config/tamr/config.toml`
+### Global config: `~/.config/palm/config.toml`
 
 ```toml
 [ui]
@@ -153,9 +153,9 @@ post_install = ""   # shell command after install
 enabled = false     # local usage tracking
 ```
 
-### Project config: `.tamr.toml`
+### Project config: `.palm.toml`
 
-Drop a `.tamr.toml` in any project to override global settings:
+Drop a `.palm.toml` in any project to override global settings:
 
 ```toml
 [hooks]
@@ -165,11 +165,11 @@ post_install = "echo 'Tool installed for this project'"
 prefer_uv = false
 ```
 
-tamr walks up from the current directory to find `.tamr.toml`.
+palm walks up from the current directory to find `.palm.toml`.
 
 ## Extending
 
-Add custom tools via external plugins at `~/.config/tamr/plugins/*.toml`:
+Add custom tools via external plugins at `~/.config/palm/plugins/*.toml`:
 
 ```toml
 [[tools]]
@@ -194,13 +194,13 @@ required = ["MY_API_KEY"]
 
 ```bash
 # zsh
-tamr completion zsh > "${fpath[1]}/_tamr"
+palm completion zsh > "${fpath[1]}/_palm"
 
 # bash
-tamr completion bash > /etc/bash_completion.d/tamr
+palm completion bash > /etc/bash_completion.d/palm
 
 # fish
-tamr completion fish > ~/.config/fish/completions/tamr.fish
+palm completion fish > ~/.config/fish/completions/palm.fish
 ```
 
 ## Requirements

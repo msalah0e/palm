@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/msalah0e/tamr/internal/stats"
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/stats"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +25,7 @@ func statsCmd() *cobra.Command {
 
 			if summary.TotalCommands == 0 {
 				fmt.Println("  No usage data recorded yet.")
-				fmt.Println("  Enable stats in ~/.config/tamr/config.toml")
+				fmt.Println("  Enable stats in ~/.config/palm/config.toml")
 				return
 			}
 

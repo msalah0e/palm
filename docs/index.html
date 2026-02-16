@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tamr - The AI Tool Manager</title>
+<title>palm - The AI Tool Manager</title>
 <meta name="description" content="Install, configure, and run 100+ AI CLI tools from one place. API key vault, parallel execution, offline mode, Docker support.">
-<meta property="og:title" content="tamr - The AI Tool Manager">
+<meta property="og:title" content="palm - The AI Tool Manager">
 <meta property="og:description" content="Install, configure, and run 100+ AI CLI tools from one place.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
@@ -425,13 +425,13 @@
 <body>
 
 <nav>
-  <a class="logo" href="/tamr/"><span>🌴</span> tamr</a>
+  <a class="logo" href="/palm/"><span>🌴</span> palm</a>
   <div class="links">
     <a href="#features">Features</a>
     <a href="#tools">Tools</a>
     <a href="#commands">Commands</a>
     <a href="#roadmap">Roadmap</a>
-    <a class="gh-btn" href="https://github.com/msalah0e/tamr">
+    <a class="gh-btn" href="https://github.com/msalah0e/palm">
       <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       GitHub
     </a>
@@ -442,7 +442,7 @@
 <div class="hero">
   <div class="hero-badge">v0.5.0 &middot; Docker + Parallel + Offline</div>
   <h1>
-    <span class="palm">tamr</span><br>
+    <span class="palm">palm</span><br>
     The AI Tool Manager
   </h1>
   <p class="subtitle">
@@ -451,7 +451,7 @@
   </p>
   <div class="cta-group">
     <a href="#install" class="btn btn-primary">Get Started</a>
-    <a href="https://github.com/msalah0e/tamr" class="btn btn-secondary">View on GitHub</a>
+    <a href="https://github.com/msalah0e/palm" class="btn btn-secondary">View on GitHub</a>
   </div>
 
   <div class="terminal">
@@ -462,7 +462,7 @@
       <span class="terminal-title">Terminal</span>
     </div>
     <div class="terminal-body">
-      <div><span class="prompt">$</span> <span class="cmd">tamr install claude-code aider ollama</span></div>
+      <div><span class="prompt">$</span> <span class="cmd">palm install claude-code aider ollama</span></div>
       <div><span class="comment">  # parallel install &mdash; 3 tools at once</span></div>
       <div><span class="output">  ⟳ Claude Code...</span></div>
       <div><span class="output">  ⟳ Aider...</span></div>
@@ -473,11 +473,11 @@
       <div>&nbsp;</div>
       <div><span class="output">  3 installed</span></div>
       <div>&nbsp;</div>
-      <div><span class="prompt">$</span> <span class="cmd">tamr keys add ANTHROPIC_API_KEY</span></div>
+      <div><span class="prompt">$</span> <span class="cmd">palm keys add ANTHROPIC_API_KEY</span></div>
       <div><span class="key">  🔐</span> <span class="output">Stored in vault</span></div>
       <div>&nbsp;</div>
-      <div><span class="prompt">$</span> <span class="cmd">tamr run aider</span></div>
-      <div><span class="output">  tamr: injected 1 key(s) from vault</span></div>
+      <div><span class="prompt">$</span> <span class="cmd">palm run aider</span></div>
+      <div><span class="output">  palm: injected 1 key(s) from vault</span></div>
     </div>
   </div>
 
@@ -503,60 +503,60 @@
 
 <!-- FEATURES -->
 <section id="features">
-  <h2>Why <span class="palm">tamr</span></h2>
+  <h2>Why <span class="palm">palm</span></h2>
   <p class="section-sub">
     Every AI tool has its own installer, its own config format, its own key management.
-    tamr unifies all of it into one CLI.
+    palm unifies all of it into one CLI.
   </p>
 
   <div class="features">
     <div class="feature">
       <div class="feature-icon">📦</div>
       <h3>Universal Installer</h3>
-      <p>Install any AI tool with one command. tamr detects the right backend &mdash; pip/uv, npm, cargo, go, docker, or script.</p>
-      <code>tamr install claude-code</code>
+      <p>Install any AI tool with one command. palm detects the right backend &mdash; pip/uv, npm, cargo, go, docker, or script.</p>
+      <code>palm install claude-code</code>
     </div>
     <div class="feature">
       <div class="feature-icon">⚡</div>
       <h3>Parallel Install</h3>
       <p>Install multiple tools concurrently with configurable concurrency. Parallel by default, use --seq to disable.</p>
-      <code>tamr install aider ollama vllm</code>
+      <code>palm install aider ollama vllm</code>
     </div>
     <div class="feature">
       <div class="feature-icon">🔐</div>
       <h3>API Key Vault</h3>
       <p>Store API keys securely in macOS Keychain or encrypted file vault. Auto-inject when running tools.</p>
-      <code>tamr keys add ANTHROPIC_API_KEY</code>
+      <code>palm keys add ANTHROPIC_API_KEY</code>
     </div>
     <div class="feature">
       <div class="feature-icon">🚀</div>
       <h3>Run with Key Injection</h3>
       <p>Launch any tool with vault keys automatically set as environment variables. No more .env files.</p>
-      <code>tamr run aider</code>
+      <code>palm run aider</code>
     </div>
     <div class="feature">
       <div class="feature-icon">🐳</div>
       <h3>Docker Backend</h3>
       <p>Pull and manage containerized AI tools. Vector databases, inference servers, and more via Docker.</p>
-      <code>tamr install vllm</code>
+      <code>palm install vllm</code>
     </div>
     <div class="feature">
       <div class="feature-icon">✈️</div>
       <h3>Offline Mode</h3>
-      <p>Pre-fetch packages for air-gapped environments. Create portable bundles with tamr bundle.</p>
-      <code>tamr fetch --all</code>
+      <p>Pre-fetch packages for air-gapped environments. Create portable bundles with palm bundle.</p>
+      <code>palm fetch --all</code>
     </div>
     <div class="feature">
       <div class="feature-icon">🔍</div>
       <h3>Smart Discovery</h3>
       <p>Search 102 tools by name, category, or tags. Get detailed info, install methods, and key requirements.</p>
-      <code>tamr search "local llm"</code>
+      <code>palm search "local llm"</code>
     </div>
     <div class="feature">
       <div class="feature-icon">🩺</div>
       <h3>Health Check</h3>
       <p>Diagnose your AI toolchain: installed tools, missing runtimes, key validity, outdated versions.</p>
-      <code>tamr doctor</code>
+      <code>palm doctor</code>
     </div>
     <div class="feature">
       <div class="feature-icon">🪝</div>
@@ -567,20 +567,20 @@
     <div class="feature">
       <div class="feature-icon">📁</div>
       <h3>Config Hierarchy</h3>
-      <p>Global config in ~/.config/tamr/ plus project-level .tamr.toml that overrides per-directory.</p>
-      <code>.tamr.toml</code>
+      <p>Global config in ~/.config/palm/ plus project-level .palm.toml that overrides per-directory.</p>
+      <code>.palm.toml</code>
     </div>
     <div class="feature">
       <div class="feature-icon">🔌</div>
       <h3>Plugin Registry</h3>
-      <p>Add custom tools via external TOML files in ~/.config/tamr/plugins/. Extend the registry without forking.</p>
-      <code>~/.config/tamr/plugins/</code>
+      <p>Add custom tools via external TOML files in ~/.config/palm/plugins/. Extend the registry without forking.</p>
+      <code>~/.config/palm/plugins/</code>
     </div>
     <div class="feature">
       <div class="feature-icon">📊</div>
       <h3>State Tracking</h3>
       <p>Track installed tools with version, backend, path, and timestamps. Query your AI stack programmatically.</p>
-      <code>~/.config/tamr/state.toml</code>
+      <code>~/.config/palm/state.toml</code>
     </div>
   </div>
 </section>
@@ -589,7 +589,7 @@
 <section id="backends">
   <h2>Install <span class="palm">Backends</span></h2>
   <p class="section-sub">
-    tamr auto-detects the best install method for each tool. Seven backends, zero configuration.
+    palm auto-detects the best install method for each tool. Seven backends, zero configuration.
   </p>
 
   <div class="backends">
@@ -742,21 +742,21 @@
 
   <div style="background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; overflow-x: auto;">
     <table class="cmd-table">
-      <tr><td>tamr install &lt;tool...&gt;</td><td>Install AI tool(s) &mdash; parallel by default</td></tr>
-      <tr><td>tamr remove &lt;tool&gt;</td><td>Remove an AI tool</td></tr>
-      <tr><td>tamr update [tool|--all]</td><td>Update AI tool(s)</td></tr>
-      <tr><td>tamr list</td><td>List installed AI tools with status</td></tr>
-      <tr><td>tamr search &lt;query&gt;</td><td>Search the registry by name or tag</td></tr>
-      <tr><td>tamr info &lt;tool&gt;</td><td>Detailed tool info</td></tr>
-      <tr><td>tamr run &lt;tool&gt; [args...]</td><td>Run tool with vault keys injected</td></tr>
-      <tr><td>tamr doctor</td><td>Health check &mdash; tools, keys, runtimes</td></tr>
-      <tr><td>tamr keys [add|rm|list|export]</td><td>Manage API keys in the vault</td></tr>
-      <tr><td>tamr discover</td><td>Browse curated catalog by category</td></tr>
-      <tr><td>tamr fetch [tool...|--all]</td><td>Pre-download for offline use</td></tr>
-      <tr><td>tamr bundle &lt;output.tar.gz&gt;</td><td>Create portable tool bundle</td></tr>
-      <tr><td>tamr self-update</td><td>Update tamr itself</td></tr>
-      <tr><td>tamr stats</td><td>Local usage statistics</td></tr>
-      <tr><td>tamr completion &lt;shell&gt;</td><td>Shell completions (zsh/bash/fish)</td></tr>
+      <tr><td>palm install &lt;tool...&gt;</td><td>Install AI tool(s) &mdash; parallel by default</td></tr>
+      <tr><td>palm remove &lt;tool&gt;</td><td>Remove an AI tool</td></tr>
+      <tr><td>palm update [tool|--all]</td><td>Update AI tool(s)</td></tr>
+      <tr><td>palm list</td><td>List installed AI tools with status</td></tr>
+      <tr><td>palm search &lt;query&gt;</td><td>Search the registry by name or tag</td></tr>
+      <tr><td>palm info &lt;tool&gt;</td><td>Detailed tool info</td></tr>
+      <tr><td>palm run &lt;tool&gt; [args...]</td><td>Run tool with vault keys injected</td></tr>
+      <tr><td>palm doctor</td><td>Health check &mdash; tools, keys, runtimes</td></tr>
+      <tr><td>palm keys [add|rm|list|export]</td><td>Manage API keys in the vault</td></tr>
+      <tr><td>palm discover</td><td>Browse curated catalog by category</td></tr>
+      <tr><td>palm fetch [tool...|--all]</td><td>Pre-download for offline use</td></tr>
+      <tr><td>palm bundle &lt;output.tar.gz&gt;</td><td>Create portable tool bundle</td></tr>
+      <tr><td>palm self-update</td><td>Update palm itself</td></tr>
+      <tr><td>palm stats</td><td>Local usage statistics</td></tr>
+      <tr><td>palm completion &lt;shell&gt;</td><td>Shell completions (zsh/bash/fish)</td></tr>
     </table>
   </div>
 </section>
@@ -776,7 +776,7 @@
         <ul>
           <li>Top-level commands (install, remove, update, search, info, doctor)</li>
           <li>API key vault with macOS Keychain + encrypted file vault</li>
-          <li>tamr run with vault key injection</li>
+          <li>palm run with vault key injection</li>
           <li>60 tools across 6 categories</li>
         </ul>
       </div>
@@ -787,7 +787,7 @@
         <h4>State &amp; Hooks ✅</h4>
         <ul>
           <li>State tracking for installed tools</li>
-          <li>External plugin registry (~/.config/tamr/plugins/)</li>
+          <li>External plugin registry (~/.config/palm/plugins/)</li>
           <li>Lifecycle hooks (pre/post install/run/update)</li>
           <li>Self-update with GitHub releases version check</li>
           <li>Multi-tool install, --offline flag, shell installer</li>
@@ -802,8 +802,8 @@
         <ul>
           <li>Docker install backend (pull/save/rmi)</li>
           <li>Parallel multi-tool install with errgroup</li>
-          <li>Offline mode: tamr fetch + tamr bundle</li>
-          <li>Config hierarchy with project-level .tamr.toml</li>
+          <li>Offline mode: palm fetch + palm bundle</li>
+          <li>Config hierarchy with project-level .palm.toml</li>
           <li>Improved pip backend: uv tool &gt; pipx &gt; pip3</li>
         </ul>
       </div>
@@ -813,9 +813,9 @@
       <div class="roadmap-content">
         <h4>Workspace &amp; Context</h4>
         <ul>
-          <li>tamr workspace for project-level tool pinning</li>
-          <li>tamr context for unified AI tool instructions</li>
-          <li>Shell integration (eval $(tamr env))</li>
+          <li>palm workspace for project-level tool pinning</li>
+          <li>palm context for unified AI tool instructions</li>
+          <li>Shell integration (eval $(palm env))</li>
           <li>Session history with cost tracking</li>
         </ul>
       </div>
@@ -825,11 +825,11 @@
       <div class="roadmap-content">
         <h4>The Control Plane</h4>
         <ul>
-          <li>tamr proxy &mdash; local LLM API interceptor</li>
-          <li>tamr matrix &mdash; terminal dashboard</li>
-          <li>tamr budget &mdash; spending controls</li>
-          <li>tamr benchmark &mdash; tool comparison</li>
-          <li>tamr models &mdash; unified model management</li>
+          <li>palm proxy &mdash; local LLM API interceptor</li>
+          <li>palm matrix &mdash; terminal dashboard</li>
+          <li>palm budget &mdash; spending controls</li>
+          <li>palm benchmark &mdash; tool comparison</li>
+          <li>palm models &mdash; unified model management</li>
         </ul>
       </div>
     </div>
@@ -840,21 +840,21 @@
 <div class="install-section" id="install">
   <h2>Get <span class="palm">Started</span></h2>
   <p class="section-sub" style="max-width: 500px; margin: 1rem auto 0;">
-    One command to install tamr, then start managing your AI tools.
+    One command to install palm, then start managing your AI tools.
   </p>
   <div class="install-methods">
-    <div class="install-box" onclick="navigator.clipboard.writeText('curl -fsSL https://msalah0e.github.io/tamr/install.sh | sh')">
-      <span class="dollar">$</span> curl -fsSL https://msalah0e.github.io/tamr/install.sh | sh
+    <div class="install-box" onclick="navigator.clipboard.writeText('curl -fsSL https://msalah0e.github.io/palm/install.sh | sh')">
+      <span class="dollar">$</span> curl -fsSL https://msalah0e.github.io/palm/install.sh | sh
       <span class="copy">copy</span>
     </div>
     <div class="install-alt">
-      or <code>go install github.com/msalah0e/tamr@latest</code>
+      or <code>go install github.com/msalah0e/palm@latest</code>
     </div>
   </div>
 </div>
 
 <footer>
-  <p>Built with 🌴 by <a href="https://github.com/msalah0e">msalah0e</a> &middot; <a href="https://github.com/msalah0e/tamr">GitHub</a></p>
+  <p>Built with 🌴 by <a href="https://github.com/msalah0e">msalah0e</a> &middot; <a href="https://github.com/msalah0e/palm">GitHub</a></p>
 </footer>
 
 </body>

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/msalah0e/tamr/internal/ui"
-	"github.com/msalah0e/tamr/internal/vault"
+	"github.com/msalah0e/palm/internal/ui"
+	"github.com/msalah0e/palm/internal/vault"
 	"github.com/spf13/cobra"
 )
 
@@ -39,12 +39,12 @@ func runCmd() *cobra.Command {
 
 			binPath, err := exec.LookPath(bin)
 			if err != nil {
-				ui.Bad.Printf("tamr: %s not found in PATH\n", bin)
+				ui.Bad.Printf("palm: %s not found in PATH\n", bin)
 				if tool == nil {
 					fmt.Println("  This tool is not in the registry either.")
-					fmt.Println("  Run `tamr search` to find available tools")
+					fmt.Println("  Run `palm search` to find available tools")
 				} else {
-					fmt.Printf("  Run `tamr install %s` first\n", toolName)
+					fmt.Printf("  Run `palm install %s` first\n", toolName)
 				}
 				os.Exit(1)
 			}
@@ -68,13 +68,13 @@ func runCmd() *cobra.Command {
 					}
 				}
 				if injected > 0 {
-					ui.Subtle.Fprintf(os.Stderr, "tamr: injected %d key(s) from vault\n", injected)
+					ui.Subtle.Fprintf(os.Stderr, "palm: injected %d key(s) from vault\n", injected)
 				}
 			}
 
 			// Replace this process with the tool
 			if err := syscall.Exec(binPath, append([]string{bin}, toolArgs...), env); err != nil {
-				ui.Bad.Printf("tamr: failed to exec %s: %v\n", bin, err)
+				ui.Bad.Printf("palm: failed to exec %s: %v\n", bin, err)
 				os.Exit(1)
 			}
 		},

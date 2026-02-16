@@ -19,9 +19,9 @@ var (
 
 const Palm = "\U0001F334" // 🌴
 
-// Banner prints the tamr banner for AI commands.
+// Banner prints the palm banner for AI commands.
 func Banner(subtitle string) {
-	fmt.Printf("%s %s — %s\n\n", Palm, Brand.Sprint("tamr"), subtitle)
+	fmt.Printf("%s %s — %s\n\n", Palm, Brand.Sprint("palm"), subtitle)
 }
 
 // Table prints a simple aligned table.

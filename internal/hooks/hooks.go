@@ -4,7 +4,7 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/msalah0e/tamr/internal/config"
+	"github.com/msalah0e/palm/internal/config"
 )
 
 // Run executes the hook script for the given phase, if configured.
@@ -17,9 +17,9 @@ func Run(phase, toolName, category string) error {
 
 	cmd := exec.Command("sh", "-c", script)
 	cmd.Env = append(os.Environ(),
-		"TAMR_TOOL="+toolName,
-		"TAMR_PHASE="+phase,
-		"TAMR_CATEGORY="+category,
+		"PALM_TOOL="+toolName,
+		"PALM_PHASE="+phase,
+		"PALM_CATEGORY="+category,
 	)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

@@ -18,7 +18,7 @@ func Dir() string {
 		home, _ := os.UserHomeDir()
 		dir = filepath.Join(home, ".cache")
 	}
-	return filepath.Join(dir, "tamr")
+	return filepath.Join(dir, "palm")
 }
 
 // Fetch pre-downloads a package to the local cache.
@@ -64,7 +64,7 @@ func IsCached(backend, pkg string) bool {
 func Bundle(output string) error {
 	cacheDir := Dir()
 	if _, err := os.Stat(cacheDir); err != nil {
-		return fmt.Errorf("cache is empty — run `tamr fetch` first")
+		return fmt.Errorf("cache is empty — run `palm fetch` first")
 	}
 
 	f, err := os.Create(output)

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>tamr -- The AI Tool Matrix Hub | Deep Research Report</title>
+<title>palm -- The AI Tool Matrix Hub | Deep Research Report</title>
 <style>
   :root {
     --palm: #2DB682;
@@ -477,7 +477,7 @@
   .comp-table .ck { color: var(--palm); font-size: 16px; }
   .comp-table .cx { color: var(--text-muted); font-size: 14px; }
   .comp-table .cp { color: var(--cyan); font-size: 12px; font-weight: 600; }
-  .comp-table .tamr-col { background: var(--palm-ghost); }
+  .comp-table .palm-col { background: var(--palm-ghost); }
 
   /* ── Roadmap ── */
   .roadmap-item {
@@ -741,7 +741,7 @@
 <!-- ============================================ -->
 <nav class="toc">
   <div class="toc-logo">
-    <span>&#127796; tamr</span>
+    <span>&#127796; palm</span>
     <small>Research Report</small>
   </div>
   <a href="#exec"><span class="toc-num">01</span> Executive Summary</a>
@@ -764,7 +764,7 @@
   <!-- ── Hero ── -->
   <header class="hero">
     <div class="hero-badge">Deep Research Report</div>
-    <h1><span class="palm-icon">&#127796;</span> tamr &mdash; The AI Tool Matrix Hub</h1>
+    <h1><span class="palm-icon">&#127796;</span> palm &mdash; The AI Tool Matrix Hub</h1>
     <p class="subtitle">Deep Research Report &middot; February 2026</p>
     <div class="hero-meta">
       <span>&#9671; v0.4.0+ Vision</span>
@@ -805,12 +805,12 @@
     <div class="section-head">
       <span class="sec-num">Section 01</span>
       <h2>Executive Summary</h2>
-      <p>The strategic case for tamr as the first AI tool package manager and matrix hub.</p>
+      <p>The strategic case for palm as the first AI tool package manager and matrix hub.</p>
     </div>
 
     <div class="exec-summary">
       <p>
-        <strong class="highlight">tamr</strong> is the first CLI that combines
+        <strong class="highlight">palm</strong> is the first CLI that combines
         <span class="highlight">AI tool package management</span>,
         <span class="highlight">API key vault</span>,
         <span class="highlight">unified configuration</span>, and
@@ -823,9 +823,9 @@
       <br>
       <p>
         The <span class="highlight">v0.3.0</span> release stripped the Homebrew wrapper and promoted
-        AI commands to top-level, focusing tamr squarely on its unique value proposition. This report
+        AI commands to top-level, focusing palm squarely on its unique value proposition. This report
         covers the research and architecture for <span class="highlight">v0.4.0+</span> &mdash;
-        the <strong>"Matrix Hub"</strong> vision &mdash; transforming tamr from a tool installer into
+        the <strong>"Matrix Hub"</strong> vision &mdash; transforming palm from a tool installer into
         a comprehensive control plane for the AI development toolkit.
       </p>
     </div>
@@ -838,7 +838,7 @@
     <div class="section-head">
       <span class="sec-num">Section 02</span>
       <h2>AI Tools Landscape</h2>
-      <p>130+ tools cataloged across 13 categories. The full inventory that tamr manages.</p>
+      <p>130+ tools cataloged across 13 categories. The full inventory that palm manages.</p>
     </div>
 
     <div class="grid-3">
@@ -1173,7 +1173,7 @@
       <h3>&#10004; Verdict: Stay with Go</h3>
       <ul>
         <li><strong>Distribution is king</strong> for a tool manager &mdash; single static binary, zero runtime dependencies, instant startup</li>
-        <li><strong>Charmbracelet ecosystem</strong> (bubbletea, lipgloss, bubbles) is unmatched for terminal UIs &mdash; critical for <code>tamr matrix</code></li>
+        <li><strong>Charmbracelet ecosystem</strong> (bubbletea, lipgloss, bubbles) is unmatched for terminal UIs &mdash; critical for <code>palm matrix</code></li>
         <li><strong>Goroutines</strong> make parallel tool installation and proxy operations trivial to implement</li>
         <li><strong>Remarkably lean</strong> &mdash; only 3 dependencies today (cobra, fatih/color, BurntSushi/toml)</li>
         <li><strong>Cross-compilation</strong> to macOS/Linux/Windows with a single <code>GOOS</code> flag &mdash; no linker headaches</li>
@@ -1197,7 +1197,7 @@
       <div style="flex:1;">
         <div class="layer-content">
           <h4>Registry + Installer + Vault + Run <span class="layer-ver">v0.3.0 (current)</span></h4>
-          <p>Tool registry (47 embedded TOML), multi-backend installer (brew/pip/npm/go/cargo/binary), macOS Keychain vault, <code>tamr run</code> with env injection</p>
+          <p>Tool registry (47 embedded TOML), multi-backend installer (brew/pip/npm/go/cargo/binary), macOS Keychain vault, <code>palm run</code> with env injection</p>
         </div>
       </div>
       <span class="badge badge-done">SHIPPED</span>
@@ -1219,7 +1219,7 @@
       <div style="flex:1;">
         <div class="layer-content">
           <h4>Workspace + Context + Shell + History <span class="layer-ver">v0.5.0</span></h4>
-          <p>Project-level workspaces, context transpilation, <code>eval $(tamr env)</code>, unified session history</p>
+          <p>Project-level workspaces, context transpilation, <code>eval $(palm env)</code>, unified session history</p>
         </div>
       </div>
       <span class="badge badge-planned">PLANNED</span>
@@ -1256,11 +1256,11 @@
       </div>
       <div class="glass">
         <h4 style="color:var(--cyan);font-size:14px;font-family:'SF Mono',monospace;margin-bottom:8px;">proto</h4>
-        <p style="font-size:13px;color:var(--text-dim);">WASM plugins for extensibility. <strong style="color:var(--orange);">Not adopted</strong> &mdash; TOML schema plugins cover 97% of tamr use cases without WASM complexity.</p>
+        <p style="font-size:13px;color:var(--text-dim);">WASM plugins for extensibility. <strong style="color:var(--orange);">Not adopted</strong> &mdash; TOML schema plugins cover 97% of palm use cases without WASM complexity.</p>
       </div>
       <div class="glass">
         <h4 style="color:var(--cyan);font-size:14px;font-family:'SF Mono',monospace;margin-bottom:8px;">volta</h4>
-        <p style="font-size:13px;color:var(--text-dim);">Shim-based version management. <strong style="color:var(--orange);">Not needed</strong> &mdash; tamr does not manage tool versions, only installs and runs.</p>
+        <p style="font-size:13px;color:var(--text-dim);">Shim-based version management. <strong style="color:var(--orange);">Not needed</strong> &mdash; palm does not manage tool versions, only installs and runs.</p>
       </div>
       <div class="glass">
         <h4 style="color:var(--cyan);font-size:14px;font-family:'SF Mono',monospace;margin-bottom:8px;">homebrew</h4>
@@ -1283,8 +1283,8 @@
           <tr><td><code style="color:var(--palm);">internal/state/</code></td><td>Tracks installed tools (version, backend, path, timestamps)</td><td>v0.4</td></tr>
           <tr><td><code style="color:var(--palm);">internal/hooks/</code></td><td>Pre/post lifecycle hooks (shell commands)</td><td>v0.4</td></tr>
           <tr><td><code style="color:var(--palm);">internal/parallel/</code></td><td>errgroup + mpb for concurrent operations</td><td>v0.5</td></tr>
-          <tr><td><code style="color:var(--palm);">internal/context/</code></td><td>Context transpilation (.tamr/context.md &rarr; CLAUDE.md, .aider.conf, .cursorrules)</td><td>v0.4</td></tr>
-          <tr><td><code style="color:var(--palm);">internal/workspace/</code></td><td>Project-level .tamr/workspace.toml</td><td>v0.4</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/context/</code></td><td>Context transpilation (.palm/context.md &rarr; CLAUDE.md, .aider.conf, .cursorrules)</td><td>v0.4</td></tr>
+          <tr><td><code style="color:var(--palm);">internal/workspace/</code></td><td>Project-level .palm/workspace.toml</td><td>v0.4</td></tr>
           <tr><td><code style="color:var(--palm);">internal/proxy/</code></td><td>Local LLM API proxy for cost tracking</td><td>v0.6</td></tr>
           <tr><td><code style="color:var(--palm);">internal/budget/</code></td><td>Spending controls and alerts</td><td>v0.7</td></tr>
           <tr><td><code style="color:var(--palm);">internal/models/</code></td><td>Unified local model management</td><td>v0.6</td></tr>
@@ -1302,7 +1302,7 @@
     <div class="section-head">
       <span class="sec-num">Section 05</span>
       <h2>Gap Analysis</h2>
-      <p>Eight critical gaps in the AI tool ecosystem that tamr is uniquely positioned to fill.</p>
+      <p>Eight critical gaps in the AI tool ecosystem that palm is uniquely positioned to fill.</p>
     </div>
 
     <div class="grid-2">
@@ -1355,35 +1355,35 @@
     <div class="section-head">
       <span class="sec-num">Section 06</span>
       <h2>Matrix Hub Features</h2>
-      <p>Eight features that transform tamr from a tool installer into a comprehensive AI development control plane.</p>
+      <p>Eight features that transform palm from a tool installer into a comprehensive AI development control plane.</p>
     </div>
 
     <div class="grid-2">
       <div class="feat-card">
         <div class="feat-head">
-          <h4>tamr workspace</h4>
+          <h4>palm workspace</h4>
           <div class="feat-meta">
             <span class="badge badge-planned">v0.4</span>
             <span class="badge badge-low">LOW EFFORT</span>
           </div>
         </div>
-        <p>Project-level <code>.tamr/workspace.toml</code> defining required tools, preferred models, key references, and team settings. Commit it to git. New team members run <code>tamr install</code> and get the full AI toolkit configured.</p>
+        <p>Project-level <code>.palm/workspace.toml</code> defining required tools, preferred models, key references, and team settings. Commit it to git. New team members run <code>palm install</code> and get the full AI toolkit configured.</p>
       </div>
 
       <div class="feat-card">
         <div class="feat-head">
-          <h4>tamr context</h4>
+          <h4>palm context</h4>
           <div class="feat-meta">
             <span class="badge badge-planned">v0.4</span>
             <span class="badge badge-medium">MED EFFORT</span>
           </div>
         </div>
-        <p>Single <code>.tamr/context.md</code> transpiled to CLAUDE.md, .aider.conf.yml, .cursorrules, codex.md, and more. Write your project context once &mdash; tamr generates the tool-specific config files. "Write once, configure everywhere."</p>
+        <p>Single <code>.palm/context.md</code> transpiled to CLAUDE.md, .aider.conf.yml, .cursorrules, codex.md, and more. Write your project context once &mdash; palm generates the tool-specific config files. "Write once, configure everywhere."</p>
       </div>
 
       <div class="feat-card">
         <div class="feat-head">
-          <h4>tamr history</h4>
+          <h4>palm history</h4>
           <div class="feat-meta">
             <span class="badge badge-planned">v0.5</span>
             <span class="badge badge-low">LOW EFFORT</span>
@@ -1400,12 +1400,12 @@
             <span class="badge badge-low">LOW EFFORT</span>
           </div>
         </div>
-        <p><code>eval $(tamr env)</code> exports all API keys as environment variables. No more <code>tamr run</code> wrapper required. Add it to .zshrc and every terminal session has keys available.</p>
+        <p><code>eval $(palm env)</code> exports all API keys as environment variables. No more <code>palm run</code> wrapper required. Add it to .zshrc and every terminal session has keys available.</p>
       </div>
 
       <div class="feat-card">
         <div class="feat-head">
-          <h4>tamr proxy</h4>
+          <h4>palm proxy</h4>
           <div class="feat-meta">
             <span class="badge badge-planned">v0.6</span>
             <span class="badge badge-hard">HARD</span>
@@ -1416,7 +1416,7 @@
 
       <div class="feat-card">
         <div class="feat-head">
-          <h4>tamr matrix</h4>
+          <h4>palm matrix</h4>
           <div class="feat-meta">
             <span class="badge badge-planned">v0.6</span>
             <span class="badge badge-medium">MED EFFORT</span>
@@ -1427,7 +1427,7 @@
 
       <div class="feat-card">
         <div class="feat-head">
-          <h4>tamr budget</h4>
+          <h4>palm budget</h4>
           <div class="feat-meta">
             <span class="badge badge-planned">v0.7</span>
             <span class="badge badge-hard">HARD</span>
@@ -1438,7 +1438,7 @@
 
       <div class="feat-card">
         <div class="feat-head">
-          <h4>tamr benchmark</h4>
+          <h4>palm benchmark</h4>
           <div class="feat-meta">
             <span class="badge badge-planned">v1.0</span>
             <span class="badge badge-hard">HARD</span>
@@ -1467,11 +1467,11 @@
         </li>
         <li>
           <span class="fl-icon">&#9670;</span>
-          <div><strong><code>tamr fetch &lt;tool&gt;</code></strong> &mdash; Pre-download packages to local cache at <code>~/.cache/tamr/</code>. Supports all backends (brew bottles, pip wheels, npm tarballs, Go binaries). Idempotent.</div>
+          <div><strong><code>palm fetch &lt;tool&gt;</code></strong> &mdash; Pre-download packages to local cache at <code>~/.cache/palm/</code>. Supports all backends (brew bottles, pip wheels, npm tarballs, Go binaries). Idempotent.</div>
         </li>
         <li>
           <span class="fl-icon">&#9670;</span>
-          <div><strong><code>tamr bundle export/import</code></strong> &mdash; Create portable archives for air-gapped transfer. Bundles include tools, model weights, and encrypted key references. USB-transferable.</div>
+          <div><strong><code>palm bundle export/import</code></strong> &mdash; Create portable archives for air-gapped transfer. Bundles include tools, model weights, and encrypted key references. USB-transferable.</div>
         </li>
         <li>
           <span class="fl-icon">&#9670;</span>
@@ -1479,11 +1479,11 @@
         </li>
         <li>
           <span class="fl-icon">&#9670;</span>
-          <div><strong><code>tamr models fetch/export/import</code></strong> &mdash; Manage LLM model files for local runners. Fetch GGUF/MLX models while online. Export to bundle for offline use. Integrates with Ollama and llama.cpp.</div>
+          <div><strong><code>palm models fetch/export/import</code></strong> &mdash; Manage LLM model files for local runners. Fetch GGUF/MLX models while online. Export to bundle for offline use. Integrates with Ollama and llama.cpp.</div>
         </li>
         <li>
           <span class="fl-icon">&#9670;</span>
-          <div><strong>Embedded registry via go:embed</strong> &mdash; All 130+ tool definitions compiled into the binary. <code>tamr search</code>, <code>tamr info</code>, and <code>tamr list</code> work with zero network access, always.</div>
+          <div><strong>Embedded registry via go:embed</strong> &mdash; All 130+ tool definitions compiled into the binary. <code>palm search</code>, <code>palm info</code>, and <code>palm list</code> work with zero network access, always.</div>
         </li>
       </ul>
     </div>
@@ -1513,10 +1513,10 @@
       <div class="glass">
         <h4 style="color:#fff;font-size:15px;margin-bottom:12px;">Applies To</h4>
         <ul class="feature-list" style="padding:0;">
-          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">tamr install a b c</code> &mdash; Install multiple tools concurrently</div></li>
-          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">tamr update --all</code> &mdash; Update all installed tools in parallel</div></li>
-          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">tamr doctor</code> &mdash; Check all tool health concurrently</div></li>
-          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">tamr fetch --all</code> &mdash; Pre-download all packages for offline use</div></li>
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">palm install a b c</code> &mdash; Install multiple tools concurrently</div></li>
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">palm update --all</code> &mdash; Update all installed tools in parallel</div></li>
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">palm doctor</code> &mdash; Check all tool health concurrently</div></li>
+          <li><span class="fl-icon">&#9670;</span><div><code style="color:var(--palm);">palm fetch --all</code> &mdash; Pre-download all packages for offline use</div></li>
         </ul>
       </div>
     </div>
@@ -1527,7 +1527,7 @@
         <span class="terminal-dot r"></span>
         <span class="terminal-dot y"></span>
         <span class="terminal-dot g"></span>
-        <span>tamr install claude-code aider ollama fabric</span>
+        <span>palm install claude-code aider ollama fabric</span>
       </div>
       <div class="terminal-body">
         <div><span class="t-spin">&#8987;</span> <span class="t-tool">Claude Code</span>    <span class="t-dim">installing via npm...</span></div>
@@ -1559,7 +1559,7 @@
         <thead>
           <tr>
             <th>Feature</th>
-            <th class="tamr-col">tamr</th>
+            <th class="palm-col">palm</th>
             <th>Ruler</th>
             <th>LNAI</th>
             <th>coder-config</th>
@@ -1570,7 +1570,7 @@
         <tbody>
           <tr>
             <td>Package Management</td>
-            <td class="tamr-col"><span class="ck">&#10003;</span></td>
+            <td class="palm-col"><span class="ck">&#10003;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
@@ -1579,7 +1579,7 @@
           </tr>
           <tr>
             <td>API Key Vault</td>
-            <td class="tamr-col"><span class="ck">&#10003;</span></td>
+            <td class="palm-col"><span class="ck">&#10003;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
@@ -1588,7 +1588,7 @@
           </tr>
           <tr>
             <td>Unified Config</td>
-            <td class="tamr-col"><span class="cp">PLANNED</span></td>
+            <td class="palm-col"><span class="cp">PLANNED</span></td>
             <td><span class="ck">&#10003;</span></td>
             <td><span class="ck">&#10003;</span></td>
             <td><span class="ck">&#10003;</span></td>
@@ -1597,7 +1597,7 @@
           </tr>
           <tr>
             <td>Cost Tracking</td>
-            <td class="tamr-col"><span class="cp">PLANNED</span></td>
+            <td class="palm-col"><span class="cp">PLANNED</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
@@ -1606,7 +1606,7 @@
           </tr>
           <tr>
             <td>Local Proxy</td>
-            <td class="tamr-col"><span class="cp">PLANNED</span></td>
+            <td class="palm-col"><span class="cp">PLANNED</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
@@ -1615,7 +1615,7 @@
           </tr>
           <tr>
             <td>TUI Dashboard</td>
-            <td class="tamr-col"><span class="cp">PLANNED</span></td>
+            <td class="palm-col"><span class="cp">PLANNED</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
@@ -1624,7 +1624,7 @@
           </tr>
           <tr>
             <td>AI-Specific</td>
-            <td class="tamr-col"><span class="ck">&#10003;</span></td>
+            <td class="palm-col"><span class="ck">&#10003;</span></td>
             <td><span class="ck">&#10003;</span></td>
             <td><span class="ck">&#10003;</span></td>
             <td><span class="ck">&#10003;</span></td>
@@ -1633,7 +1633,7 @@
           </tr>
           <tr>
             <td>Cross-platform Binary</td>
-            <td class="tamr-col"><span class="ck">&#10003;</span></td>
+            <td class="palm-col"><span class="ck">&#10003;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
             <td><span class="cx">&mdash;</span></td>
@@ -1651,7 +1651,7 @@
         <li>Ruler/LNAI/coder-config solve config only &mdash; no installation, no keys, no costs</li>
         <li>LiteLLM is the closest to the proxy/cost vision but is Python-only and not a package manager</li>
         <li>Homebrew is a general package manager with zero AI awareness</li>
-        <li>tamr is building in a greenfield &mdash; first-mover advantage is real</li>
+        <li>palm is building in a greenfield &mdash; first-mover advantage is real</li>
       </ul>
     </div>
   </section>
@@ -1672,11 +1672,11 @@
       <div class="roadmap-date">March 2026 &mdash; Foundation</div>
       <ul class="roadmap-tasks">
         <li>State tracking (<code>internal/state/</code>) &mdash; persist installed tools, versions, paths, timestamps</li>
-        <li>Config hierarchy &mdash; <code>.tamr.toml</code> project files with global/workspace/project precedence</li>
-        <li>External plugin registry &mdash; <code>~/.config/tamr/plugins/*.toml</code> for community tools</li>
+        <li>Config hierarchy &mdash; <code>.palm.toml</code> project files with global/workspace/project precedence</li>
+        <li>External plugin registry &mdash; <code>~/.config/palm/plugins/*.toml</code> for community tools</li>
         <li>Lifecycle hooks &mdash; pre/post install, pre/post run shell commands</li>
-        <li><code>tamr workspace</code> &mdash; project-level workspace.toml for team tooling</li>
-        <li><code>tamr context</code> &mdash; transpile context.md to CLAUDE.md, .aider.conf, .cursorrules</li>
+        <li><code>palm workspace</code> &mdash; project-level workspace.toml for team tooling</li>
+        <li><code>palm context</code> &mdash; transpile context.md to CLAUDE.md, .aider.conf, .cursorrules</li>
       </ul>
     </div>
 
@@ -1686,10 +1686,10 @@
       <div class="roadmap-date">April 2026 &mdash; Developer Experience</div>
       <ul class="roadmap-tasks">
         <li>Enhanced history/session tracking &mdash; unified log with search and filters</li>
-        <li>Shell integration &mdash; <code>eval $(tamr env)</code> for direct env export</li>
-        <li>Offline mode &mdash; <code>--offline</code> flag, <code>tamr fetch</code>, embedded registry</li>
+        <li>Shell integration &mdash; <code>eval $(palm env)</code> for direct env export</li>
+        <li>Offline mode &mdash; <code>--offline</code> flag, <code>palm fetch</code>, embedded registry</li>
         <li>Parallel execution &mdash; errgroup + mpb for concurrent installs</li>
-        <li><code>tamr outdated</code> &mdash; check for newer versions of installed tools</li>
+        <li><code>palm outdated</code> &mdash; check for newer versions of installed tools</li>
       </ul>
     </div>
 
@@ -1698,10 +1698,10 @@
       <div class="roadmap-ver">v0.6.0</div>
       <div class="roadmap-date">May 2026 &mdash; Intelligence Layer</div>
       <ul class="roadmap-tasks">
-        <li><code>tamr proxy</code> &mdash; local HTTP proxy intercepting LLM API calls</li>
-        <li><code>tamr matrix</code> &mdash; bubbletea TUI dashboard for tools, sessions, costs</li>
+        <li><code>palm proxy</code> &mdash; local HTTP proxy intercepting LLM API calls</li>
+        <li><code>palm matrix</code> &mdash; bubbletea TUI dashboard for tools, sessions, costs</li>
         <li>Cost estimation engine &mdash; real-time token counting and pricing</li>
-        <li><code>tamr models</code> &mdash; unified local model management (fetch, list, remove)</li>
+        <li><code>palm models</code> &mdash; unified local model management (fetch, list, remove)</li>
       </ul>
     </div>
 
@@ -1710,9 +1710,9 @@
       <div class="roadmap-ver">v0.7.0</div>
       <div class="roadmap-date">June 2026 &mdash; Enterprise</div>
       <ul class="roadmap-tasks">
-        <li><code>tamr budget</code> &mdash; spending controls with alerts and hard enforcement</li>
-        <li><code>tamr bundle export/import</code> &mdash; portable archives for air-gapped environments</li>
-        <li><code>tamr registry add &lt;url&gt;</code> &mdash; remote community registries</li>
+        <li><code>palm budget</code> &mdash; spending controls with alerts and hard enforcement</li>
+        <li><code>palm bundle export/import</code> &mdash; portable archives for air-gapped environments</li>
+        <li><code>palm registry add &lt;url&gt;</code> &mdash; remote community registries</li>
       </ul>
     </div>
 
@@ -1721,19 +1721,19 @@
       <div class="roadmap-ver">v1.0.0</div>
       <div class="roadmap-date">August 2026 &mdash; Matrix Hub</div>
       <ul class="roadmap-tasks">
-        <li><code>tamr benchmark</code> &mdash; multi-tool comparison on same tasks</li>
-        <li><code>tamr sync</code> &mdash; cross-machine config synchronization via git</li>
+        <li><code>palm benchmark</code> &mdash; multi-tool comparison on same tasks</li>
+        <li><code>palm sync</code> &mdash; cross-machine config synchronization via git</li>
         <li>goreleaser CI pipeline &mdash; automated releases for macOS, Linux, Windows</li>
-        <li>Homebrew tap &mdash; <code>brew install msalah0e/tap/tamr</code></li>
+        <li>Homebrew tap &mdash; <code>brew install msalah0e/tap/palm</code></li>
       </ul>
     </div>
   </section>
 
   <!-- ── Footer ── -->
   <div class="footer">
-    <div class="footer-brand">&#127796; tamr &mdash; The AI Tool Matrix Hub</div>
+    <div class="footer-brand">&#127796; palm &mdash; The AI Tool Matrix Hub</div>
     <p>Generated by Claude Opus 4.6 &middot; February 16, 2026 &middot; Research based on 130+ tools, 50+ sources</p>
-    <p style="margin-top:8px;">github.com/msalah0e/tamr</p>
+    <p style="margin-top:8px;">github.com/msalah0e/palm</p>
   </div>
 
 </div>

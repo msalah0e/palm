@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-const serviceName = "tamr-vault"
+const serviceName = "palm-vault"
 
 // KeychainVault stores API keys in the macOS Keychain.
 type KeychainVault struct{}
@@ -69,21 +69,21 @@ func (k *KeychainVault) List() ([]string, error) {
 
 	var keys []string
 	lines := strings.Split(string(out), "\n")
-	inTamrEntry := false
+	inPalmEntry := false
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if strings.Contains(line, fmt.Sprintf(`"svce"<blob>="%s"`, serviceName)) {
-			inTamrEntry = true
+			inPalmEntry = true
 			continue
 		}
-		if inTamrEntry && strings.Contains(line, `"acct"<blob>="`) {
+		if inPalmEntry && strings.Contains(line, `"acct"<blob>="`) {
 			// Extract account name (the key)
 			start := strings.Index(line, `"acct"<blob>="`) + len(`"acct"<blob>="`)
 			end := strings.LastIndex(line, `"`)
 			if start > 0 && end > start {
 				keys = append(keys, line[start:end])
 			}
-			inTamrEntry = false
+			inPalmEntry = false
 		}
 	}
 	return keys, nil

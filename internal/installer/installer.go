@@ -5,8 +5,8 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/msalah0e/tamr/internal/registry"
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/registry"
+	"github.com/msalah0e/palm/internal/ui"
 )
 
 // Install installs a tool using the best available backend.

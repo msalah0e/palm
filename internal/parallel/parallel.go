@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/ui"
 	"golang.org/x/sync/errgroup"
 )
 

@@ -1,4 +1,4 @@
-module github.com/msalah0e/tamr
+module github.com/msalah0e/palm
 
 go 1.24.0
 

@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/msalah0e/tamr/internal/cache"
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/cache"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 

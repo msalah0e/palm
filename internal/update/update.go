@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 	"time"
 
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/ui"
 )
 
 const (
-	repo        = "msalah0e/tamr"
+	repo        = "msalah0e/palm"
 	checkEvery  = 24 * time.Hour
 )
 
@@ -32,7 +32,7 @@ func cachePath() string {
 		home, _ := os.UserHomeDir()
 		dir = filepath.Join(home, ".config")
 	}
-	return filepath.Join(dir, "tamr", "update-check.json")
+	return filepath.Join(dir, "palm", "update-check.json")
 }
 
 // CheckForUpdate checks GitHub for a newer version and prints a message if available.
@@ -84,7 +84,7 @@ func CheckNow(currentVersion string) {
 		clean = clean[1:]
 	}
 	if clean == currentVersion {
-		ui.Good.Printf("  %s tamr is up to date (%s)\n", ui.StatusIcon(true), currentVersion)
+		ui.Good.Printf("  %s palm is up to date (%s)\n", ui.StatusIcon(true), currentVersion)
 	} else {
 		printUpdateMessage(currentVersion, latest)
 	}
@@ -113,5 +113,5 @@ func printUpdateMessage(current, latest string) {
 	fmt.Println()
 	ui.Warn.Printf("  Update available: %s → %s\n", current, latest)
 	fmt.Printf("  Run: go install github.com/%s@latest\n", repo)
-	fmt.Printf("  Or:  curl -fsSL https://%s.github.io/tamr/install.sh | sh\n", "msalah0e")
+	fmt.Printf("  Or:  curl -fsSL https://%s.github.io/palm/install.sh | sh\n", "msalah0e")
 }

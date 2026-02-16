@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -39,7 +39,7 @@ func searchCmd() *cobra.Command {
 
 			ui.Table(headers, rows)
 
-			fmt.Printf("\n  %d results · `tamr install <tool>` to install\n", len(results))
+			fmt.Printf("\n  %d results · `palm install <tool>` to install\n", len(results))
 		},
 	}
 }

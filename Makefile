@@ -1,11 +1,11 @@
-BINARY = tamr
+BINARY = palm
 INSTALL_DIR = $(HOME)/.local/bin
 VERSION = 0.5.0
 
 .PHONY: build install clean test completions
 
 build:
-	go build -ldflags "-X github.com/msalah0e/tamr/cmd.version=$(VERSION)" -o $(BINARY) .
+	go build -ldflags "-X github.com/msalah0e/palm/cmd.version=$(VERSION)" -o $(BINARY) .
 
 install: build
 	mkdir -p $(INSTALL_DIR)
@@ -19,6 +19,6 @@ test:
 
 completions: build
 	mkdir -p completions
-	./$(BINARY) completion zsh > completions/tamr.zsh
-	./$(BINARY) completion bash > completions/tamr.bash
-	./$(BINARY) completion fish > completions/tamr.fish
+	./$(BINARY) completion zsh > completions/palm.zsh
+	./$(BINARY) completion bash > completions/palm.bash
+	./$(BINARY) completion fish > completions/palm.fish

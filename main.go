@@ -4,7 +4,7 @@ import (
 	"embed"
 	"os"
 
-	"github.com/msalah0e/tamr/cmd"
+	"github.com/msalah0e/palm/cmd"
 )
 
 //go:embed registry/*.toml

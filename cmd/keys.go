@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/msalah0e/tamr/internal/ui"
-	"github.com/msalah0e/tamr/internal/vault"
+	"github.com/msalah0e/palm/internal/ui"
+	"github.com/msalah0e/palm/internal/vault"
 	"github.com/spf13/cobra"
 )
 
@@ -93,7 +93,7 @@ func keysListCmd() *cobra.Command {
 
 			if len(keys) == 0 {
 				fmt.Println("  No API keys stored.")
-				fmt.Println("  Run `tamr keys add <KEY>` to add one")
+				fmt.Println("  Run `palm keys add <KEY>` to add one")
 				return
 			}
 
@@ -125,11 +125,11 @@ func keysExportCmd() *cobra.Command {
 			}
 
 			if len(keys) == 0 {
-				fmt.Println("# No API keys stored in tamr vault")
+				fmt.Println("# No API keys stored in palm vault")
 				return
 			}
 
-			fmt.Println("# tamr vault — eval $(tamr keys export)")
+			fmt.Println("# palm vault — eval $(palm keys export)")
 			for _, key := range keys {
 				val, err := v.Get(key)
 				if err == nil {

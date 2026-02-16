@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/msalah0e/tamr/internal/registry"
-	"github.com/msalah0e/tamr/internal/ui"
+	"github.com/msalah0e/palm/internal/registry"
+	"github.com/msalah0e/palm/internal/ui"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ func listCmd() *cobra.Command {
 
 			if len(detected) == 0 {
 				fmt.Println("  No AI tools detected.")
-				fmt.Println("  Run `tamr discover` to explore available tools")
+				fmt.Println("  Run `palm discover` to explore available tools")
 				return
 			}
 

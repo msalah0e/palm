@@ -29,7 +29,7 @@ func NewFileVault() *FileVault {
 	}
 
 	return &FileVault{
-		path: filepath.Join(dir, "tamr", "vault.enc"),
+		path: filepath.Join(dir, "palm", "vault.enc"),
 		key:  deriveKey(),
 	}
 }
@@ -41,7 +41,7 @@ func deriveKey() []byte {
 		username = os.Getenv("USERNAME")
 	}
 
-	seed := fmt.Sprintf("tamr-vault:%s:%s", hostname, username)
+	seed := fmt.Sprintf("palm-vault:%s:%s", hostname, username)
 	hash := sha256.Sum256([]byte(seed))
 	return hash[:]
 }
