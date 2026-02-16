@@ -1,6 +1,6 @@
 BINARY = palm
 INSTALL_DIR = $(HOME)/.local/bin
-VERSION = 1.5.0
+VERSION = 1.5.1
 
 .PHONY: build install clean test test-e2e completions build-all
 
