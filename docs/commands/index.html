@@ -11,7 +11,7 @@
 <body>
 
 <nav>
-  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.3</span></a>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.5</span></a>
   <div class="links">
     <a href="../index.html">Home</a>
     <a href="../getting-started/">Get Started</a>
@@ -85,6 +85,9 @@
     <div class="group-title">Pirate Mode</div>
     <a href="#pirate">Auto-Switch</a>
 
+    <div class="group-title">Monitoring</div>
+    <a href="#top">Live Monitor</a>
+
     <div class="group-title">More</div>
     <a href="#benchmark">Benchmark</a>
     <a href="#health">Health</a>
@@ -100,7 +103,7 @@
   <main class="content">
     <h1><span class="palm">Command</span> Reference</h1>
     <p class="lead">
-      Complete guide to all palm commands &mdash; v1.3.0.
+      Complete guide to all palm commands &mdash; v1.5.0.
     </p>
 
     <!-- ────────────────── TOOL MANAGEMENT ────────────────── -->
@@ -869,6 +872,24 @@ depends_on = ["read-code"]
     </div>
 
     <!-- ────────────────── HEALTH ────────────────── -->
+
+    <h2 id="top">Live AI Process Monitor</h2>
+
+    <p>An htop-like live dashboard that monitors running AI tool processes in real-time. Shows CPU, memory, and GPU usage alongside a process table of detected AI tools.</p>
+
+    <div class="codeblock">
+<span class="comment"># Start the live monitor (refreshes every 1s)</span>
+<span class="prompt">$</span> palm top
+
+<span class="comment"># Custom refresh interval</span>
+<span class="prompt">$</span> palm top --interval 2
+
+<span class="comment"># Also available as:</span>
+<span class="prompt">$</span> palm monitor
+<span class="prompt">$</span> palm htop
+    </div>
+
+    <p>Detects processes for all 102 registered tools plus common AI binaries like <code>claude</code>, <code>ollama</code>, <code>aider</code>, <code>codex</code>, and more. Press <code>Ctrl+C</code> to exit.</p>
 
     <h2 id="health">System Health</h2>
 

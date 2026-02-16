@@ -3,16 +3,16 @@ package cmd
 import (
 	"embed"
 	"fmt"
-	"os"
 
 	"github.com/msalah0e/palm/internal/config"
 	"github.com/msalah0e/palm/internal/registry"
+	"github.com/msalah0e/palm/internal/state"
 	"github.com/msalah0e/palm/internal/ui"
 	"github.com/msalah0e/palm/internal/update"
 	"github.com/spf13/cobra"
 )
 
-var version = "1.4.0"
+var version = "1.5.0"
 
 var (
 	reg         *registry.Registry
@@ -44,13 +44,15 @@ var rootCmd = &cobra.Command{
 	Long: ui.Brand.Sprint(ui.Palm+" palm") + " — manage your AI tools from one place\n" +
 		ui.Subtle.Sprint("Install, configure, and run AI CLI tools with one command"),
 	Version: version + " " + ui.Palm,
-	PersistentPreRun: func(cmd *cobra.Command, args []string) {
-		if _, err := os.Stat(config.ConfigDir()); os.IsNotExist(err) {
-			cfg := config.Load()
-			if !cfg.Setup.Complete {
-				fmt.Println(ui.Subtle.Sprint("  Tip: Run `palm setup` to get started with curated tool presets"))
-				fmt.Println()
-			}
+	Run: func(cmd *cobra.Command, args []string) {
+		r := loadRegistry()
+		ui.Logo(version, len(r.All()))
+
+		cfg := config.Load()
+		if !cfg.Setup.Complete {
+			showFirstRunMenu()
+		} else {
+			showQuickMenu(r)
 		}
 	},
 	PersistentPostRun: func(cmd *cobra.Command, args []string) {
@@ -58,6 +60,38 @@ var rootCmd = &cobra.Command{
 			update.CheckForUpdate(version)
 		}
 	},
+}
+
+func showFirstRunMenu() {
+	ui.Brand.Println("  Get started:")
+	fmt.Println()
+	fmt.Printf("    %s  %s  %s\n", ui.Brand.Sprint("palm setup"), " ", ui.Subtle.Sprint("Interactive wizard with curated presets"))
+	fmt.Printf("    %s %s  %s\n", ui.Brand.Sprint("palm doctor"), " ", ui.Subtle.Sprint("Check runtimes and dependencies"))
+	fmt.Printf("    %s %s  %s\n", ui.Brand.Sprint("palm search"), " ", ui.Subtle.Sprint("Browse 102 AI tools by category"))
+	fmt.Printf("    %s  %s  %s\n", ui.Brand.Sprint("palm install"), "", ui.Subtle.Sprint("Install any AI tool"))
+	fmt.Println()
+	ui.Subtle.Println("  Run `palm --help` for all commands")
+	fmt.Println()
+}
+
+func showQuickMenu(r *registry.Registry) {
+	installed := state.Load()
+	count := len(installed.Installed)
+
+	ui.Good.Printf("  %d tools installed", count)
+	fmt.Printf(" out of %d in registry\n", len(r.All()))
+	fmt.Println()
+
+	fmt.Printf("    %s   %s\n", ui.Brand.Sprint("palm list"),    ui.Subtle.Sprint("Show installed tools"))
+	fmt.Printf("    %s %s\n", ui.Brand.Sprint("palm search"),  ui.Subtle.Sprint("Browse & discover tools"))
+	fmt.Printf("    %s %s\n", ui.Brand.Sprint("palm install"), ui.Subtle.Sprint("Install AI tools"))
+	fmt.Printf("    %s    %s\n", ui.Brand.Sprint("palm run"),    ui.Subtle.Sprint("Run with vault key injection"))
+	fmt.Printf("    %s %s\n", ui.Brand.Sprint("palm doctor"),  ui.Subtle.Sprint("Health check"))
+	fmt.Printf("    %s    %s\n", ui.Brand.Sprint("palm top"),    ui.Subtle.Sprint("Live AI process monitor"))
+	fmt.Printf("    %s   %s\n", ui.Brand.Sprint("palm keys"),   ui.Subtle.Sprint("API key vault"))
+	fmt.Println()
+	ui.Subtle.Println("  Run `palm --help` for all commands")
+	fmt.Println()
 }
 
 func init() {
@@ -109,6 +143,7 @@ func init() {
 		healthCmd(),
 		pirateCmd(),
 		setupCmd(),
+		topCmd(),
 	)
 }
 

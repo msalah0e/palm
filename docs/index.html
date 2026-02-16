@@ -563,7 +563,7 @@
 <body>
 
 <nav>
-  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.3</span></a>
+  <a class="logo" href="/palm/">🌴 palm <span class="v-badge">v1.5</span></a>
   <div class="links">
     <a href="#features">Features</a>
     <a href="#providers">Providers</a>
@@ -583,8 +583,8 @@
 <!-- ██ HERO ██ -->
 <div class="hero">
   <div class="hero-announce">
-    <span class="tag">v1.3</span>
-    MCP Servers &middot; Pirate Mode &middot; Token Counter &middot; Universal Rules &middot; Prompt Library
+    <span class="tag">v1.5</span>
+    palm top Live Monitor &middot; ASCII Logo &middot; Quickstart Menu &middot; Linux Packages &middot; Setup Wizard
   </div>
   <h1>
     <span class="palm">palm</span> <span class="thin">is the</span><br>
@@ -1185,6 +1185,11 @@
       <tr><td>palm pirate --local</td><td>Prefer local models (ollama, llama-cpp)</td></tr>
     </table>
 
+    <div class="cmd-group-title">Monitoring</div>
+    <table class="cmd-table">
+      <tr><td>palm top [--interval N]</td><td>Live htop-like monitor for AI tool processes</td></tr>
+    </table>
+
     <div class="cmd-group-title">More</div>
     <table class="cmd-table">
       <tr><td>palm matrix</td><td>Terminal dashboard &mdash; everything at a glance</td></tr>
@@ -1316,6 +1321,16 @@
         <li>Linux package backend &mdash; auto-detect apt/dnf/pacman</li>
         <li>palm setup &mdash; interactive wizard with curated tool presets</li>
         <li>First-run onboarding flow with preset selection</li>
+      </ul>
+    </div>
+
+    <div class="rm-item">
+      <div class="rm-ver">v1.5.0 <span class="done-badge">SHIPPED</span></div>
+      <div class="rm-title">Top &amp; Branding</div>
+      <ul class="rm-list">
+        <li>palm top &mdash; htop-like live monitor for running AI tool processes</li>
+        <li>ASCII art logo with figlet PALM text in brand green</li>
+        <li>Quickstart menu on bare <code>palm</code> &mdash; replaces default help with logo + quick commands</li>
       </ul>
     </div>
 
