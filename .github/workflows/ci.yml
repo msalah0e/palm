@@ -109,7 +109,7 @@ jobs:
         run: pip install pipx
 
       - name: Build
-        run: go build -ldflags "-X github.com/msalah0e/palm/cmd.version=1.2.0-test" -o /usr/local/bin/palm .
+        run: go build -ldflags "-X github.com/msalah0e/palm/cmd.version=1.3.0-test" -o /usr/local/bin/palm .
 
       - name: Run E2E tests
         run: sh e2e/run.sh

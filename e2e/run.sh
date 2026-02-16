@@ -34,7 +34,7 @@ assert_exit_nonzero() {
 }
 
 echo ""
-echo "🌴 palm E2E test suite v1.2.0"
+echo "🌴 palm E2E test suite v1.3.0"
 echo "=============================="
 echo ""
 
@@ -59,7 +59,7 @@ echo ""
 # ────────────────────────────────────────
 # Version
 OUTPUT=$(palm --version 2>&1)
-assert_contains "$OUTPUT" "palm 1.2.0-test" "palm --version"
+assert_contains "$OUTPUT" "palm 1.3.0-test" "palm --version"
 
 # Help
 OUTPUT=$(palm --help 2>&1)

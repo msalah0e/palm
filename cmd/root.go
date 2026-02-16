@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var version = "1.2.0"
+var version = "1.3.0"
 
 var (
 	reg         *registry.Registry
