@@ -310,3 +310,9 @@ palm completion fish | source
 ## License
 
 MIT
+
+---
+
+<p align="center">
+  <strong>palm</strong> is an open-source product from <a href="https://nilerobot.com">Nilerobot</a> 🌴
+</p>
